@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>yan-frame-parent</artifactId>
+        <groupId>com.yan</groupId>
+        <version>1.0-version</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>yan-frame-web</artifactId>
+    <packaging>war</packaging>
+
+
+
+
+
+    <dependencies>
+
+
+        <!--项目依赖-->
+        <dependency>
+            <groupId>com.yan</groupId>
+            <artifactId>yan-frame-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.yan</groupId>
+            <artifactId>yan-frame-resource</artifactId>
+        </dependency>
+
+
+    </dependencies>
+    <build>
+        <finalName>yan-frame-web</finalName>
+    </build>
+
+
+</project>

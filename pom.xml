@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.yan</groupId>
+    <artifactId>yan-frame-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-version</version>
+    <modules>
+        <module>yanframecommon</module>
+        <module>yanframeweb</module>
+        <module>yanframeresource</module>
+    </modules>
+
+
+    <!--版本信息统一定义-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <com.yan>1.0-version</com.yan>
+        <junit>3.8.1</junit>
+        <spring.version>4.3.2.RELEASE</spring.version>
+        <jackson.version>2.5.0</jackson.version>
+    </properties>
+
+
+    <!-- maven依赖 -->
+    <dependencyManagement>
+
+        <dependencies>
+            <!-- hd start -->
+            <dependency>
+                <groupId>com.yan</groupId>
+                <artifactId>yan-frame-common</artifactId>
+                <version>${com.yan}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.yan</groupId>
+                <artifactId>yan-frame-web</artifactId>
+                <version>${com.yan}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.yan</groupId>
+                <artifactId>yan-frame-resource</artifactId>
+                <version>${com.yan}</version>
+            </dependency>
+
+            <!-- hd end -->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit}</version>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
+
+</project>

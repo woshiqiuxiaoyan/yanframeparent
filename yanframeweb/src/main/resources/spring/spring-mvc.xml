@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--启用注解驱动来扫描controller 包含了 映射器 和 适配器  conversionService自定义类型转换器 validator 自定义validator  -->
+    <mvc:annotation-driven conversion-service="conversionService" validator="validator" >
+        <!--配置@ResponseBody由fastjson解析-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="defaultCharset" value="UTF-8"/>
+            </bean>
+
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>application/*+json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <bean id="fastJsonpResponseBodyAdvice" class="com.alibaba.fastjson.support.spring.FastJsonpResponseBodyAdvice">
+        <constructor-arg>
+            <list>
+                <value>callback</value>
+                <value>jsonp</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+
+
+
+    <!-- 处理器 -->
+    <!-- springmvc的配置文件中不扫描带有@Service注解的类 -->
+    <context:component-scan base-package="system.controller,user.controller,converter">
+        <!--排除service-->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <!--静态资源解析-->
+    <mvc:resources mapping="/static/**/" location="/static/" />
+
+
+    <!--视图解析器  InternalResourceView，利用它来展现jsp （实现了jstlview） 以后要前后台分离 换一个视图解析器 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/pages/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!--bean视图解析 返回 json用-->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" >
+        <property name="order" value="10" />
+    </bean>
+
+
+
+    <!--自定义参数绑定-->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!--转换器-->
+        <property name="converters">
+            <set>
+                <!-- 日期转化换类 -->
+                <ref bean="customDateTimeConverter" />
+            </set>
+        </property>
+    </bean>
+
+
+    <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <!--校验器-->
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+
+    <!-- 国际化的消息资源文件（本系统中主要用于显示/错误消息定制） -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                <!-- 在web环境中一定要定位到classpath 否则默认到当前web应用下找  -->
+                <value>classpath:message/messages</value>
+                <value>classpath:message/ValidationMessages</value>
+            </list>
+        </property>
+        <property name="useCodeAsDefaultMessage" value="false"/>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="cacheSeconds" value="60"/>
+    </bean>
+
+
+    <!--废弃 使用BaseController  @ExceptionHandler注解实现异常处理 替代-->
+    <!--
+    &lt;!&ndash;全局异常处理器 实现了spring 的handlerExceptionResolver接口 &ndash;&gt;
+    <bean class="com.system.exception.CustomExceptionResolver"></bean>
+    -->
+
+    <!--文件上传-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="209715200" />
+        <property name="defaultEncoding" value="UTF-8" />
+        <property name="resolveLazily" value="true" />
+    </bean>
+
+
+    <!--拦截器配置-->
+    <mvc:interceptors>
+        <!--可以配置多个顺序执行 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="interceptor.CustomerHandlerInterceptor"></bean>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="interceptor.CustomerForAnnotationHandlerInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <!--增加redis技持-->
+    <bean id="jedisConnFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:use-pool="true"/>
+
+    <!-- redis template definition -->
+    <bean id="redisTemplate"
+          class="org.springframework.data.redis.core.RedisTemplate"
+          p:connection-factory-ref="jedisConnFactory"/>
+
+</beans>
