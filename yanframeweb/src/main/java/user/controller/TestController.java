@@ -268,7 +268,7 @@ public class TestController extends BaseController {
         String originFileName = uploadFile.getOriginalFilename();
 
         //前半部分路径
-        String leftPath =  request.getServletContext().getRealPath("/uploadimages");
+        String leftPath =  request.getRealPath("/uploadimages");
 
         File file = new File(leftPath,originFileName);
 
