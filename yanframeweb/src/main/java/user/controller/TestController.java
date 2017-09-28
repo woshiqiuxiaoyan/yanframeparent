@@ -1,5 +1,6 @@
 package user.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.yan.frame.commonuse.SimpleService;
 import com.yan.frame.pojo.TUserInfo;
 import exception.CustomException;
@@ -13,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import pojo.SimplePojo;
 import system.controller.BaseController;
 import user.controller.validation.VaildatorGroup1;
@@ -342,6 +344,17 @@ public class TestController extends BaseController {
         SimpleService smpojo  =new SimpleService();
 
         return smpojo;
+
+    }
+
+
+    @RequestMapping("/test111")
+    public ModelAndView enterTestHello(Model model){
+        model.addAttribute("yan","yan");
+        ModelAndView modelAndView =new ModelAndView("TestHello");
+        modelAndView.addObject("name","123");
+        return modelAndView;
+
 
     }
 

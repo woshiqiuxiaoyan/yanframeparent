@@ -21,6 +21,7 @@ public class BaseController {
 
         ex.printStackTrace();
 
+
         CustomException customException = null;
 
         //解析全局错误

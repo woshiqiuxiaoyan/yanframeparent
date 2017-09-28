@@ -47,7 +47,7 @@
 
   <servlet-mapping>
     <servlet-name>dispatcherServlet</servlet-name>
-    <url-pattern>*.html</url-pattern>
+    <url-pattern>*.htm</url-pattern>
   </servlet-mapping>
   <!--springDispatcherServlet 普通前端适配器 end-->
 

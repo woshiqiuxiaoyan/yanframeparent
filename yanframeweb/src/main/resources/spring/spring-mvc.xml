@@ -55,10 +55,10 @@
 
 
     <!--视图解析器  InternalResourceView，利用它来展现jsp （实现了jstlview） 以后要前后台分离 换一个视图解析器 -->
-    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+   <!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/pages/" />
         <property name="suffix" value=".jsp" />
-    </bean>
+    </bean>-->
 
     <!--bean视图解析 返回 json用-->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" >
@@ -66,6 +66,29 @@
     </bean>
 
 
+
+    <!--springMVC+thymeleaf的跳转页面配置-->
+    <bean id="templateResolver"
+          class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+        <constructor-arg ref="servletContext"/>
+        <property name="prefix" value="/static/html/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+    </bean>
+
+    <bean id="templateEngine"
+          class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+    </bean>
+
+
+
+
+    <!--thymeleaf结束 -->
 
     <!--自定义参数绑定-->
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
