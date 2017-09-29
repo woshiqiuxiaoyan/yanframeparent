@@ -351,11 +351,25 @@ public class TestController extends BaseController {
     @RequestMapping("/test111")
     public ModelAndView enterTestHello(Model model){
         model.addAttribute("yan","yan");
-        ModelAndView modelAndView =new ModelAndView("TestHello");
+        ModelAndView modelAndView =new ModelAndView("layuitest");
         modelAndView.addObject("name","123");
         return modelAndView;
-
-
     }
 
+    @RequestMapping("/test222")
+    public ModelAndView enterTestHello1(Model model){
+        model.addAttribute("yan","yan");
+        ModelAndView modelAndView =new ModelAndView("layuitest");
+        modelAndView.addObject("name","123");
+        return modelAndView;
+    }
+
+
+    @RequestMapping("/test333")
+    public ModelAndView enterTestHello3(Model model){
+        model.addAttribute("yan","yan");
+        ModelAndView modelAndView =new ModelAndView("admin/index");
+        modelAndView.addObject("name","123");
+        return modelAndView;
+    }
 }

@@ -11,6 +11,12 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
+
+    <!--静态资源解析-->
+    <mvc:resources mapping="/static/js/**" location="/static/js/" />
+    <mvc:resources mapping="/static/layui/**" location="/static/layui/" />
+    <mvc:resources mapping="/html/admin/static/**" location="/html/admin/static/" />
+
     <!--启用注解驱动来扫描controller 包含了 映射器 和 适配器  conversionService自定义类型转换器 validator 自定义validator  -->
     <mvc:annotation-driven conversion-service="conversionService" validator="validator" >
         <!--配置@ResponseBody由fastjson解析-->
@@ -50,8 +56,7 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
 
-    <!--静态资源解析-->
-    <mvc:resources mapping="/static/**/" location="/static/" />
+
 
 
     <!--视图解析器  InternalResourceView，利用它来展现jsp （实现了jstlview） 以后要前后台分离 换一个视图解析器 -->
@@ -71,9 +76,11 @@
     <bean id="templateResolver"
           class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
         <constructor-arg ref="servletContext"/>
-        <property name="prefix" value="/static/html/" />
+        <property name="prefix" value="/html/" />
         <property name="suffix" value=".html" />
         <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="utf-8" />
     </bean>
 
     <bean id="templateEngine"
@@ -83,12 +90,9 @@
 
     <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
         <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding" value="utf-8" />
     </bean>
-
-
-
-
-    <!--thymeleaf结束 -->
+    <!--**********************************************thymeleaf结束**********************************************-->
 
     <!--自定义参数绑定-->
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">

@@ -29,6 +29,7 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
         //return false 拦截、return true 放行
         log.info(httpServletRequest.getRequestURI());
 
+        /*
         HandlerMethod handler2 = (HandlerMethod) handler;
 
         Class<?> clazz = handler2.getBeanType();
@@ -46,7 +47,9 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
         }
 
 
+        return true;*/
         return true;
+
     }
 
     //进入Handler之后,返回ModelAndView之前
