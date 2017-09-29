@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+      >
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>芊朵恋</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css">
     <script src="/static/js/jquery-3.2.1.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".head").load("/html/admin/static/head.html");
-        });
-    </script>
+
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
 
-    <div class="head"></div>
+    <div th:include="admin/static/head::head"></div>
 
     <div th:include="admin/static/left::left"></div>
 
