@@ -1,0 +1,1 @@
+package pojo;import lombok.Data;@Datapublic class SysRoleAuthority{	private java.lang.Integer id;//   主键编号自增长	private java.lang.String menu_code;//   菜单编码	private java.lang.String role_key;//   角色编码	private java.lang.Integer menu_type;//   菜单类型 1 导航 2 按钮}

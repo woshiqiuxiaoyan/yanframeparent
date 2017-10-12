@@ -15,10 +15,18 @@
     <!--静态资源解析-->
     <mvc:resources mapping="/static/js/**" location="/static/js/" />
     <mvc:resources mapping="/static/layui/**" location="/static/layui/" />
+    <mvc:resources mapping="/static/css/**" location="/static/css/" />
+    <mvc:resources mapping="/static/images/**" location="/static/images/" />
     <mvc:resources mapping="/html/admin/static/**" location="/html/admin/static/" />
+
 
     <!--启用注解驱动来扫描controller 包含了 映射器 和 适配器  conversionService自定义类型转换器 validator 自定义validator  -->
     <mvc:annotation-driven conversion-service="conversionService" validator="validator" >
+
+        <mvc:argument-resolvers>
+            <bean class="myhandlermethodargumentresolver.CurrentUserHandlerMethodArgumentResolver"></bean>
+        </mvc:argument-resolvers>
+
         <!--配置@ResponseBody由fastjson解析-->
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -34,6 +42,8 @@
                 </property>
             </bean>
         </mvc:message-converters>
+
+
     </mvc:annotation-driven>
 
 
@@ -104,6 +114,10 @@
             </set>
         </property>
     </bean>
+
+
+
+
 
 
     <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->

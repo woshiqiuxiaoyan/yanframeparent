@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.SysUserMapper">
+    <!--启用了基于namespace="com.dao.UserMapper"的全局缓存。-->
+
+    <select id="querySysUserByPwdAndUserName" parameterType="sysUserDTO" resultType="sysUserDTO">
+        SELECT
+            *
+        FROM
+            sys_user
+        WHERE
+            login_pass = #{login_pass}
+        AND (
+            login_account = #{login_account}
+            OR user_phone = #{login_account}
+        )
+    </select>
+
+    <select id="getAutorityListByUserId" parameterType="sysUserDTO" resultType="sysAuthorityDTO">
+        SELECT
+            sysauthority.*
+        FROM
+            sys_authority sysauthority
+        , sys_role_authority sysroleauthority
+        , sys_role sysrole
+        , sys_user_role sysuserrole
+        where
+          sysrole.role_id = sysuserrole.role_id
+        and
+          sysrole.role_key = sysroleauthority.role_key
+        and
+          sysauthority.menu_code = sysroleauthority.menu_code
+        and
+         sysuserrole.user_id = #{user_id}
+    </select>
+
+
+</mapper>

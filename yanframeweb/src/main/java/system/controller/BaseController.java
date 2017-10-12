@@ -1,6 +1,8 @@
 package system.controller;
 
+import constant.Constant;
 import exception.CustomException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,5 +44,18 @@ public class BaseController {
         return "errorpage";
 
     }
+
+    /**
+     * 打开指定页面
+     *
+     * @param model
+     * @param container
+     * @return
+     */
+    public String view(Model model, String container) {
+        model.addAttribute(Constant.LAY_CONTAIN, container);
+        return Constant.INEXPAGE;
+    }
+
 
 }

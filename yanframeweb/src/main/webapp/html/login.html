@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>芊朵恋-登录</title>
+    <meta name="keywords" content="芊朵恋,layui">
+    <meta name="description" content="芊朵恋官方后台">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/Login.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/><![endif]-->
+    <script>if (window.top !== window.self) {
+        window.top.location = window.location;
+    }</script>
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">芊</h1>
+
+        </div>
+        <h3>欢迎使用 芊朵恋登录</h3>
+
+        <form class="m-t" role="form" action="doLogin">
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="帐号或者手机号" required="" name="login_account">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="密码" required="" name="login_pass">
+            </div>
+            <button type="button" class="btn btn-primary block full-width m-b loginbtn">登 录</button>
+
+
+            <p class="text-muted text-center">
+                <a href="login.html#">
+                    <small>忘记密码了？</small>
+                </a>
+                |
+                <a href="register.html">注册一个新账号</a>
+            </p>
+
+        </form>
+    </div>
+</div>
+<script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+
+<script>
+
+
+    $(document).ready(function () {
+        //表单转对像
+        $.prototype.serializeObject = function () {
+            var a, o, h, i, e;
+            a = this.serializeArray();
+            o = {};
+            h = o.hasOwnProperty;
+            for (i = 0; i < a.length; i++) {
+                e = a[i];
+                if (!h.call(o, e.name)) {
+                    o[e.name] = e.value;
+                }
+            }
+            return o;
+        };
+
+        $(".loginbtn").click(function () {
+            $.post($(".m-t").attr("action"), $(".m-t").serializeObject(), function (result) {
+                console.log(JSON.stringify(result));
+                if (result.code == '1000') {
+                    location.href="../IndexController/index";
+                }else{
+                    alert(result.msg);
+                }
+            }, "json");
+        });
+
+    });
+</script>
+
+</html>

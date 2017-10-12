@@ -2,8 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="content">
-    我是主要内容
+<div th:fragment="maincontent">
+
+    我是内容
+    <div th:include="admin/static/onload_js::onloadJs"></div>
 </div>
+
 </body>
+
 </html>
+
+

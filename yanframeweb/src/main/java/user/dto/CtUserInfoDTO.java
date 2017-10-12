@@ -1,0 +1,1 @@
+package user.dto;import lombok.Data;import lombok.ToString;import pojo.CtUserInfo;@Datapublic class CtUserInfoDTO extends CtUserInfo {    @Override    public String toString() {       return  super.toString();    }}

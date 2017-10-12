@@ -1,36 +1,34 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+<head th:include="admin/static/common_head::commoncssheader('首页')">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>芊朵恋</title>
+</head>
 <body>
 <div th:fragment="left">
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree ">
-
-                <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;">所有商品1</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="javascript:;">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                <li class="layui-nav-item   " th:each="meun:${session.MENULIST}"
+                    th:if="${meun.parent_menucode eq '0' && meun.menu_type eq '1' }">
+                    <a href="#" th:text="${meun.menu_name}"></a>
+                    <dl class="layui-nav-child" th:if="${meun.parent_menucode eq '0' && meun.menu_type eq '1' }">
+                        <dd th:each="submeun:${session.MENULIST}" th:if="${submeun.parent_menucode eq meun.menu_code}">
+                            <a th:href="@{${submeun.data_url}}" th:text="${submeun.menu_name}"></a>
+                        </dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="">超链接</a></dd>
-                    </dl>
-                </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
             </ul>
         </div>
     </div>
+    <div th:include="admin/static/onload_js::onloadJs"></div>
+
 </div>
+
 </body>
+
+
 </html>
 

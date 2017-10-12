@@ -6,104 +6,106 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-  <display-name>Archetype Created Web Application</display-name>
+    <display-name>Archetype Created Web Application</display-name>
 
 
-  <!-- post乱码过滤（放在最前面） start-->
-  <filter>
-    <filter-name>characterEncodingFilter</filter-name>
-    <filter-class>filter.CustomterCharacterFilter</filter-class>
-    <init-param>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-    <init-param>
-      <param-name>forceEncoding</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>characterEncodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <!--post乱码过滤 end-->
+    <!-- post乱码过滤（放在最前面） start-->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>filter.CustomterCharacterFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!--post乱码过滤 end-->
+
+    <!-- 配置  Shiro 的 Filter -->
+    <filter>
+        <description>shiro 权限拦截</description>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <!-- 设置true由servlet容器控制filter的生命周期 -->
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <!-- 设置spring容器filter的bean id，如果不设置则找与filter-name一致的bean-->
+        <!--  <init-param>
+            <param-name>targetBeanName</param-name>
+            <param-value>shiroFilter</param-value>
+          </init-param>-->
+    </filter>
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- 配置  Shiro 的 Filter  end -->
 
 
-  <!-- 配置  Shiro 的 Filter -->
-  <filter>
-    <description>shiro 权限拦截</description>
-    <filter-name>shiroFilter</filter-name>
-    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    <init-param>
-      <param-name>targetFilterLifecycle</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>shiroFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <!-- 配置  Shiro 的 Filter  end -->
+    <!--springDispatcherServlet 普通前端适配器 start-->
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <!--load-on-startup值为1指定了dispatcherServlet随servlet容器启动。-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <url-pattern>*.htm</url-pattern>
+    </servlet-mapping>
+    <!--springDispatcherServlet 普通前端适配器 end-->
+
+    <!--springDispatcherServlet  支持restFUl的前端控制器(会对静态资源访问造成问题 所以要添加静态资源解析方法) start-->
+    <servlet>
+        <servlet-name>spring-rest</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <!--load-on-startup值为1指定了dispatcherServlet随servlet容器启动。-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>spring-rest</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <!--springDispatcherServlet 支持restFUl的前端控制器 end-->
+
+    <!--spring  监听器 start-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!--init-param 和 context-param 的区别，从名字上就可以看得出，后者是相对于整个web应用的，而前者是针对单个servlet的。-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:datasource/*.xml,classpath:spring/spring-shiro.xml</param-value>
+    </context-param>
+    <!--spring  监听器 end-->
 
 
 
-
-
-  <!--springDispatcherServlet 普通前端适配器 start-->
-  <servlet>
-    <servlet-name>dispatcherServlet</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:spring/spring-mvc.xml</param-value>
-    </init-param>
-    <!--load-on-startup值为1指定了dispatcherServlet随servlet容器启动。-->
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>dispatcherServlet</servlet-name>
-    <url-pattern>*.htm</url-pattern>
-  </servlet-mapping>
-  <!--springDispatcherServlet 普通前端适配器 end-->
-
-  <!--springDispatcherServlet  支持restFUl的前端控制器(会对静态资源访问造成问题 所以要添加静态资源解析方法) start-->
-  <servlet>
-    <servlet-name>spring-rest</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:spring/spring-mvc.xml</param-value>
-    </init-param>
-    <!--load-on-startup值为1指定了dispatcherServlet随servlet容器启动。-->
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>spring-rest</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
-  <!--springDispatcherServlet 支持restFUl的前端控制器 end-->
-
-  <!--spring  监听器 start-->
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-  <!--init-param 和 context-param 的区别，从名字上就可以看得出，后者是相对于整个web应用的，而前者是针对单个servlet的。-->
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:datasource/*.xml</param-value>
-  </context-param>
-  <!--spring  监听器 end-->
-
-
-
-  <!--日志logback-->
-  <context-param>
-    <param-name>logbackConfigLocation</param-name>
-    <param-value>classpath:log/logback.xml</param-value>
-  </context-param>
-  <listener>
-    <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
-  </listener>
+    <!--日志logback-->
+    <context-param>
+        <param-name>logbackConfigLocation</param-name>
+        <param-value>classpath:log/logback.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+    </listener>
 
 </web-app>

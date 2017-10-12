@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!--shiro 核心安全接口  -->
+        <property name="securityManager" ref="securityManager"/>
+        <!--登录时的连接  -->
+        <property name="loginUrl" value="/LoginController/login"/><!-- 如果不写的话，默认去找login.jsp页面 -->
+
+        <property name="unauthorizedUrl" value="/index.jsp"/>   <!-- 认证不通过访问的页面 -->
+        <!-- 过虑器链定义，从上向下顺序执行，一般将/**放在最下边 -->
+        <property name="filterChainDefinitions">
+            <value>
+                /refuse.jsp = anon
+                /static/** = anon   <!--过滤静态资源-->
+                /LoginController/** = anon   <!-- anon过滤器表示没有权限也可访问  -->
+                /logout.do = logout <!-- 表示访问logout.do时就直接访问logout这个过滤器，即直接退出 -->
+                /** = authc         <!-- 表示其他的所有路径都要通过认证后才能访问 -->
+            </value>
+        </property>
+
+    </bean>
+
+    <!-- 注入自定义realm -->
+    <bean id="myShiroRealm" class="user.springshirorealm.MyShiroRealm">
+        <!--<property name="accountService" ref="accountService"/>-->
+    </bean>
+
+    <!-- 安全管理器 ：必须注入-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myShiroRealm"></property>
+    </bean>
+
+    <!-- 注入查询用户名与密码的service实现类 -->
+    <!--<bean id="accountService" class="user.service.impl.AccountService"></bean>-->
+
+</beans>

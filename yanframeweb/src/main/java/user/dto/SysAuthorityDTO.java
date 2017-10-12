@@ -1,0 +1,1 @@
+package user.dto;import lombok.Data;import pojo.SysAuthority;@Datapublic class SysAuthorityDTO extends SysAuthority {}
