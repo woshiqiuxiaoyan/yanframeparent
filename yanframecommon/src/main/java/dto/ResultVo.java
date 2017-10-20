@@ -1,6 +1,7 @@
 package dto;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -10,14 +11,12 @@ import java.io.Serializable;
  * 通用VO
  */
 @Data
-public class ResultVo implements Serializable
+@ToString
+public class ResultVo  implements Serializable
 {	
 	private static final long serialVersionUID = 1L;
 	
-	@Override
-	public String toString() {
-		return "ResultVo [code=" + code + ", msg=" + msg + ", result=" + result + "]";
-	}
+
 
 	/**
 	 * code == 0时表示没有错误 其余表示错误
@@ -31,7 +30,8 @@ public class ResultVo implements Serializable
 	 * 返回结果 json
 	 * */
 	private Object result;
-	
+
+
 	
 	public ResultVo(){}
 	

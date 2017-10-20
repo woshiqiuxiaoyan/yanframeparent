@@ -35,4 +35,24 @@
     </select>
 
 
+    <select id="getUserRole" parameterType="sysUserDTO" resultType="sysRoleDTO">
+       SELECT
+            *
+        FROM
+            sys_role sysrole
+        WHERE
+            sysrole.role_id IN (
+                SELECT
+                    sysuserrole.role_id
+                FROM
+                    sys_user_role sysuserrole
+                WHERE
+                    sysuserrole.user_id = #{user_id}
+            )
+        AND sysrole.delete_flag = 1
+    </select>
+
+
+
+
 </mapper>

@@ -3,6 +3,7 @@ package converter;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -14,12 +15,13 @@ import org.springframework.stereotype.Component;
 @Component("customDateTimeConverter")
 public class CustomDateTimeConverter implements Converter<String, DateTime> {
 
+    private Logger log =  LoggerFactory.getLogger(this.getClass());
 
     public DateTime convert(String str) {
 
-        System.out.println("***********************************CustomDateTimeConverter***********************************");
+        log.info("***********************************CustomDateTimeConverter***********************************");
 
-        LoggerFactory.getLogger(this.getClass()).info(str);
+        log.info(str);
 
         DateTime dateTime = null;
 

@@ -24,12 +24,13 @@ public class CustomerHandlerInterceptor implements HandlerInterceptor {
     //应用场景：比如登录拦截
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         log.info("--------------------请求url:"+httpServletRequest.getRequestURI());
-       /* Enumeration enu  = httpServletRequest.getParameterNames();
-        log.info("--------------------请求参数如下：");
+        Enumeration enu  = httpServletRequest.getParameterNames();
+        if(enu.hasMoreElements())
+          log.info("--------------------请求参数如下：");
         while(null!=enu && enu.hasMoreElements()){
             String paraName=(String)enu.nextElement();
             log.info("  "+paraName+" : "+httpServletRequest.getParameter(paraName));
-        }*/
+        }
         return true;
     }
 

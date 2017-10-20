@@ -21,8 +21,19 @@ public class Constant {
 
 
     public interface Views {
-        public static String createCard = "admin/createcustomcard/createcustomcard";//开卡页面
+        public static String createCard = "admin/CustomManager/createcustomcard";//开卡页面
         public static String firstPage = "admin/content";//首页页面
+        public static String redirectFirstPage ="redirect:index";//重定向到首页
+        public static String  customList="admin/CustomManager/customcardlist";//会员列表页面
+        public static String createGoodsInfo = "admin/GoodsInfoManager/createsgoodsinfo";//产品入录页面
+        public static String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
+
     }
+
+    public interface NorMsg{
+        public static String CREATECARDREMARK="会员开卡";
+    }
+
+    public  static int DefaultPageSize=5;//默认每页大小
 
 }

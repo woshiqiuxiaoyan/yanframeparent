@@ -15,6 +15,6 @@ public class SysUser   {
 	private java.lang.Integer user_sex;//   性别
 	private java.util.Date user_birthday;//   生日
 	private java.util.Date register_time;//   注册时间
-	private java.lang.String create_by;//   创建者;对应sys_user(login_account)字段
+	private java.lang.Integer create_by;//   创建者;对应sys_user(login_account)字段
 	private java.lang.String real_name;//   真实姓名
 }

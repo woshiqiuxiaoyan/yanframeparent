@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      >
+      xmlns:th="http://www.thymeleaf.org">
 <head th:include="admin/static/common_head::commoncssheader('首页')">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>芊朵恋</title>
 </head>
-
 <body class="layui-layout-body">
 
-
 <div class="layui-layout layui-layout-admin">
-
-
 
     <div th:include="admin/static/head::head"></div>
 
     <div th:replace="admin/static/left::left"></div>
 
     <div class="layui-body">
+
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <div th:include="${lay_contain}::maincontent"></div>
-        </div>
 
+
+            <div th:include="${lay_contain}::maincontent"></div>
+
+            <!-- -->
+        </div>
     </div>
+
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
         © layui.com - 底部固定区域
     </div>
 </div>
-
+<!--引入js-->
+<div th:include="admin/static/onload_js::onloadJs"></div>
 
 
 <script>
 
-    function onComplete(){
 
-    }
+    layui.use(['table','layer','laydate','form'], function () {
+        var table = layui.table,layer = layui.layer
+            ,laydate = layui.laydate,layform = layui.form
+            ,upload = layui.upload,element = layui.element
+            ,carousel = layui.carousel;
+
+        onloadInit(upload,layform,laydate,element,table,layer,carousel);
+    });
 </script>
-<!--引入js-->
-<div th:include="admin/static/onload_js::onloadJs"></div>
-<script th:src="@{/static/js/common.js}"></script>
-
 </body>
 </html>

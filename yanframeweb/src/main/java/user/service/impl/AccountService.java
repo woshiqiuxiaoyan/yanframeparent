@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pojo.SysUser;
 import user.dto.SysAuthorityDTO;
+import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
 import user.dto.TDemo;
 import user.mapper.SysUserMapper;
@@ -34,8 +35,23 @@ public class AccountService implements IAccountService {
         return  sysUserMapper.querySysUserByPwdAndUserName(sysUser);
     }
 
+    /**
+     * 获取当前用户菜单列表
+     * @param sysUser
+     * @return
+     */
     public List<SysAuthorityDTO> getMenuList(SysUserDTO sysUser) {
         return sysUserMapper.getAutorityListByUserId(sysUser);
     }
+
+    /**
+     * 获取用户角色
+     * @param sysUser
+     * @return
+     */
+    public SysRoleDTO getUserRole(SysUserDTO sysUser) {
+        return sysUserMapper.getUserRole(sysUser);
+    }
+
 
 }

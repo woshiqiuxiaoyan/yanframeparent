@@ -1,0 +1,405 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+
+    <form class="layui-form search_goodsinfo_form" method="post" th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="text-align:center;" >货号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="goods_id"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">商品颜色</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="goods_color"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" style="text-align:center;" >商品名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="goods_name"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">尺码</label>
+                <div class="layui-input-inline">
+                    <select name="goods_size">
+                        <option th:each="goodsize : ${GoodsSizeBound}"  th:value="${goodsize.value}" th:text="${goodsize.name}" selected></option>
+                    </select>
+                </div>
+
+                <div class="layui-inline" style="float:right;">
+                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+
+                <label class="layui-form-label">开卡时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
+                </div>
+                <label class="layui-form-label" style="text-align:center;">~</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+<table class="layui-table"
+       lay-data="{height:730, url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="customcardlist" lay-size="lg">
+    <thead>
+    <tr>
+        <th lay-data="{ field:'id',checkbox:true, width:80}"></th>
+        <th lay-data="{field:'goods_id', width:130}">商品货号</th>
+        <th lay-data="{field:'goods_name', width:150}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
+        <th lay-data="{field:'goods_sale_price',align:'center', width:80, sort: true}">售价</th>
+        <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
+        <th lay-data="{width:100, templet:'#templetgoods_size'}">商品尺码</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetcreate_time'}">创建时间</th>
+        <th lay-data="{field:'user_name',  width:200,align:'center' }">创建者</th>
+        <th lay-data="{fixed:'left', width:400, align:'center',templet:'#templetimgurl'}">图片</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+
+<!--尺码视图-->
+<script type="text/html" id="templetgoods_size">
+    <!--6 无 ,0 S  ,1 M ,2 L,3 xl,4 xxl,5 xxxl '-->
+    {{#  if(d.goods_size == 6){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">无码</div>
+    {{#  } else if(d.goods_size == 5){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XXXL</div>
+    {{#  } else if(d.goods_size == 4){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XXL</div>
+    {{#  } else if(d.goods_size == 3){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XL</div>
+    {{#  } else if(d.goods_size == 2){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">L</div>
+    {{#  } else if(d.goods_size == 1){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">M</div>
+    {{#  } else if(d.goods_size == 0){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">S</div>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="templetcreate_time">
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.creat_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+
+<script type="text/html" id="templetimgurl">
+    <div class="layui-table-cell laytable-cell-1-create_time">
+        <div class="layui-carousel" id="goods_info_carousel">
+            <div carousel-item>
+                <div><img src="http://s10.mogucdn.com/mlcdn/c45406/170710_3a6jf5f0j24bgcc3i3f36el2a2ckj_778x440.jpg_900x9999.v1c7E.70.webp"></div>
+                <div><img src="http://s10.mogucdn.com/mlcdn/c45406/170714_5e8867724c4bfae8ka6l3a5274h0h_778x440.jpg_900x9999.v1c7E.70.webp"></div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script>
+
+    function Format(datetime,fmt) {
+        if(datetime==undefined){
+            return "无";
+        }
+
+        if (parseInt(datetime)==datetime) {
+            if (datetime.length==10) {
+                datetime=parseInt(datetime)*1000;
+            } else if(datetime.length==13) {
+                datetime=parseInt(datetime);
+            }
+        }
+        datetime=new Date(datetime);
+        var o = {
+            "M+" : datetime.getMonth()+1,                 //月份
+            "d+" : datetime.getDate(),                    //日
+            "h+" : datetime.getHours(),                   //小时
+            "m+" : datetime.getMinutes(),                 //分
+            "s+" : datetime.getSeconds(),                 //秒
+            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
+            "S"  : datetime.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+        //查询按钮
+        $(".search_btn").on('click',function () {
+            table.reload('IdCtuserListTable', {
+                url: '/GoodsInfoManagerController/getGoodsInfoList'
+                ,where: $(".search_goodsinfo_form").serializeObject()
+            });
+
+        })
+
+
+        laydate_manager(laydate);
+        table_manger(table,layer,laydate,layform);
+
+        carousel_manager(carousel);
+    }
+
+    function carousel_manager(carousel) {
+        carousel.render({
+            elem: '#goods_info_carousel'
+            ,width: '100%'
+            , interval: 5000
+        });
+    }
+
+
+    function laydate_manager(laydate){
+        //单控件
+        laydate.render({
+            elem: '#condictionstart'
+        })
+        laydate.render({
+            elem: '#condictionend'
+        })
+    }
+
+    function table_manger(table,layer,laydate,layform){
+        //监听工具条
+        table.on('tool(customcardlist)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'detail' || layEvent === 'edit') { //查看
+                var othis = $(this), method = layEvent;
+                active[method] ? active[method].call(data) : '';
+            } else if (layEvent === 'del'){//删除
+                layer.confirm('真的删除行么', function (index) {
+
+                    //更新url
+                    var posturl  = static_path+"CtuManagerController/delCtuser";
+
+                    var objTmp = {id:obj.data.id};
+                    $.post(posturl, objTmp, function (result) {
+                        console.log(JSON.stringify(result));
+                        if (result.code == '1000') {
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }, "json");
+
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+
+                });
+            }
+        });
+
+
+
+        //触发事件
+        var active = {
+            detail: function(obj,tmpdata){
+                console.log( this.born_day);
+
+                var contenttmp = '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'
+                    +'ID     :'+this.id +'<br>'
+                    +'真实姓名:'+this.real_name +'<br>'
+                    +'手机号码:'+this.mobile_phone +'<br>'
+                    +'卡号    :'+this.card_no +'<br>'
+                    +'出生日期 :'+Format(this.born_day,"yyyy-M-d") +'<br>'
+                    +'性别    :'+this.sex +'<br>'
+                    +'身份证   :'+this.id_card_number +'<br>'
+                    +'邮箱     :'+this.email+'<br>'
+                    +'地址     :'+this.address+'<br>'
+                    +'经办人   :'+this.operatorName+'<br>'
+                    +'推荐人卡号:'+this.referee_card_no+'<br>'
+                    +'推荐人:'+this.referee+'<br>'
+                    +'积分    :'+this.accumulate_integral+'<br>'
+                    +'所属店长 :'+this.shop_keeper+'<br>'
+                    +'头像    :'+this.head_url+'<br>'
+                    +'备注    :'+this.remark+'<br>'
+                    +'创建时间 :'+this.create_time+'<br>';
+
+
+                //示范一个公告层
+                layer.open({
+                    type: 1
+                    ,title: false //不显示标题栏
+                    ,closeBtn: false
+                    ,area: '300px;'
+                    ,shade: 0.8
+                    ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    ,btn: ['o 了']
+                    ,btnAlign: 'c'
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: contenttmp
+                    ,success: function(layero){
+                        console.log(layero);
+                    }
+                });
+            }
+            ,edit: function(){
+
+                var contenttmp='<form class="layui-form customcardlistform"  lay-filter="customcardlistform" method="post" action="CtuManagerController/updateCtUserInfo">\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label requiredcontent">会员卡号</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="card_no"    lay-verify="required" readonly required  \n' +
+                    '      value="'+this.card_no+'"       autocomplete="off" class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label ">会员生日</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="born_day" value="'+
+                    Format(this.born_day,"yyyy-M-d")+'" class="layui-input normalinputwidth" placeholder="请选择会员生日" id="test2" readonly>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label requiredcontent">会员姓名</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="real_name" lay-verify="required" required placeholder="请输入会员姓名"\n' +
+                    '     value="'+this.real_name+'"                  autocomplete="on" class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '        <div class="layui-form-item" pane>\n' +
+                    '            <label class="layui-form-label">性别</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="radio" name="sex" value="1" title="男" '+(this.sex==1?"checked":"")+'>\n' +
+                    '                <input type="radio" name="sex" value="2" title="女" '+(this.sex==2?"checked":"")+'>\n' +
+                    '                <input type="radio" name="sex" value="3" title="其他" disabled>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label">手机</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="tel" name="mobile_phone" autocomplete="on" placeholder="请输入手机号"\n' +
+                    '    value="'+this.mobile_phone+'"  class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '\n' +
+                    '        </div>\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label">邮箱</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="email" placeholder="请输入邮箱" autocomplete="on"\n' +
+                    '     value="'+this.email+'"        class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label">身份证</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="id_card_number" autocomplete="on" placeholder="请输入身份证号"\n' +
+                    '   value="'+this.id_card_number+'"  class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label">推荐人卡号</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="tel" name="referee_card_no" placeholder="请输入推荐人卡号" autocomplete="on"\n' +
+                    '      value="'+this.referee_card_no+'"      class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '\n' +
+                    '        <div class="layui-form-item">\n' +
+                    '            <label class="layui-form-label">地址</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <input type="text" name="address" lay-verify="address" autocomplete="on" placeholder="请输入地址"\n' +
+                    '      value="'+this.address+'"        class="layui-input normalinputwidth">\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="layui-form-item layui-form-text">\n' +
+                    '            <label class="layui-form-label">备注</label>\n' +
+                    '            <div class="layui-input-block">\n' +
+                    '                <textarea name="remark" placeholder="请输入内容"' +
+                    '    class="layui-textarea normalinputwidth">'+this.remark+'</textarea>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <button type="reset" style="display:none"  class="layui-btn layui-btn-primary resetbtn">重置</button>\n' +
+                    '    </form>'
+
+
+                layer.open({
+                    type: 1
+                    ,offset: '50px'
+                    ,area: '500px'
+                    ,id: 'layerDemo'+this.id //防止重复弹出
+                    ,content: contenttmp
+                    ,btn: ['确认修改','我要重置','关闭全部']
+                    ,btnAlign: 'c' //按钮居中
+                    ,shade: 0 //不显示遮罩
+                    ,yes: function(){
+
+                        //更新url
+                        var posturl  = static_path+$(".customcardlistform").attr("action");
+
+                        $.post(posturl, $(".customcardlistform").serializeObject(), function (result) {
+                            console.log(JSON.stringify(result));
+                            if (result.code == '1000') {
+                                location.href=ctuserListurl;
+                            }else{
+                                layer.msg(result.msg)
+                            }
+                        }, "json");
+                    },btn2: function(index, layero){
+                        $(".resetbtn").click();
+                        return false;
+                    },btn3: function(index, layero){
+                        layer.closeAll();
+
+                    },success: function(layero, index){
+                        //打开成功后的回调
+                        $(".normalinputwidth").css('width','350px');
+                        //单控件
+                        laydate.render({
+                            elem: '#test2'
+                        })
+                        layform.render();
+                        $(".requiredcontent").append("<span style='color:red;'>*</span>");
+
+                    }
+                });
+            }
+
+        };
+    }
+
+
+
+
+</script>
+</body>
+</html>

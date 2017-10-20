@@ -2,6 +2,7 @@ package user.service;
 
 import pojo.SysUser;
 import user.dto.SysAuthorityDTO;
+import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
 
 import java.util.List;
@@ -22,4 +23,11 @@ public interface IAccountService {
      * @return
      */
     List<SysAuthorityDTO> getMenuList(SysUserDTO sysUser);
+
+    /**
+     * 获取当前用户角色
+     * @param sysUser
+     * @return
+     */
+    SysRoleDTO getUserRole(SysUserDTO sysUser);
 }

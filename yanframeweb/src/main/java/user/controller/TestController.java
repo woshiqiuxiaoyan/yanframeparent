@@ -48,7 +48,7 @@ public class TestController extends BaseController {
     @RequestMapping(value = "/testFirst")
     public String testFirst(Model model, HttpServletRequest req) {
         model.addAttribute("aa", "123123");
-        return "test";
+        return "admin/CustomManager/1";
     }
 
 
@@ -265,6 +265,30 @@ public class TestController extends BaseController {
      */
     @RequestMapping(value = "/testUploadPic", method = {RequestMethod.POST, RequestMethod.GET})
     public String testUploadPic(@RequestParam("testFile") MultipartFile uploadFile,HttpServletRequest request) throws CustomException, IOException {
+
+        String originFileName = uploadFile.getOriginalFilename();
+
+        //前半部分路径
+        String leftPath =  request.getRealPath("/uploadimages");
+
+        File file = new File(leftPath,originFileName);
+
+        uploadFile.transferTo(file);
+
+        return "subform";
+
+    }
+
+
+
+    /**A
+     * 测试  图片上传
+     *
+     * @param
+     * @ModelAttribute 回显的key
+     */
+    @RequestMapping(value = "/testUploadPic1", method = {RequestMethod.POST, RequestMethod.GET})
+    public String testUploadPic1( MultipartFile uploadFile,HttpServletRequest request) throws CustomException, IOException {
 
         String originFileName = uploadFile.getOriginalFilename();
 

@@ -61,7 +61,7 @@
     <logger name="org.springframework.data.jpa" level="DEBUG"/>
     <logger name="org.cometd" level="WARN"/>
     <logger name="ch.qos.logback" level="WARN"/>
-    <logger name="com.user" level="DEBUG"/>
+    <logger name="user" level="DEBUG"/>
     <logger name="enterUrl" level="DEBUG"/>
     <logger name="CustomSystemLog" level="DEBUG"/>
     <logger name="CustomerForAnnotationHandlerInterceptor" level="DEBUG"/>

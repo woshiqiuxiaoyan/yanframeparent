@@ -2,6 +2,7 @@ package interceptor;
 
 import annotation.HelloYan;
 import annotation.MenuAuthory;
+import annotation.TrimSpace;
 import constant.Constant;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -16,6 +17,7 @@ import pojo.SysAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -43,6 +45,7 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
             HandlerMethod handler2 = (HandlerMethod) handler;
             //菜单权限
             MenuAuthory menuAuthory = handler2.getMethodAnnotation(MenuAuthory.class);
+
 
             if (null != menuAuthory) {
 

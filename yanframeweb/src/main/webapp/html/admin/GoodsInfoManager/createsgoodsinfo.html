@@ -1,0 +1,188 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<style>
+
+
+
+    .layui-upload-img {
+        width: 92px;
+        height: 92px;
+        margin: 0 10px 10px 0;
+    }
+</style>
+<div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+        <legend style="font-size: smaller;"> 友情提示 <span class="requiredcontent"></span> 为必填</legend>
+    </fieldset>
+
+    <form class="layui-form form_createsgoodsinfo" method="post" th:action="@{/GoodsInfoManagerController/saveGoodsInfo}">
+        <div class="layui-form-item">
+            <label class="layui-form-label requiredcontent">商品货号</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_id" lay-verify="required" required placeholder="请输入商品货号"
+                       autocomplete="off" class="layui-input  ">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label requiredcontent">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_name" lay-verify="required"
+                       class="layui-input  " placeholder="请选择商品名称">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label requiredcontent">进货价格</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_instock_price" lay-verify="number|required" required placeholder="请输入进货价格"
+                         class="layui-input ">
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">商品尺码</label>
+            <div class="layui-input-block">
+                <input th:each="goodsize : ${GoodsSizeBound}"  type="radio" name="goods_size" th:value="${goodsize.value}"  th:title="${goodsize.name}"   checked>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">售价</label>
+            <div class="layui-input-block">
+                <input type="tel" name="goods_sale_price" lay-verify="goods_sale_price"  autocomplete="on" placeholder="请输入出售价格"
+                       class="layui-input normalinputwidth">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品颜色</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_color" placeholder="请输入对应颜色" autocomplete="on"
+                       class="layui-input normalinputwidth">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-upload layui-input-block">
+                <button type="button" class="layui-btn" id="mutil_pic_upload">多图片上传</button>
+                <div class="layui-upload-list" id="mutil_pic_upload_prview"></div>
+                <hr class="layui-bg-orange">
+            </div>
+            <!--异步上传完后返回的临时图片名字-->
+            <input type="hidden" id="goods_img_url" name="goods_img_url" value="" >
+
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" class="layui-btn" lay-submit lay-filter="form_createsgoodsinfo_submit"
+                       value="立即提交"></input>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <br><br><br>
+    <!--引入js-->
+    <script>
+        //初始化
+        function onloadInit(upload,layform) {
+            $(".requiredcontent").append("<span style='color:red;'>*</span>");
+
+            createsgoodsinfo_upload(upload);
+
+            form_createsgoodsinfo_submit(layform);
+
+        }
+
+
+        function createsgoodsinfo_upload(upload){
+            upload.render({
+                elem: '#mutil_pic_upload'
+                , url: static_path + 'GoodsInfoManagerController/UploadPicTemp'
+                , multiple: true
+                , field: "PicFileName"
+                , accept: "images"
+                , exts: "jpg|png|gif|bmp|jpeg"
+                , auto: true //是否选完文件后自动上传。如果设定 false，那么需要设置 bindAction 参数来指向一个其它按钮提交上传
+//                , bindAction: ".create_goods_info_submitbtn"
+                , size: 1024
+                , before: function (obj) {
+                    //将每次选择的文件追加到文件队列
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#mutil_pic_upload_prview').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                    });
+                }
+                , done: function (res) {
+                    //上传完毕
+                    var temp = $("#goods_img_url").val()+res.result+",";
+                    $("#goods_img_url").val(temp);
+                }
+            });
+        }
+
+        //表单提交
+        function form_createsgoodsinfo_submit(layform){
+
+            //自定义验证规则
+            layform.verify({
+                goods_sale_price: function (value) {
+                    if (value.length > 0 && !new RegExp(/^\d+(\.\d+)?$/).test(value)) {
+                        return '售价只能为数字';
+                    }
+                },
+                address: function (value) {
+                    return  ;
+                }
+            });
+
+
+            //创建商品
+            layform.on('submit(form_createsgoodsinfo_submit)', function(data){
+                console.log($(".form_createsgoodsinfo").serializeObject());
+                $.post($(".form_createsgoodsinfo").attr("action"), $(".form_createsgoodsinfo").serializeObject(), function (result) {
+                    layer.msg(result.msg)
+                    if (result.code == '1000') {
+                        layer.open({
+                            content: '是否继续添加？'
+                            ,btn: ['没错', '不加了']
+                            ,yes: function(index, layero){
+                                //按钮【按钮一】的回调
+                                location.reload();
+                            }
+                            ,btn2: function(index, layero){
+                                //按钮【按钮二】的回调
+
+                                location.href=ctuserListurl;
+                            }
+
+                        });
+
+                    }
+                }, "json");
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+        }
+
+
+    </script>
+</div>
+
+
+</body>
+</html>
+

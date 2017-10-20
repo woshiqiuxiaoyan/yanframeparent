@@ -10,7 +10,7 @@
 
 </style>
 <div>
-    <form class="layui-form formcreatecard" method="post" th:action="@{/IndexController/createCtUserInfo}">
+    <form class="layui-form formcreatecard" method="post" th:action="@{/CtuManagerController/createCtUserInfo}">
         <div class="layui-form-item">
             <label class="layui-form-label requiredcontent">会员卡号</label>
             <div class="layui-input-block">
@@ -93,7 +93,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <input type="button" class="layui-btn submitbtn" lay-submit lay-filter="formDemo" value="立即提交"></input>
+                <input type="button" class="layui-btn" lay-submit lay-filter="formcreatecard_submitbtn" value="立即提交"></input>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -101,55 +101,51 @@
 
 
     <br><br><br>
-    <div th:include="admin/static/onload_js::onloadJs"></div>
-    <!--引入js-->
+
     <script>
 
-        function onloadInit() {
+        function onloadInit(upload,layform,laydate,element) {
             $(".requiredcontent").append("<span style='color:red;'>*</span>");
-        }
-
-        layui.use(['form', 'laydate', 'element'], function () {
-
-            onloadInit();
-
-            var element = layui.element;
 
             element.init();
 
-            var laydate = layui.laydate;
             //单控件
             laydate.render({
                 elem: '#test2'
             })
 
-            var form = layui.form;
+            form_submit(layform);
+        }
 
 
-            //事件监听 这个 可以起作用
-            form.on('radio(*)', function (data) {
-                alert(data)
-            });
-
+        function  form_submit(layform) {
 
             //自定义验证规则
-            form.verify({
+            layform.verify({
                 title: function (value) {
                     if (value.length < 5) {
                         return '标题也太短了吧';
                     }
                 },
                 address: function (value) {
-//                     return "起作用了吗";
+                    return  ;
                 }
             });
 
-            $(".submitbtn").click(function () {
-//                layer.msg(JSON.stringify($(".formcreatecard").serializeObject()));
-                alert(JSON.stringify($(".formcreatecard").serializeObject()))
-                $(".formcreatecard").submit();
-            })
-        });
+            //会员开卡提交
+            layform.on('submit(formcreatecard_submitbtn)', function(data){
+                console.log($(".formcreatecard").serializeObject());
+                $.post($(".formcreatecard").attr("action"), $(".formcreatecard").serializeObject(), function (result) {
+                    console.log(JSON.stringify(result));
+                    if (result.code == '1000') {
+                        location.href=ctuserListurl;
+                    }else{
+                        layer.msg(result.msg)
+                    }
+                }, "json");
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        }
 
     </script>
 </div>

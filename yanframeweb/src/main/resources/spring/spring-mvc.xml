@@ -30,6 +30,7 @@
         <!--配置@ResponseBody由fastjson解析-->
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
                 <property name="defaultCharset" value="UTF-8"/>
             </bean>
 
@@ -38,6 +39,7 @@
                     <list>
                         <value>application/json;charset=UTF-8</value>
                         <value>application/*+json;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
                     </list>
                 </property>
             </bean>

@@ -4,6 +4,7 @@ package user.mapper;
 import org.springframework.stereotype.Repository;
 import pojo.SysUser;
 import user.dto.SysAuthorityDTO;
+import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
 
 import java.util.List;
@@ -24,4 +25,11 @@ public interface SysUserMapper {
      * @return
      */
     List<SysAuthorityDTO> getAutorityListByUserId(SysUserDTO sysUser);
+
+    /**
+     * 通过用户user_id 取角色
+     * @param sysUser
+     * @return
+     */
+    SysRoleDTO getUserRole(SysUserDTO sysUser);
 }
