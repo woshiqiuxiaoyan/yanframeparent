@@ -88,5 +88,10 @@
     </select>
 
 
+    <delete id="delSysGoodsInfoById">
+        DELETE FROM  sys_goods_info
+        WHERE id= #{id}
+    </delete>
+
 
 </mapper>

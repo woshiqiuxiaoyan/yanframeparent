@@ -19,6 +19,10 @@ public class Constant {
 
     public static String INEXPAGE = "admin/index";//主页
 
+    public static String PIC_URL_GOODS_UPLOAD = "uploadimages/GoodsInfoUpload/";//图片上传保存的真正路径
+
+    public static String yanFrameParent_url="http://localhost:8080/";
+
 
     public interface Views {
         public static String createCard = "admin/CustomManager/createcustomcard";//开卡页面

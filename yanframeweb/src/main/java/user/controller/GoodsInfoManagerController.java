@@ -79,7 +79,7 @@ public class GoodsInfoManagerController extends BaseController {
 
     @RequestMapping("/getGoodsInfoList")
     @ResponseBody
-    public ResultVoPage getGoodsInfoList(@CurrentUser SysUserDTO sysUser, SysGoodsInfoDTO sysGoodsInfoDTO) {
+    public ResultVoPage getGoodsInfoList(@CurrentUser SysUserDTO sysUser, SysGoodsInfoDTO sysGoodsInfoDTO,HttpServletRequest request) {
 
 
         try {
@@ -100,6 +100,30 @@ public class GoodsInfoManagerController extends BaseController {
 
 
 
+    /**
+     * 删除产品
+     *
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+    @RequestMapping("/delGoods")
+    @ResponseBody
+    public ResultVo delGoods(SysGoodsInfoDTO sysGoodsInfoDTO) {
+
+        try {
+            int effect = goodsInfoService.delGoods(sysGoodsInfoDTO);
+            if (effect >= 0) {
+                return ResultVo.createCustomSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        } catch (CustomException e) {
+            log.error("产品删除失败:" + e.getMessage());
+            return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("产品删除失败:" + e.getMessage());
+        }
+
+        return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+    }
 
 
     /**

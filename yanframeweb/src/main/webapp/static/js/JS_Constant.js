@@ -2,6 +2,8 @@ var static_path = "http://localhost:8080/";
 var menu_code_ctuserList = "22";  //会员列表 权限id
 var index_page_main_content=static_path+"IndexController/index";//首页
 var ctuserListurl = static_path+"CtuManagerController/ctuserList/"+menu_code_ctuserList//会员列表url
+var menu_cod_goodsInfo="32";//产品列表 权限id
+var goodsInfoListurl = static_path+"GoodsInfoManagerController/goodsInfoList/"+menu_cod_goodsInfo//产品列表url
 
 
 //表单转对像

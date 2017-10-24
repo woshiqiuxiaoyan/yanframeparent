@@ -48,6 +48,8 @@ public class ErrorCode {
         String GOODS_NAME_FAIL="商品名称无效";
         String GOODS_INSTOCK_PRICE_FAIL="进货价格有误";
         String CREATE_GOODSINFO_FAIL="创建产品失败";
+
+
     }
 
 

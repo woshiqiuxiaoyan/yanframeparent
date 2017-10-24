@@ -76,10 +76,41 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
             throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
         }
 
-        Page<SysGoodsInfoDTO> list =  PageHelper.startPage(sysGoodsInfoDTO.getPage(), sysGoodsInfoDTO.getLimit())
+        Page<SysGoodsInfoDTO> list = PageHelper.startPage(sysGoodsInfoDTO.getPage(), sysGoodsInfoDTO.getLimit())
                 .doSelectPage(() -> goodsInfoMapper.queryByCondition(sysGoodsInfoDTO));
 
+
+        list.stream().map(string -> {
+            if (StringUtils.isBlank(string.getGoods_img_url())) {
+                string.setImg_url_show(new String[]{"#"});
+            } else {
+
+                String img_url_show[] =null;
+                List tmpList = Stream.of(string.getGoods_img_url().split(",")).filter(good_img_url_tmp -> StringUtils.isNotBlank(good_img_url_tmp)).map(
+                        good_img_url_tmp -> {
+                            return Constant.yanFrameParent_url + Constant.PIC_URL_GOODS_UPLOAD + good_img_url_tmp;
+                        }
+                ).collect(Collectors.toList());
+
+                img_url_show = new String[tmpList.size()];
+                tmpList.toArray(img_url_show);
+//                Stream.of(img_url_show).forEach(System.out::println);
+                string.setImg_url_show(img_url_show);
+            }
+            return string;
+        }).collect(Collectors.toList());
+
+        list.forEach(System.out::println);
+
         return list;
+    }
+
+    @Override
+    public int delGoods(SysGoodsInfoDTO sysGoodsInfoDTO) {
+        if(null==sysGoodsInfoDTO.getId()){
+            throw new CustomException(ErrorCode.sys_error.PARAM_FAIL);
+        }
+        return goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
     }
 
     /**
@@ -116,14 +147,15 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
 
         String[] tmpPaths = sysGoodsInfoDTO.getGoods_img_url().split(",");
 
-        String tmpPre =sysGoodsInfoDTO.getRequestPath() + "uploadimages/" + sysGoodsInfoDTO.getCreate_by_user_id() + "/";
-        String realPre=sysGoodsInfoDTO.getRequestPath() + "uploadimages/GoodsInfoUpload";
+        String tmpPre = sysGoodsInfoDTO.getRequestPath() + "uploadimages/" + sysGoodsInfoDTO.getCreate_by_user_id() + "/";
+        String realPre = sysGoodsInfoDTO.getRequestPath() + Constant.PIC_URL_GOODS_UPLOAD;
 
-       Stream.of(tmpPaths).filter((a) -> StringUtils.isNotBlank(a)).forEach((imgName)->{
-           CommonTools.copyFile(tmpPre+imgName , realPre,imgName);});
+        Stream.of(tmpPaths).filter((a) -> StringUtils.isNotBlank(a)).forEach((imgName) -> {
+            CommonTools.copyFile(tmpPre + imgName, realPre, imgName);
+        });
 
-       //清空临时文件
-       CommonTools.deleteDirectory(tmpPre);
+        //清空临时文件
+        CommonTools.deleteDirectory(tmpPre);
 
 
     }

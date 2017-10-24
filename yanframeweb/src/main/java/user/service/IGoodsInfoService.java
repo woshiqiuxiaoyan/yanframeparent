@@ -24,4 +24,11 @@ public interface IGoodsInfoService {
      * @return
      */
     Page<SysGoodsInfoDTO> getGoodsInfoList(SysUserDTO sysUser, SysGoodsInfoDTO sysGoodsInfoDTO);
+
+    /**
+     * 删除产品
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+    int delGoods(SysGoodsInfoDTO sysGoodsInfoDTO);
 }

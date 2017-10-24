@@ -21,4 +21,11 @@ public interface GoodsInfoMapper {
      * @param sysGoodsInfoDTO
      */
     List<SysGoodsInfoDTO> queryByCondition(SysGoodsInfoDTO sysGoodsInfoDTO);
+
+    /**
+     * 通过id删除产品
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+    int delSysGoodsInfoById(SysGoodsInfoDTO sysGoodsInfoDTO);
 }

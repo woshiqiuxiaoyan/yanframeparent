@@ -14,6 +14,7 @@
 
     <!--静态资源解析-->
     <mvc:resources mapping="/static/js/**" location="/static/js/" />
+    <mvc:resources mapping="/uploadimages/**" location="/uploadimages/" />
     <mvc:resources mapping="/static/layui/**" location="/static/layui/" />
     <mvc:resources mapping="/static/css/**" location="/static/css/" />
     <mvc:resources mapping="/static/images/**" location="/static/images/" />

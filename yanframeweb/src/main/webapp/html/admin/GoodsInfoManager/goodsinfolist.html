@@ -2,6 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <body th:fragment="maincontent">
+<style>
+    .layui-table    tr  td {height: 100px !important;}
+
+    .layui-table[lay-size=lg]  td .layui-table-cell{
+        height: 100px !important;
+        line-height: 100px !important;
+    }
+
+
+    .layui-table  .layui-upload-list{
+        margin:0;
+    }
+
+</style>
+
 
     <form class="layui-form search_goodsinfo_form" method="post" th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
         <div class="layui-form-item">
@@ -35,7 +50,7 @@
 
             <div class="layui-inline">
 
-                <label class="layui-form-label">开卡时间</label>
+                <label class="layui-form-label">创建时间</label>
                 <div class="layui-input-inline">
                     <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
                 </div>
@@ -49,10 +64,10 @@
 
 
 <table class="layui-table"
-       lay-data="{height:730, url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="customcardlist" lay-size="lg">
-    <thead>
-    <tr>
+       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="goodsinfolist" lay-size="lg"  >
+    <thead >
+    <tr  >
         <th lay-data="{ field:'id',checkbox:true, width:80}"></th>
         <th lay-data="{field:'goods_id', width:130}">商品货号</th>
         <th lay-data="{field:'goods_name', width:150}">商品名称</th>
@@ -60,13 +75,16 @@
         <th lay-data="{field:'goods_sale_price',align:'center', width:80, sort: true}">售价</th>
         <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
         <th lay-data="{width:100, templet:'#templetgoods_size'}">商品尺码</th>
-        <th lay-data="{width:200, align:'center',templet:'#templetcreate_time'}">创建时间</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>
         <th lay-data="{field:'user_name',  width:200,align:'center' }">创建者</th>
-        <th lay-data="{fixed:'left', width:400, align:'center',templet:'#templetimgurl'}">图片</th>
+        <th lay-data="{fixed: 'right',width:400, align:'center',templet:'#templetimgurl'}" >图片</th>
         <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
     </tr>
     </thead>
 </table>
+
+
+
 
 
 <script type="text/html" id="barDemo">
@@ -105,15 +123,17 @@
 </script>
 
 
+
+
 <script type="text/html" id="templetimgurl">
-    <div class="layui-table-cell laytable-cell-1-create_time">
-        <div class="layui-carousel" id="goods_info_carousel">
-            <div carousel-item>
-                <div><img src="http://s10.mogucdn.com/mlcdn/c45406/170710_3a6jf5f0j24bgcc3i3f36el2a2ckj_778x440.jpg_900x9999.v1c7E.70.webp"></div>
-                <div><img src="http://s10.mogucdn.com/mlcdn/c45406/170714_5e8867724c4bfae8ka6l3a5274h0h_778x440.jpg_900x9999.v1c7E.70.webp"></div>
-            </div>
+    <div class="layui-table-cell laytable-cell-1-create_time"  style="height: 100px;">
+         <div class="layui-upload-list"  >
+                {{#  layui.each(d.img_url_show, function(index, item){ }}
+                     <img    src="{{ item }}">
+                {{#  }); }}
         </div>
     </div>
+
 </script>
 
 
@@ -149,7 +169,19 @@
         return fmt;
     }
 
+    var carouseltest=null;
     function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+        console.log($(".table-cell"));
+
+        $.each($(".table-cell"), function(name, value) {
+        /*    this;      //this指向当前属性的值
+            name;      //name表示Object当前属性的名称
+            value;     //value表示Object当前属性的值*/
+            console.log(value);
+        });
+
+//        $(".table-cell").style.height='100px';
 
         //查询按钮
         $(".search_btn").on('click',function () {
@@ -164,12 +196,13 @@
         laydate_manager(laydate);
         table_manger(table,layer,laydate,layform);
 
-        carousel_manager(carousel);
+        carouseltest = carousel
+//        carousel_manager(carousel);
     }
 
     function carousel_manager(carousel) {
         carousel.render({
-            elem: '#goods_info_carousel'
+            elem: '#test1'
             ,width: '100%'
             , interval: 5000
         });
@@ -188,19 +221,19 @@
 
     function table_manger(table,layer,laydate,layform){
         //监听工具条
-        table.on('tool(customcardlist)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        table.on('tool(goodsinfolist)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'detail' || layEvent === 'edit') { //查看
                 var othis = $(this), method = layEvent;
-                active[method] ? active[method].call(data) : '';
+                goodsinfoactive[method] ? goodsinfoactive[method].call(data) : '';
             } else if (layEvent === 'del'){//删除
                 layer.confirm('真的删除行么', function (index) {
 
                     //更新url
-                    var posturl  = static_path+"CtuManagerController/delCtuser";
+                    var posturl  = static_path+"GoodsInfoManagerController/delGoods";
 
                     var objTmp = {id:obj.data.id};
                     $.post(posturl, objTmp, function (result) {
@@ -222,43 +255,51 @@
 
 
         //触发事件
-        var active = {
+        var goodsinfoactive = {
             detail: function(obj,tmpdata){
-                console.log( this.born_day);
+                console.log( this.img_url_show);
+                var tmpdataimg= '';
+                if(this.img_url_show!=null&&this.img_url_show!=undefined&&this.img_url_show.length>0&&this.img_url_show[0]!='#'){
+                    tmpdataimg= '<div class="layui-carousel" id="test1">\n' +
+                        '  <div carousel-item>\n';
+                    for(var i=0;i<this.img_url_show.length;i++){
+                        tmpdataimg +=   '    <div>  <img style="width:100%;height:100%;"   src="'+this.img_url_show[i]+'"></div>\n' ;
+                    }
+                    tmpdataimg+='  </div>\n' +
+                        '</div>';
+                }
+
 
                 var contenttmp = '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'
-                    +'ID     :'+this.id +'<br>'
-                    +'真实姓名:'+this.real_name +'<br>'
-                    +'手机号码:'+this.mobile_phone +'<br>'
-                    +'卡号    :'+this.card_no +'<br>'
-                    +'出生日期 :'+Format(this.born_day,"yyyy-M-d") +'<br>'
-                    +'性别    :'+this.sex +'<br>'
-                    +'身份证   :'+this.id_card_number +'<br>'
-                    +'邮箱     :'+this.email+'<br>'
-                    +'地址     :'+this.address+'<br>'
-                    +'经办人   :'+this.operatorName+'<br>'
-                    +'推荐人卡号:'+this.referee_card_no+'<br>'
-                    +'推荐人:'+this.referee+'<br>'
-                    +'积分    :'+this.accumulate_integral+'<br>'
-                    +'所属店长 :'+this.shop_keeper+'<br>'
-                    +'头像    :'+this.head_url+'<br>'
+                    +'商品货号:'+this.goods_id +'<br>'
+                    +'商品名称:'+this.goods_name +'<br>'
+                    +'进货价格    :'+this.goods_instock_price +'<br>'
+                    +'售价   :'+this.goods_sale_price +'<br>'
+                    +'商品颜色     :'+this.goods_color+'<br>'
+                    +'商品尺码     :'+this.goods_size+'<br>'
+                    +'创建人  :'+this.user_name+'<br>'
                     +'备注    :'+this.remark+'<br>'
-                    +'创建时间 :'+this.create_time+'<br>';
+//                    +'图片    :'+this.img_url_show+'<br>'
+                    +'创建时间 :'+Format(this.creat_time,"yyyy-M-d")+'<br>'
+                    +tmpdataimg;
+
 
 
                 //示范一个公告层
                 layer.open({
                     type: 1
+                    ,offset: '100px'
                     ,title: false //不显示标题栏
                     ,closeBtn: false
                     ,area: '300px;'
                     ,shade: 0.8
                     ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                    ,btn: ['o 了']
+                    ,btn: ['看完了']
                     ,btnAlign: 'c'
                     ,moveType: 1 //拖拽模式，0或者1
                     ,content: contenttmp
                     ,success: function(layero){
+                        carousel_manager(carouseltest);
                         console.log(layero);
                     }
                 });
