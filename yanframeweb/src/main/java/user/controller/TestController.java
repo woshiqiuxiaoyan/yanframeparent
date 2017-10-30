@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by t on 2017/8/16.
@@ -394,5 +396,15 @@ public class TestController extends BaseController {
         ModelAndView modelAndView =new ModelAndView("admin/index");
         modelAndView.addObject("name","123");
         return modelAndView;
+    }
+
+
+
+    @RequestMapping("/hello/{data}")
+    @ResponseBody
+    public String helloTest(@PathVariable("data") String data ){
+        StringBuilder aa =new StringBuilder("傻逼输入了：");
+        aa = aa.append(data);
+        return aa.toString();
     }
 }

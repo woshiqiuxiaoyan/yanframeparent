@@ -158,6 +158,35 @@ public class GoodsInfoManagerController extends BaseController {
     }
 
     /**
+     * 产品修改
+     * @Author qxy
+     * @Date: 2017/10/30 13:15
+     */
+    @RequestMapping("/upateGoodsInfo")
+    @ResponseBody
+    public ResultVo updateGoodsInfo(@CurrentUser SysUserDTO sysUserDTO,SysGoodsInfoDTO sysGoodsInfoDTO){
+        log.info(sysGoodsInfoDTO.toString());
+
+        try {
+
+            int effect = goodsInfoService.updateGoodsInfo(sysUserDTO, sysGoodsInfoDTO);
+
+            if(effect>0){
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,null);
+            }
+        }catch (CustomException e){
+            log.error("产品更新失败："+e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }catch (Exception e) {
+            e.printStackTrace();
+            log.error("产品更新失败："+e.getMessage());
+        }
+
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
+
+    /**
      * 工具类
      * 图片上传到临时目录
      *

@@ -93,5 +93,17 @@
         WHERE id= #{id}
     </delete>
 
+    <update id="updateGoodsInfoById" parameterType="sysGoodsInfoDTO">
+        UPDATE sys_goods_info
+        SET goods_name = #{goods_name},
+         goods_instock_price = #{goods_instock_price},
+         goods_sale_price = #{goods_sale_price},
+         goods_color = #{goods_color},
+         goods_size = #{goods_size},
+         remark = #{remark},
+         update_by_user_id = #{update_by_user_id}
+        WHERE
+            id = #{id}
+    </update>
 
 </mapper>

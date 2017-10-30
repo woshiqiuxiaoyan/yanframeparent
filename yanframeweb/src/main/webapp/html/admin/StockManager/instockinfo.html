@@ -1,0 +1,202 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<style>
+    .layui-table tr td {
+        height: 100px !important;
+    }
+
+    .layui-table[lay-size=sm] td .layui-table-cell {
+        height: 100px !important;
+        line-height: 100px !important;
+    }
+
+    .layui-table .layui-upload-list {
+        margin: 0;
+    }
+
+    .layui-table-view {
+        width: 49% !important;
+        font-size: small;
+        float:left;
+        margin:2px;
+    }
+
+    .layui-table-view:nth-child(2) {
+        width: 90% !important;
+
+    }
+
+    .layui-size{
+        padding:0 !important;
+        text-align:center;
+    }
+</style>
+
+<form class="layui-form search_goodsinfo_form" method="post" th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label" style="text-align:center;" >货号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_id"   autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">商品颜色</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="goods_color"   autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label" style="text-align:center;" >商品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_name"   autocomplete="off" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">尺码</label>
+            <div class="layui-input-inline">
+                <select name="goods_size">
+                    <option th:each="goodsize : ${GoodsSizeBound}"  th:value="${goodsize.value}" th:text="${goodsize.name}" selected></option>
+                </select>
+            </div>
+
+            <div class="layui-inline" style="float:right;">
+                <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
+            </div>
+            <label class="layui-form-label" style="text-align:center;">~</label>
+            <div class="layui-input-inline">
+                <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="layui-table"
+       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="goodsinfolist" lay-size="sm"  >
+    <thead>
+    <tr>
+        <th lay-data="{field:'goods_name', width:100}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
+        <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
+        <th lay-data="{width:80, templet:'#templetgoods_size'}">商品尺码</th>
+        <th lay-data="{width:180, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>
+        <th lay-data="{width:250, align:'center',templet:'#templetimgurl'}" >图片</th>
+    </tr>
+    </thead>
+</table>
+
+
+<!--尺码视图-->
+<script type="text/html" id="templetgoods_size">
+    <!--6 无 ,0 S  ,1 M ,2 L,3 xl,4 xxl,5 xxxl '-->
+    {{#  if(d.goods_size == 6){ }}
+    <div class="layui-table-cell  layui-size">无码</div>
+    {{#  } else if(d.goods_size == 5){ }}
+    <div class="layui-table-cell  layui-size">XXXL</div>
+    {{#  } else if(d.goods_size == 4){ }}
+    <div class="layui-table-cell  layui-size">XXL</div>
+    {{#  } else if(d.goods_size == 3){ }}
+    <div class="layui-table-cell  layui-size">XL</div>
+    {{#  } else if(d.goods_size == 2){ }}
+    <div class="layui-table-cell  layui-size">L</div>
+    {{#  } else if(d.goods_size == 1){ }}
+    <div class="layui-table-cell  layui-size">M</div>
+    {{#  } else if(d.goods_size == 0){ }}
+    <div class="layui-table-cell  layui-size">S</div>
+    {{#  } }}
+</script>
+
+
+<!--图片视图-->
+<script type="text/html" id="templetimgurl">
+    <div class="layui-table-cell "  style="height: 100px;padding:0;">
+        <div class="layui-upload-list"  >
+            {{#  layui.each(d.img_url_show, function(index, item){ }}
+            <img    src="{{ item }}">
+            {{#  }); }}
+        </div>
+    </div>
+</script>
+
+<!--创建时间视图-->
+<script type="text/html" id="templetcreate_time">
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.creat_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+
+<table class="layui-table"
+       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdInStockTable',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="goodsinfolist" lay-size="sm" style="float:left;">
+    <thead>
+    <tr>
+    <tr>
+        <th lay-data="{field:'goods_name', width:100}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
+        <th lay-data="{field:'goods_color', width:120 }">商品颜色</th>
+        <th lay-data="{width:100, templet:'#templetgoods_size'}">商品尺码</th>
+        <th lay-data="{fixed: 'right',width:250, align:'center',templet:'#templetimgurl'}" >图片</th>
+    </tr>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+
+
+<script>
+
+    function Format(datetime, fmt) {
+        if (datetime == undefined) {
+            return "无";
+        }
+
+        if (parseInt(datetime) == datetime) {
+            if (datetime.length == 10) {
+                datetime = parseInt(datetime) * 1000;
+            } else if (datetime.length == 13) {
+                datetime = parseInt(datetime);
+            }
+        }
+        datetime = new Date(datetime);
+        var o = {
+            "M+": datetime.getMonth() + 1,                 //月份
+            "d+": datetime.getDate(),                    //日
+            "h+": datetime.getHours(),                   //小时
+            "m+": datetime.getMinutes(),                 //分
+            "s+": datetime.getSeconds(),                 //秒
+            "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
+            "S": datetime.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+    }
+</script>
+</body>
+</html>

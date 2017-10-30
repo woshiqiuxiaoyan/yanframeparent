@@ -6,25 +6,14 @@ import constant.Constant;
 import constant.ErrorCode;
 import exception.CustomException;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import user.dto.CtUserInfoDTO;
 import user.dto.SysGoodsInfoDTO;
-import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
-import user.mapper.CtUserInfoMapper;
 import user.mapper.GoodsInfoMapper;
-import user.service.IAccountService;
-import user.service.ICtUserInfoService;
 import user.service.IGoodsInfoService;
 import utils.CommonTools;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -111,6 +100,38 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
             throw new CustomException(ErrorCode.sys_error.PARAM_FAIL);
         }
         return goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
+    }
+
+    /**
+     * 更新产品 信息
+     *
+     * @param sysUserDTO
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+
+    @Override
+    public int updateGoodsInfo(SysUserDTO sysUserDTO, SysGoodsInfoDTO sysGoodsInfoDTO) {
+
+        if (null == sysUserDTO) {
+            throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
+        }
+
+        if (StringUtils.isBlank(sysGoodsInfoDTO.getGoods_id())) {
+            throw new CustomException(ErrorCode.create_GoodsInfo.GOODS_ID_FAIL);
+        }
+
+        if (StringUtils.isBlank(sysGoodsInfoDTO.getGoods_name())) {
+            throw new CustomException(ErrorCode.create_GoodsInfo.GOODS_NAME_FAIL);
+        }
+
+        if (sysGoodsInfoDTO.getGoods_instock_price() <= new Double(0)) {
+            throw new CustomException(ErrorCode.create_GoodsInfo.GOODS_INSTOCK_PRICE_FAIL);
+        }
+
+        sysGoodsInfoDTO.setUpdate_by_user_id(sysUserDTO.getUser_id());
+
+        return goodsInfoMapper.updateGoodsInfoById(sysGoodsInfoDTO);
     }
 
     /**

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.SysStockMapper">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="user.dto.SysStockDTO">
+        <result column="id" property="id"/>
+        <result column="goods_id" property="goods_id"/>
+        <result column="total" property="total"/>
+        <result column="user_id" property="user_id"/>
+        <result column="create_time" property="create_time"/>
+        <result column="update_time" property="update_time"/>
+        <result column="remark" property="remark"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- sys_stock table all fields -->
+    <sql id="Base_Column_List">
+	   id,goods_id,total,user_id,create_time,update_time,remark,deleted
+    </sql>
+
+
+    <!-- 插入记录 -->
+    <insert id="insertSysStock" parameterType="sysStockDTO">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into sys_stock(goods_id,total,user_id,create_time,update_time,remark,deleted)
+        values( #{goods_id},#{total},#{user_id},SYSDATE(),SYSDATE(),#{remark},1)
+    </insert>
+
+
+</mapper>   

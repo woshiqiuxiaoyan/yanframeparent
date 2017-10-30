@@ -1,0 +1,1 @@
+package pojo;import lombok.Data;@Datapublic class SysStockLog {    private java.lang.Integer id;//    private java.lang.Integer stock_id;//   库存id    private java.lang.Integer type;//   1入库 2 出库 3 新增 4删除    private java.lang.Integer operator_num;//   操作数量    private java.lang.Integer user_id;//   操作人员    private java.util.Date create_time;//}

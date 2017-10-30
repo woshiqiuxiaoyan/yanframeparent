@@ -31,4 +31,13 @@ public interface IGoodsInfoService {
      * @return
      */
     int delGoods(SysGoodsInfoDTO sysGoodsInfoDTO);
+
+    /**
+     * 更新产品
+     *
+     * @param sysUserDTO
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+    int updateGoodsInfo(SysUserDTO sysUserDTO, SysGoodsInfoDTO sysGoodsInfoDTO);
 }

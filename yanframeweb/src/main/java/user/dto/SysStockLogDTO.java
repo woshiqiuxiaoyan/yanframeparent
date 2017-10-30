@@ -1,0 +1,1 @@
+package user.dto;import lombok.Data;import pojo.SysStockLog;@Datapublic class SysStockLogDTO extends SysStockLog{}

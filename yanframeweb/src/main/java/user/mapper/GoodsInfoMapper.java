@@ -28,4 +28,11 @@ public interface GoodsInfoMapper {
      * @return
      */
     int delSysGoodsInfoById(SysGoodsInfoDTO sysGoodsInfoDTO);
+
+    /**
+     * 更新产品
+     * @param sysGoodsInfoDTO
+     * @return
+     */
+    int updateGoodsInfoById(SysGoodsInfoDTO sysGoodsInfoDTO);
 }
