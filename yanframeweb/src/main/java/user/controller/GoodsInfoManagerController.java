@@ -108,9 +108,10 @@ public class GoodsInfoManagerController extends BaseController {
      */
     @RequestMapping("/delGoods")
     @ResponseBody
-    public ResultVo delGoods(SysGoodsInfoDTO sysGoodsInfoDTO) {
+    public ResultVo delGoods(SysGoodsInfoDTO sysGoodsInfoDTO,HttpServletRequest request) {
 
         try {
+
             int effect = goodsInfoService.delGoods(sysGoodsInfoDTO);
             if (effect >= 0) {
                 return ResultVo.createCustomSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
@@ -202,8 +203,7 @@ public class GoodsInfoManagerController extends BaseController {
         String real_name = System.currentTimeMillis() + "_" + originFileName;//上传到服务器的真正的图片名字
 
         //前半部分路径
-        String leftPath = request.getRealPath("/uploadimages/"+sysUserDTO.getUser_id());
-
+        String leftPath = Constant.yanFrameParent_real_url+"uploadimages/"+sysUserDTO.getUser_id();
 
         File file = new File(leftPath, real_name);
 

@@ -6,6 +6,8 @@ import constant.Constant;
 import constant.ErrorCode;
 import exception.CustomException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import user.dto.SysGoodsInfoDTO;
@@ -32,6 +34,9 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
 
     @Autowired
     private GoodsInfoMapper goodsInfoMapper;
+
+
+    private Logger log = LoggerFactory.getLogger(GoodsInfoServiceImpl.class);
 
 
     @Override
@@ -77,13 +82,12 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
                 String img_url_show[] =null;
                 List tmpList = Stream.of(string.getGoods_img_url().split(",")).filter(good_img_url_tmp -> StringUtils.isNotBlank(good_img_url_tmp)).map(
                         good_img_url_tmp -> {
-                            return Constant.yanFrameParent_url + Constant.PIC_URL_GOODS_UPLOAD + good_img_url_tmp;
+                            return Constant.yanFrameParent_img_url + good_img_url_tmp;
                         }
                 ).collect(Collectors.toList());
 
                 img_url_show = new String[tmpList.size()];
                 tmpList.toArray(img_url_show);
-//                Stream.of(img_url_show).forEach(System.out::println);
                 string.setImg_url_show(img_url_show);
             }
             return string;
@@ -99,7 +103,23 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
         if(null==sysGoodsInfoDTO.getId()){
             throw new CustomException(ErrorCode.sys_error.PARAM_FAIL);
         }
-        return goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
+
+        sysGoodsInfoDTO =  goodsInfoMapper.queryById(sysGoodsInfoDTO);
+
+        if(null==sysGoodsInfoDTO){
+            throw new CustomException(ErrorCode.create_GoodsInfo.GOODSINFO_NO_EXIST);
+        }
+
+        if(StringUtils.isNotBlank(sysGoodsInfoDTO.getGoods_img_url())){
+            String imgs[] =  sysGoodsInfoDTO.getGoods_img_url().split(",");
+            Stream.of(imgs).filter((string)->StringUtils.isNotBlank(string)).forEach((tmp)->{
+                boolean delFlag =  CommonTools.deleteFile(Constant.yanFrameParent_real_img_url+tmp);
+                log.info("删除文件："+tmp+"  结果："+delFlag);
+            });
+        }
+
+        int effect =   goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
+        return effect;
     }
 
     /**
@@ -168,8 +188,8 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
 
         String[] tmpPaths = sysGoodsInfoDTO.getGoods_img_url().split(",");
 
-        String tmpPre = sysGoodsInfoDTO.getRequestPath() + "uploadimages/" + sysGoodsInfoDTO.getCreate_by_user_id() + "/";
-        String realPre = sysGoodsInfoDTO.getRequestPath() + Constant.PIC_URL_GOODS_UPLOAD;
+        String tmpPre = Constant.yanFrameParent_real_url + "uploadimages/" + sysGoodsInfoDTO.getCreate_by_user_id() + "/";
+        String realPre = Constant.yanFrameParent_real_img_url;
 
         Stream.of(tmpPaths).filter((a) -> StringUtils.isNotBlank(a)).forEach((imgName) -> {
             CommonTools.copyFile(tmpPre + imgName, realPre, imgName);

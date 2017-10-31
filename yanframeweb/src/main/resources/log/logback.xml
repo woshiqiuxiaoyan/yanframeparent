@@ -65,7 +65,7 @@
     <logger name="enterUrl" level="DEBUG"/>
     <logger name="CustomSystemLog" level="DEBUG"/>
     <logger name="CustomerForAnnotationHandlerInterceptor" level="DEBUG"/>
-
+    <logger name="SpringIniterListener" level="INFO" />
 
 
     <root level="DEBUG">

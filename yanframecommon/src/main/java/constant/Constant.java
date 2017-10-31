@@ -21,7 +21,13 @@ public class Constant {
 
     public static String PIC_URL_GOODS_UPLOAD = "uploadimages/GoodsInfoUpload/";//图片上传保存的真正路径
 
-    public static String yanFrameParent_url="http://localhost:8080/";
+    public static String yanFrameParent_content_url="/"; //全局路径
+
+    public static String yanFrameParent_real_url="/"; //全局真正路径
+
+    public static String yanFrameParent_img_url="";//上传图片路径
+
+    public static String yanFrameParent_real_img_url="";//上传图片真正路径
 
 
     public interface Views {

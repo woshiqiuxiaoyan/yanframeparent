@@ -12,25 +12,31 @@
         line-height: 100px !important;
     }
 
-    .layui-table .layui-upload-list {
+    .layui-table  {
         margin: 0;
     }
 
-    .layui-table-view {
-        width: 49% !important;
-        font-size: small;
-        float:left;
-        margin:2px;
+    .layui-table-view .layui-table th{
+        min-height:20px !important;
+        padding:5px auto !important;
     }
 
-    .layui-table-view:nth-child(2) {
-        width: 90% !important;
-
+    .layui-table-view {
+        width: 44% !important;
+        font-size: small;
+        float:left;
+        margin-right:1%;
     }
 
     .layui-size{
         padding:0 !important;
         text-align:center;
+    }
+
+    .minestocktable{
+        float:left;
+        width:53%;
+        /*margin-left:10px;*/
     }
 </style>
 
@@ -83,11 +89,13 @@
        lay-filter="goodsinfolist" lay-size="sm"  >
     <thead>
     <tr>
+        <th lay-data="{field:'goods_id', width:100}">商品货号</th>
         <th lay-data="{field:'goods_name', width:100}">商品名称</th>
         <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
         <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
         <th lay-data="{width:80, templet:'#templetgoods_size'}">商品尺码</th>
-        <th lay-data="{width:180, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>
+        <!--<th lay-data="{width:180, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>-->
+
         <th lay-data="{width:250, align:'center',templet:'#templetimgurl'}" >图片</th>
     </tr>
     </thead>
@@ -132,24 +140,12 @@
 </script>
 
 
-<table class="layui-table"
-       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdInStockTable',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="goodsinfolist" lay-size="sm" style="float:left;">
-    <thead>
-    <tr>
-    <tr>
-        <th lay-data="{field:'goods_name', width:100}">商品名称</th>
-        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
-        <th lay-data="{field:'goods_color', width:120 }">商品颜色</th>
-        <th lay-data="{width:100, templet:'#templetgoods_size'}">商品尺码</th>
-        <th lay-data="{fixed: 'right',width:250, align:'center',templet:'#templetimgurl'}" >图片</th>
-    </tr>
-    </tr>
-    </thead>
+
+<table class="layui-table minestocktable" id="inStockTableId"  lay-size="sm" >
 </table>
 
 
-<script type="text/html" id="barDemo">
+<script type="text/html" id="instockinfotabletoolbar">
     <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
@@ -160,6 +156,11 @@
     {{#  } }}
 </script>
 
+
+
+
+
+<script th:src="@{/static/js/instockinfo.js}"></script>
 
 <script>
 
@@ -195,8 +196,9 @@
 
 
     function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
-
+        minestocktableManager(table)
     }
+
 </script>
 </body>
 </html>

@@ -14,7 +14,6 @@
         <!-- 过虑器链定义，从上向下顺序执行，一般将/**放在最下边 -->
         <property name="filterChainDefinitions">
             <value>
-                /TestController/** = anon
                 /test/** = anon
                 /uploadimages/**= anon
                 /refuse.jsp = anon

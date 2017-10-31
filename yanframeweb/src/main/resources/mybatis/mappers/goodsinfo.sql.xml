@@ -41,6 +41,18 @@
 
     </insert>
 
+    <select id="queryById" parameterType="sysGoodsInfoDTO" resultType="sysGoodsInfoDTO">
+        SELECT
+        *
+        FROM
+        sys_goods_info sysgoodsinfo
+        WHERE
+        sysgoodsinfo.deleted = 1
+        AND sysgoodsinfo.id like CONCAT('%',#{id},'%')
+
+    </select>
+
+
     <select id="queryByCondition" parameterType="sysGoodsInfoDTO" resultType="sysGoodsInfoDTO">
         SELECT
             id,

@@ -90,6 +90,13 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
+    <!--自己定义监听器-->
+    <listener>
+        <listener-class>SpringIniterListener</listener-class>
+    </listener>
+
+
     <!--init-param 和 context-param 的区别，从名字上就可以看得出，后者是相对于整个web应用的，而前者是针对单个servlet的。-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -107,5 +114,8 @@
     <listener>
         <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
     </listener>
+
+
+
 
 </web-app>
