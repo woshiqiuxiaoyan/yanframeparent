@@ -10,6 +10,18 @@
     .layui-table[lay-size=sm] td .layui-table-cell {
         height: 100px !important;
         line-height: 100px !important;
+        padding:0;
+    }
+
+
+    .layui-table[lay-size=sm] td .layui-table-cell .layui-upload-list {
+        padding:0;
+        margin:0;
+    }
+
+
+    .layui-table[lay-size=sm] th .layui-table-cell   {
+        padding:0;
     }
 
     .layui-table  {
@@ -22,7 +34,7 @@
     }
 
     .layui-table-view {
-        width: 44% !important;
+        width: 48% !important;
         font-size: small;
         float:left;
         margin-right:1%;
@@ -34,28 +46,34 @@
     }
 
     .minestocktable{
-        float:left;
-        width:53%;
-        /*margin-left:10px;*/
+        float:right;
+        width:45%;
+    }
+
+    .layui-table-view .layui-form-checkbox[lay-skin=primary] i{
+        margin:0 25px;
+    }
+    .search_goodsinfo_form *{
+        font-size:small;
     }
 </style>
 
-<form class="layui-form search_goodsinfo_form" method="post" th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+<form class="layui-form search_goodsinfo_form" method="post"  th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label" style="text-align:center;" >货号</label>
             <div class="layui-input-inline">
-                <input type="text" name="goods_id"   autocomplete="off" class="layui-input">
+                <input type="text" name="goods_id"     class="layui-input">
             </div>
 
             <label class="layui-form-label">商品颜色</label>
             <div class="layui-input-inline">
-                <input type="tel" name="goods_color"   autocomplete="off" class="layui-input">
+                <input type="tel" name="goods_color"    class="layui-input">
             </div>
 
             <label class="layui-form-label" style="text-align:center;" >商品名称</label>
             <div class="layui-input-inline">
-                <input type="text" name="goods_name"   autocomplete="off" class="layui-input">
+                <input type="text" name="goods_name"   class="layui-input">
             </div>
 
             <label class="layui-form-label">尺码</label>
@@ -85,21 +103,29 @@
 </form>
 
 <table class="layui-table"
-       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="goodsinfolist" lay-size="sm"  >
+       lay-data="{width:600, height: 'full-225', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="instockGoodsInfoTableFilter" lay-size="sm"  >
     <thead>
+    <tr><th lay-data="{align:'center'}" colspan="7">选择商品添加到右边的仓库中</th></tr>
     <tr>
-        <th lay-data="{field:'goods_id', width:100}">商品货号</th>
-        <th lay-data="{field:'goods_name', width:100}">商品名称</th>
-        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
-        <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
-        <th lay-data="{width:80, templet:'#templetgoods_size'}">商品尺码</th>
-        <!--<th lay-data="{width:180, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>-->
-
-        <th lay-data="{width:250, align:'center',templet:'#templetimgurl'}" >图片</th>
+        <th lay-data="{field:'goods_id', style:'background-color: #5FB878; color: #fff;', width:100,align:'center'}">商品货号</th>
+        <th lay-data="{field:'goods_name', width:100,align:'center'}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:55}">进货价格</th>
+        <th lay-data="{field:'goods_color', width:100,align:'center' }">商品颜色</th>
+        <th lay-data="{width:50, templet:'#templetgoods_size',align:'center'}">尺码</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetimgurl'}" >图片</th>
+        <th lay-data="{fixed:'right', width:190, align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
     </tr>
     </thead>
 </table>
+
+
+
+<!--左边工具条 （商品信息）-->
+<script type="text/html" id="instockGoodsInfoTableToolBar">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="add">添加</a>
+</script>
 
 
 <!--尺码视图-->
@@ -128,7 +154,7 @@
     <div class="layui-table-cell "  style="height: 100px;padding:0;">
         <div class="layui-upload-list"  >
             {{#  layui.each(d.img_url_show, function(index, item){ }}
-            <img    src="{{ item }}">
+            <img    src="{{ item }}" onerror="this.src='/uploadimages/GoodsInfoUpload/default_pic.jpg'">
             {{#  }); }}
         </div>
     </div>
@@ -141,62 +167,92 @@
 
 
 
-<table class="layui-table minestocktable" id="inStockTableId"  lay-size="sm" >
+<table class="layui-table minestocktable" id="inStockTableId" lay-filter="inStockTableFilter"  lay-size="sm" >
 </table>
 
-
+<!--右边工具条 （添加的仓库信息）-->
 <script type="text/html" id="instockinfotabletoolbar">
     <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
-    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
-
-    <!-- 这里同样支持 laytpl 语法，如： -->
-    {{#  if(d.auth > 2){ }}
-    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
-    {{#  } }}
 </script>
 
 
 
-
-
+<script th:src="@{/static/js/goodsinfolist.js}"></script>
 <script th:src="@{/static/js/instockinfo.js}"></script>
 
 <script>
 
-    function Format(datetime, fmt) {
-        if (datetime == undefined) {
-            return "无";
-        }
+    var carouseltest=null;
 
-        if (parseInt(datetime) == datetime) {
-            if (datetime.length == 10) {
-                datetime = parseInt(datetime) * 1000;
-            } else if (datetime.length == 13) {
-                datetime = parseInt(datetime);
-            }
-        }
-        datetime = new Date(datetime);
-        var o = {
-            "M+": datetime.getMonth() + 1,                 //月份
-            "d+": datetime.getDate(),                    //日
-            "h+": datetime.getHours(),                   //小时
-            "m+": datetime.getMinutes(),                 //分
-            "s+": datetime.getSeconds(),                 //秒
-            "q+": Math.floor((datetime.getMonth() + 3) / 3), //季度
-            "S": datetime.getMilliseconds()             //毫秒
-        };
-        if (/(y+)/.test(fmt))
-            fmt = fmt.replace(RegExp.$1, (datetime.getFullYear() + "").substr(4 - RegExp.$1.length));
-        for (var k in o)
-            if (new RegExp("(" + k + ")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-        return fmt;
+    // 仓库表格数据
+    var inStockTableData=null;
+
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+        //查询按钮
+        $(".search_btn").on('click',function () {
+            table.reload('instockGoodsInfoTableId', {
+                url: '/GoodsInfoManagerController/getGoodsInfoList'
+                ,where: $(".search_goodsinfo_form").serializeObject()
+            });
+
+        });
+
+        carouseltest = carousel;//存图片
+
+        laydate_manager(laydate);
+
+        tableSetting(table,[]);//渲染右边库存的表格
+
+        table_manger(table,layer,laydate,layform);
     }
 
 
-    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
-        minestocktableManager(table)
+
+    function table_manger(table,layer,laydate,layform){
+
+
+        //监听右边工具条
+        table.on('tool(inStockTableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            instockActive[layEvent] ? instockActive[layEvent].call(data) : '';
+        });
+
+        var instockActive ={
+            detial:function (){
+
+            },
+            del:function (){
+                layer.confirm('真的删除行么', function (index) {
+                    delInstock(this);
+                    console.log( inStockTableData.config.data);
+                    layer.close(index);
+                });
+            }
+        }
+
+        //监听左边工具条
+        table.on('tool(instockGoodsInfoTableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            instockGoodsInfoactive[layEvent] ? instockGoodsInfoactive[layEvent].call(data) : '';
+        });
+
+        //触发事件
+        var instockGoodsInfoactive = {
+            detail: function(){
+                detailView.call(this);
+            }
+            ,add: function(){
+                this.table =table;
+                addInstock.call(this);
+            }
+        };
+
     }
 
 </script>

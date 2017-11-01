@@ -2,6 +2,7 @@ package user.controller;
 
 import annotation.MenuAuthory;
 import constant.Constant;
+import enums.GoodsSize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class SysStockController extends BaseController {
     @MenuAuthory
     @RequestMapping("/inStockPage/{menu_code}")
     public String inStockPage(Model model) {
-
+        model.addAttribute("GoodsSizeBound", GoodsSize.toList());
         return view(model, Constant.Views.inStockPage);
     }
 

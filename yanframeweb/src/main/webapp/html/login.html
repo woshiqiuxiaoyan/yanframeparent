@@ -19,8 +19,14 @@
         window.top.location = window.location;
     }</script>
 </head>
+<script>
+    function keyLogin(){
+        if (event.keyCode==13)  //回车键的键值为13
+            document.getElementById("loginbtnid").click(); //调用登录按钮的登录事件
+    }
 
-<body class="gray-bg">
+</script>
+<body class="gray-bg" onkeydown="keyLogin();">
 
 <div class="middle-box text-center loginscreen  animated fadeInDown">
     <div>
@@ -38,7 +44,7 @@
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="密码" required="" name="login_pass">
             </div>
-            <button type="button" class="btn btn-primary block full-width m-b loginbtn">登 录</button>
+            <button type="button" class="btn btn-primary block full-width m-b loginbtn" id="loginbtnid">登 录</button>
 
 
             <p class="text-muted text-center">
@@ -74,6 +80,7 @@
             }
             return o;
         };
+
 
         $(".loginbtn").click(function () {
             $.post($(".m-t").attr("action"), $(".m-t").serializeObject(), function (result) {
