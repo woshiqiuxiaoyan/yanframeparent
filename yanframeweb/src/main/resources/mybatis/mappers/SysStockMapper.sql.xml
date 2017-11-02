@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.SysStockMapper">
+
+
+    <select id="queryByStockRecordId" resultType="sysStockRecordDTO" >
+        SELECT
+            *
+        FROM
+            sys_stock_record t
+        WHERE
+            t.stock_record_id = #{stock_record_id}
+    </select>
+
+    <!-- 插入入库清单 -->
+    <insert id="saveSysStockRecordDTOList"   >
+
+        INSERT INTO sys_stock_record (
+            stock_record_id,
+            goods_info_id,
+            num,
+            type,
+            remark,
+            create_time,
+            create_by
+        )
+        VALUES
+        <foreach collection="sysStockRecordDTOList" index="index" item="item"   separator=","  >
+            (
+              #{item.stock_record_id}
+              ,#{item.goods_info_id}
+              ,#{item.num}
+              ,#{item.type}
+              ,#{item.remark}
+              ,SYSDATE()
+              ,#{item.create_by}
+            )
+        </foreach>
+    </insert>
+
+
+</mapper>   

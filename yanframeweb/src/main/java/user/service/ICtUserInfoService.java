@@ -5,6 +5,7 @@ package user.service;
 import com.github.pagehelper.Page;
 import exception.CustomException;
 import user.dto.CtUserInfoDTO;
+import user.dto.SysStockRecordDTO;
 import user.dto.SysUserDTO;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface ICtUserInfoService  {
      * @return
      */
     int delCtuser(CtUserInfoDTO ctUserInfoDTO);
+
+
 }

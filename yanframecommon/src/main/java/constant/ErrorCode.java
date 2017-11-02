@@ -49,7 +49,13 @@ public class ErrorCode {
         String GOODS_INSTOCK_PRICE_FAIL="进货价格有误";
         String CREATE_GOODSINFO_FAIL="创建产品失败";
         String GOODSINFO_NO_EXIST="产品不存在";
+    }
 
+    /**
+     * 库存操作
+     */
+    public static interface manager_Stock{
+        String INSTOCK_FAIL="商品入库失败";
 
     }
 

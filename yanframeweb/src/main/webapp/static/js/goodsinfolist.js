@@ -1,3 +1,5 @@
+
+var isDebugger = false;//开发者模式
 /**
  * 格式化
  * @param datetime
@@ -247,7 +249,9 @@ var detailView = function(){
         ,content: contenttmp
         ,success: function(layero){
             carousel_manager(carouseltest);
-            console.log(layero);
+            if(isDebugger){
+                console.log(layero);
+            }
         }
     });
 }

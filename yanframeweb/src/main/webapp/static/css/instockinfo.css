@@ -1,0 +1,57 @@
+.layui-table tr td {
+    height: 100px !important;
+}
+
+.layui-table[lay-size=sm] td .layui-table-cell {
+    height: 100px !important;
+    line-height: 100px !important;
+    padding:0;
+}
+
+
+.layui-table[lay-size=sm] td .layui-table-cell .layui-upload-list {
+    padding:0;
+    margin:0;
+}
+
+
+.layui-table[lay-size=sm] th .layui-table-cell   {
+    padding:0;
+}
+
+.layui-table  {
+    margin: 0;
+}
+
+.layui-table-view .layui-table th{
+    min-height:20px !important;
+    padding:5px auto !important;
+}
+
+.layui-table-view {
+    width: 48% !important;
+    font-size: small;
+    float:left;
+    margin-right:1%;
+}
+
+.layui-size{
+    padding:0 !important;
+    text-align:center;
+}
+
+.minestocktable{
+    float:right;
+    width:45%;
+}
+
+.layui-table-view .layui-form-checkbox[lay-skin=primary] i{
+    margin:0 25px;
+}
+.search_goodsinfo_form *{
+    font-size:small;
+}
+.instockbtn{
+    width:97%;
+    text-align:right;
+}

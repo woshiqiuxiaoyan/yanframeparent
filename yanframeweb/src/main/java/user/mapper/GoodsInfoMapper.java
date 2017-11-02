@@ -1,7 +1,7 @@
 package user.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import user.dto.CtUserInfoDTO;
 import user.dto.SysGoodsInfoDTO;
 
 import java.util.List;
@@ -42,4 +42,11 @@ public interface GoodsInfoMapper {
      * @return
      */
     SysGoodsInfoDTO queryById(SysGoodsInfoDTO sysGoodsInfoDTO);
+
+    /**
+     * 通过商品id查询商品信息
+     * @param idList
+     * @return
+     */
+    List<SysGoodsInfoDTO> queryByIdList(@Param("idList") List<SysGoodsInfoDTO> idList);
 }

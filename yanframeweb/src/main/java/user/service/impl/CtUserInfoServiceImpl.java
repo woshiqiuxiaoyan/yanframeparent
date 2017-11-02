@@ -11,16 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import pojo.SysRole;
 import user.dto.CtUserInfoDTO;
 import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
 import user.mapper.CtUserInfoMapper;
-import user.mapper.SysUserMapper;
 import user.service.IAccountService;
 import user.service.ICtUserInfoService;
-
-import java.util.List;
 
 /**
  * <p>Title:AccountService </p>
@@ -39,6 +35,8 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
     @Autowired
     private CtUserInfoMapper ctUserInfoMapper;
 
+
+
     /**
      * @param sysUser
      * @param ctUserInfoDTO
@@ -56,7 +54,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             throw new CustomException(ErrorCode.sys_user.CARD_NO_ERROR);
         }
 
-        if (StringUtils.isBlank( ctUserInfoDTO.getReal_name())) {
+        if (StringUtils.isBlank(ctUserInfoDTO.getReal_name())) {
             throw new CustomException(ErrorCode.create_card.REAL_NAME_ERROR);
         }
 
@@ -103,6 +101,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
     /**
      * 查询会员列表
+     *
      * @param sysUser
      * @param ctUserInfoDTO
      * @return
@@ -123,7 +122,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             ctUserInfoDTO.setShop_keeper_user_id(sysUser.getCreate_by());
         }
 
-        Page<CtUserInfoDTO> list =  PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
+        Page<CtUserInfoDTO> list = PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
                 .doSelectPage(() -> ctUserInfoMapper.queryByCondition(ctUserInfoDTO));
 
         return list;
@@ -131,7 +130,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
 
     @Override
-    public int updateCtUserInfo(SysUserDTO sysUser, CtUserInfoDTO ctUserInfoDTO) throws CustomException{
+    public int updateCtUserInfo(SysUserDTO sysUser, CtUserInfoDTO ctUserInfoDTO) throws CustomException {
 
         LoggerFactory.getLogger(this.getClass()).info("----------------更新会员---------------------");
 
@@ -150,7 +149,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
         int effect = ctUserInfoMapper.updateCtUserInfo(ctUserInfoDTO);
 
-        if(effect==0){
+        if (effect == 0) {
             throw new CustomException(ErrorCode.create_card.CARD_USER_UPDATE_FAIL);
         }
 
@@ -159,16 +158,19 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
     /**
      * 删除会员
+     *
      * @param ctUserInfoDTO
      * @return
      */
     @Override
     public int delCtuser(CtUserInfoDTO ctUserInfoDTO) {
-        if(ctUserInfoDTO.getId()==null){
+        if (ctUserInfoDTO.getId() == null) {
             throw new CustomException(ErrorCode.sys_error.PARAM_FAIL);
         }
         return ctUserInfoMapper.delCtuser(ctUserInfoDTO);
     }
+
+
 
 
     /**

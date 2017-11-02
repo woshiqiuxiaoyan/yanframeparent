@@ -1,5 +1,7 @@
 package utils;
 
+import org.joda.time.DateTime;
+
 import java.io.*;
 
 /**
@@ -119,5 +121,18 @@ public class CommonTools {
             return false;
         }
     }
+
+
+    /**
+     * 生成随机字符串
+     *
+     * @Author qxy
+     * @Date: 2017/9/1 10:35
+     */
+    public static String createRandomString() {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(16, 16);
+        return  new DateTime().toString("yymmdd") + String.valueOf(idWorker.nextId());
+    }
+
 
 }
