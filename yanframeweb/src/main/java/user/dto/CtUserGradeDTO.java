@@ -1,0 +1,1 @@
+package user.dto;import lombok.Data;import pojo.CtUserGrade;/** *  * <br> * <b>功能：</b>CtUserGradeEntity<br> * <b>作者：</b>qxy<br> * <b>日期：</b> ${date} <br> * <b>版权所有：<b>版权所有(C) 2017，芊朵恋<br> */@Datapublic class CtUserGradeDTO extends CtUserGrade{    private int page;    private int limit;}

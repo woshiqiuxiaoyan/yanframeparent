@@ -1,0 +1,39 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<style>
+
+
+</style>
+
+
+
+<table class="layui-table"
+       lay-data="{height: 'full-20',width:600, url:'/CtuManagerController/getCtUserGradeList', page:true, id:'ctusergradeListId',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="ctusergradeListFilter" lay-size="lg"  >
+    <thead >
+    <tr >
+        <th lay-data="{field:'grade_name', width:100}">会员等级</th>
+        <th lay-data="{field:'accumulate_integral', width:100}">所需积分</th>
+        <th lay-data="{field:'remark',align:'center', width:250}">等级说明</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#ctusergradebar'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="ctusergradebar">
+    <a class="layui-btn layui-btn-mini" lay-event = "add">增加</a>
+    <a class="layui-btn layui-btn-mini" lay-event = "edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event = "del">删除</a>
+</script>
+
+
+<script>
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+    }
+</script>
+</body>
+</html>

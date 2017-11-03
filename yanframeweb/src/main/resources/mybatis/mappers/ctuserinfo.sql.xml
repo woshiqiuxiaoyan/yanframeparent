@@ -147,5 +147,12 @@
     </update>
 
 
+    <!--会员等级查询-->
+    <select id="queryCtUserGradeList">
+        SELECT
+            *
+        FROM
+            ct_user_grade
+    </select>
 
 </mapper>

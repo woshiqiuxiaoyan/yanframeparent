@@ -3,6 +3,7 @@ package user.service;
 
 import com.github.pagehelper.Page;
 import exception.CustomException;
+import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
 import user.dto.SysStockRecordDTO;
 import user.dto.SysUserDTO;
@@ -56,4 +57,10 @@ public interface ICtUserInfoService {
     boolean isShopKeeper(SysUserDTO sysUser);
 
 
+    /**
+     * 查询会员等级列表
+     * @param ctUserGradeDTO
+     * @return
+     */
+    Page<CtUserGradeDTO> getCtUserGradeList(CtUserGradeDTO ctUserGradeDTO);
 }

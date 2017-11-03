@@ -1,6 +1,7 @@
 package user.mapper;
 
 import org.springframework.stereotype.Repository;
+import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
 
 import java.util.List;
@@ -44,4 +45,11 @@ public interface CtUserInfoMapper  {
      * @return
      */
     int delCtuser(CtUserInfoDTO ctUserInfoDTO);
+
+    /**
+     * 查询会员等级
+     * @param ctUserGradeDTO
+     * @return
+     */
+    List<CtUserGradeDTO> queryCtUserGradeList(CtUserGradeDTO ctUserGradeDTO);
 }

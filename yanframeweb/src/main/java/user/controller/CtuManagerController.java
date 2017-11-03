@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import system.controller.BaseController;
+import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
 import user.dto.SysUserDTO;
 import user.service.ICtUserInfoService;
@@ -51,6 +52,49 @@ public class CtuManagerController extends BaseController {
 
         return view(model, Constant.Views.createCard);
     }
+
+
+    /**
+     * 会员等级页面
+     * @param model
+     * @return
+     */
+    @MenuAuthory
+    @RequestMapping("/ctUserGrade/{menu_code}")
+    public String ctUserGrade( Model model) {
+        return view(model, Constant.Views.ctUserGrade);
+    }
+
+    /**
+     * 会员等级列表
+     * @param ctUserGradeDTO
+     * @return
+     */
+    @RequestMapping("/getCtUserGradeList")
+    @ResponseBody
+    public ResultVoPage getCtUserGradeList(CtUserGradeDTO ctUserGradeDTO) {
+        try {
+            Page<CtUserGradeDTO> ctUserInfoDTOList = ctUserInfoService.getCtUserGradeList(ctUserGradeDTO);
+
+            if (null != ctUserInfoDTOList && ctUserInfoDTOList.size() > 0) {
+                return ResultVoPage.createCustomSuccess(0, ErrorCode.sys_error.SUCCESS_MSG, ctUserInfoDTOList, ctUserInfoDTOList.getTotal());
+            }
+        } catch (CustomException e) {
+            log.error("会员等级列表查询:" + e.getMessage());
+            return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("会员等级列表查询失败:" + e.getMessage());
+        }
+
+
+        return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+    }
+
+
+
+
+
 
 
     /**

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
 import user.dto.SysRoleDTO;
 import user.dto.SysUserDTO;
@@ -184,5 +185,19 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
         return false;
 
+    }
+
+    /**
+     * 获取会员等级列表
+     * @param ctUserGradeDTO
+     * @return
+     */
+    @Override
+    public Page<CtUserGradeDTO> getCtUserGradeList(CtUserGradeDTO ctUserGradeDTO) {
+
+        Page<CtUserGradeDTO> list = PageHelper.startPage(ctUserGradeDTO.getPage(), ctUserGradeDTO.getLimit())
+                .doSelectPage(() -> ctUserInfoMapper.queryCtUserGradeList(ctUserGradeDTO));
+
+        return list;
     }
 }

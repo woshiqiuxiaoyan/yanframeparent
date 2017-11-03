@@ -32,6 +32,7 @@ public class Constant {
 
     public interface Views {
         public static String createCard = "admin/CustomManager/createcustomcard";//开卡页面
+        public static String ctUserGrade = "admin/CustomManager/ctusergrademanager";//会员等级页面
         public static String firstPage = "admin/content";//首页页面
         public static String redirectFirstPage ="redirect:index";//重定向到首页
         public static String  customList="admin/CustomManager/customcardlist";//会员列表页面
