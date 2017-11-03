@@ -38,6 +38,7 @@ public class Constant {
         public static String createGoodsInfo = "admin/GoodsInfoManager/createsgoodsinfo";//产品入录页面
         public static String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
         public static String inStockPage="admin/StockManager/instockinfo";//进货页面
+        public static String stockListPage="admin/StockManager/stocklist";//库存列表页面
 
 
     }

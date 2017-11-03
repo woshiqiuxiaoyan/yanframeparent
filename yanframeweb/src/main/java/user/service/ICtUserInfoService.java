@@ -1,7 +1,6 @@
 package user.service;
 
 
-
 import com.github.pagehelper.Page;
 import exception.CustomException;
 import user.dto.CtUserInfoDTO;
@@ -10,11 +9,12 @@ import user.dto.SysUserDTO;
 
 import java.util.List;
 
-public interface ICtUserInfoService  {
+public interface ICtUserInfoService {
 
 
     /**
      * 会员开卡
+     *
      * @param sysUser
      * @param ctUserInfoDTO
      * @return
@@ -23,6 +23,7 @@ public interface ICtUserInfoService  {
 
     /**
      * 会员列表查询
+     *
      * @param sysUser
      * @param ctUserInfoDTO
      * @return
@@ -31,6 +32,7 @@ public interface ICtUserInfoService  {
 
     /**
      * 更新会员信息
+     *
      * @param sysUser
      * @param ctUserInfoDTO
      * @return
@@ -39,10 +41,19 @@ public interface ICtUserInfoService  {
 
     /**
      * 删除会员
+     *
      * @param ctUserInfoDTO
      * @return
      */
     int delCtuser(CtUserInfoDTO ctUserInfoDTO);
+
+
+    /**
+     * 判断当前用户是不是店长或者管理员
+     * @param sysUser
+     * @return
+     */
+    boolean isShopKeeper(SysUserDTO sysUser);
 
 
 }

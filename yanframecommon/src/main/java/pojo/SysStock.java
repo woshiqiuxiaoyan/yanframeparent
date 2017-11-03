@@ -7,7 +7,7 @@ import lombok.Data;
 public class SysStock   {
 
 	private java.lang.Integer id;//   
-	private java.lang.String goods_info_id;//   商品ID(对应 sys_goods_info 的id)
+	private java.lang.Integer goods_info_id;//   商品ID(对应 sys_goods_info 的id)
 	private java.lang.Integer total;//   库存数量
 	private java.lang.Integer user_id;//   所属店铺
 	private java.util.Date create_time;//   

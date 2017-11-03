@@ -75,21 +75,8 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
 
 
         list.stream().map(string -> {
-            if (StringUtils.isBlank(string.getGoods_img_url())) {
-                string.setImg_url_show(new String[]{"#"});
-            } else {
-
-                String img_url_show[] =null;
-                List tmpList = Stream.of(string.getGoods_img_url().split(",")).filter(good_img_url_tmp -> StringUtils.isNotBlank(good_img_url_tmp)).map(
-                        good_img_url_tmp -> {
-                            return Constant.yanFrameParent_img_url + good_img_url_tmp;
-                        }
-                ).collect(Collectors.toList());
-
-                img_url_show = new String[tmpList.size()];
-                tmpList.toArray(img_url_show);
-                string.setImg_url_show(img_url_show);
-            }
+            String[] img_url_show = setImgurl(string.getGoods_img_url());
+            string.setImg_url_show(img_url_show);
             return string;
         }).collect(Collectors.toList());
 
@@ -98,27 +85,53 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
         return list;
     }
 
+    /**
+     * 设置图片全路径
+     *
+     * @param goods_img_url
+     */
+    public static String[] setImgurl(String goods_img_url) {
+
+        if (StringUtils.isBlank(goods_img_url)) {
+            return new String[]{"#"};
+        } else {
+
+            String img_url_show[] = null;
+            List tmpList = Stream.of(goods_img_url.split(",")).filter(good_img_url_tmp ->
+                    StringUtils.isNotBlank(good_img_url_tmp)).map(
+                    good_img_url_tmp -> {
+                        return Constant.yanFrameParent_img_url + good_img_url_tmp;
+                    }
+            ).collect(Collectors.toList());
+
+            img_url_show = new String[tmpList.size()];
+            tmpList.toArray(img_url_show);
+            return img_url_show;
+        }
+    }
+
+
     @Override
     public int delGoods(SysGoodsInfoDTO sysGoodsInfoDTO) {
-        if(null==sysGoodsInfoDTO.getId()){
+        if (null == sysGoodsInfoDTO.getId()) {
             throw new CustomException(ErrorCode.sys_error.PARAM_FAIL);
         }
 
-        sysGoodsInfoDTO =  goodsInfoMapper.queryById(sysGoodsInfoDTO);
+        sysGoodsInfoDTO = goodsInfoMapper.queryById(sysGoodsInfoDTO);
 
-        if(null==sysGoodsInfoDTO){
+        if (null == sysGoodsInfoDTO) {
             throw new CustomException(ErrorCode.create_GoodsInfo.GOODSINFO_NO_EXIST);
         }
 
-        if(StringUtils.isNotBlank(sysGoodsInfoDTO.getGoods_img_url())){
-            String imgs[] =  sysGoodsInfoDTO.getGoods_img_url().split(",");
-            Stream.of(imgs).filter((string)->StringUtils.isNotBlank(string)).forEach((tmp)->{
-                boolean delFlag =  CommonTools.deleteFile(Constant.yanFrameParent_real_img_url+tmp);
-                log.info("删除文件："+tmp+"  结果："+delFlag);
+        if (StringUtils.isNotBlank(sysGoodsInfoDTO.getGoods_img_url())) {
+            String imgs[] = sysGoodsInfoDTO.getGoods_img_url().split(",");
+            Stream.of(imgs).filter((string) -> StringUtils.isNotBlank(string)).forEach((tmp) -> {
+                boolean delFlag = CommonTools.deleteFile(Constant.yanFrameParent_real_img_url + tmp);
+                log.info("删除文件：" + tmp + "  结果：" + delFlag);
             });
         }
 
-        int effect =   goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
+        int effect = goodsInfoMapper.delSysGoodsInfoById(sysGoodsInfoDTO);
         return effect;
     }
 

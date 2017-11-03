@@ -56,6 +56,7 @@ public class ErrorCode {
      */
     public static interface manager_Stock{
         String INSTOCK_FAIL="商品入库失败";
+        String INSTOCK_GOODS_NUM_FAIL="入库商品数量不能为0";
 
     }
 

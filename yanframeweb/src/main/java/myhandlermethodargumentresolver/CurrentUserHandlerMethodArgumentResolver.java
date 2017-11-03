@@ -4,12 +4,14 @@ import annotation.CurrentUser;
 import constant.Constant;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import user.dto.SysUserDTO;
+import user.service.ICtUserInfoService;
 
 /**
  * <p>Title:CurrentUserHandlerMethodArgumentResolver </p>
@@ -21,6 +23,8 @@ import user.dto.SysUserDTO;
  */
 public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
+    @Autowired
+    private ICtUserInfoService ctUserInfoService;
 
     public boolean supportsParameter(MethodParameter parameter) {//有注解currentuser头部
         return parameter.hasParameterAnnotation(CurrentUser.class);
@@ -33,8 +37,20 @@ public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodAr
         if(subject==null)
             return null;
 
-        SysUserDTO sysUserDTO = (SysUserDTO) subject.getSession().getAttribute(Constant.SYSUSERDTO);
-        return sysUserDTO;
+        SysUserDTO sysUser = (SysUserDTO) subject.getSession().getAttribute(Constant.SYSUSERDTO);
+
+
+        //查询当前用店长（店铺）的会员列表
+        if (ctUserInfoService.isShopKeeper(sysUser)) {
+            //当前 店长 或者 管理员登录则 将自己设置成为会员所属店铺
+            sysUser.setShopkeeper_user_id(sysUser.getUser_id());
+            sysUser.setShopKeeper(true);
+        } else {
+            //普通员工取自己的创建者（店长）
+            sysUser.setShopkeeper_user_id(sysUser.getCreate_by());
+            sysUser.setShopKeeper(true);
+        }
+        return sysUser;
     }
 
 }

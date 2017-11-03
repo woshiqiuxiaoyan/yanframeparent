@@ -113,14 +113,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
         }
 
-        //查询当前用店长（店铺）的会员列表
-        if (isShopKeeper(sysUser)) {
-            //当前 店长 或者 管理员登录则 将自己设置成为会员所属店铺
-            ctUserInfoDTO.setShop_keeper_user_id(sysUser.getUser_id());
-        } else {
-            //普通员工取自己的创建者（店长）
-            ctUserInfoDTO.setShop_keeper_user_id(sysUser.getCreate_by());
-        }
+        ctUserInfoDTO.setShop_keeper_user_id(sysUser.getShopkeeper_user_id());
 
         Page<CtUserInfoDTO> list = PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
                 .doSelectPage(() -> ctUserInfoMapper.queryByCondition(ctUserInfoDTO));
