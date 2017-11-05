@@ -56,55 +56,55 @@
     <select id="queryByCondition" resultType="ctUserInfoDTO">
 
         SELECT
-            id,
-            ctuserinfo.real_name,
-            mobile_phone,
-            card_no,
-            born_day,
-            sex,
-            id_card_number,
-            email,
-            address,
-            ctuserinfo.user_id,
-            sysuser.user_name OperatorName,
-            referee_card_no,
-            (
-                SELECT
-                    real_name
-                FROM
-                    ct_user_info ctuserinfotmp
-                WHERE
-                    ctuserinfotmp.card_no = ctuserinfo.referee_card_no
-            ) referee,
-            accumulate_integral,
-            shop_keeper_user_id,
-            (
-                SELECT
-                    user_name
-                FROM
-                    sys_user sysuser
-                WHERE
-                    sysuser.user_id = shop_keeper_user_id
-            ) shop_keeper,
-            head_url,
-            remark,
-            create_time,
-            ctuserinfo.deleted
+        id,
+        ctuserinfo.real_name,
+        mobile_phone,
+        card_no,
+        born_day,
+        sex,
+        id_card_number,
+        email,
+        address,
+        ctuserinfo.user_id,
+        sysuser.user_name OperatorName,
+        referee_card_no,
+        (
+        SELECT
+        real_name
         FROM
-            ct_user_info ctuserinfo
-        LEFT JOIN
-            sys_user sysuser
-        ON
-            sysuser.user_id = ctuserinfo.user_id
+        ct_user_info ctuserinfotmp
         WHERE
-            ctuserinfo.deleted = 1
+        ctuserinfotmp.card_no = ctuserinfo.referee_card_no
+        ) referee,
+        accumulate_integral,
+        shop_keeper_user_id,
+        (
+        SELECT
+        user_name
+        FROM
+        sys_user sysuser
+        WHERE
+        sysuser.user_id = shop_keeper_user_id
+        ) shop_keeper,
+        head_url,
+        remark,
+        create_time,
+        ctuserinfo.deleted
+        FROM
+        ct_user_info ctuserinfo
+        LEFT JOIN
+        sys_user sysuser
+        ON
+        sysuser.user_id = ctuserinfo.user_id
+        WHERE
+        ctuserinfo.deleted = 1
         AND
-            ctuserinfo.shop_keeper_user_id = #{shop_keeper_user_id}
+        ctuserinfo.shop_keeper_user_id = #{shop_keeper_user_id}
         <if test="card_no != null and card_no != '' ">
-          AND ctuserinfo.card_no like CONCAT('%',#{card_no},'%')
+            AND ctuserinfo.card_no like CONCAT('%',#{card_no},'%')
         </if>
         <if test="real_name != null and real_name != ''">
-            AND ctuserinfo.real_name  like CONCAT('%',#{real_name},'%')
+            AND ctuserinfo.real_name like CONCAT('%',#{real_name},'%')
         </if>
         <if test="mobile_phone != null and mobile_phone != '' ">
             AND ctuserinfo.mobile_phone like CONCAT('%', #{mobile_phone},'%')
@@ -148,11 +148,41 @@
 
 
     <!--会员等级查询-->
-    <select id="queryCtUserGradeList">
+    <select id="queryCtUserGradeList" resultType="ctUserGradeDTO">
         SELECT
             *
         FROM
             ct_user_grade
+        ORDER BY accumulate_integral ASC
     </select>
+
+
+    <!--增加会员等级-->
+    <insert id="insertCtUserGrade" parameterType="ctUserGradeDTO">
+        INSERT INTO   `ct_user_grade` (
+        `grade_name`,
+        `accumulate_integral`,
+        `remark`
+    )
+    VALUES
+        (
+            #{grade_name}
+           ,${accumulate_integral}
+           ,#{remark}
+        );
+    </insert>
+
+    <update id="updateCtUserGradeById" parameterType="ctUserGradeDTO">
+        UPDATE ct_user_grade
+        SET grade_name=#{grade_name}
+        ,accumulate_integral=#{accumulate_integral}
+        ,remark =#{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delCtUserGrade">
+        DELETE FROM  ct_user_grade
+        WHERE id =#{id}
+    </delete>
 
 </mapper>

@@ -52,4 +52,25 @@ public interface CtUserInfoMapper  {
      * @return
      */
     List<CtUserGradeDTO> queryCtUserGradeList(CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 增加会员等级
+     * @param ctUserGradeDTO
+     * @return
+     */
+    int insertCtUserGrade(CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 修改会员等级
+     * @param ctUserGradeDTO
+     * @return
+     */
+    int updateCtUserGradeById(CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 删除会员等级
+     * @param id
+     * @return
+     */
+    int delCtUserGrade(Integer id);
 }

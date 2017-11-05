@@ -2,37 +2,188 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <body th:fragment="maincontent">
-<style>
-
-
-</style>
-
-
 
 <table class="layui-table"
-       lay-data="{height: 'full-20',width:600, url:'/CtuManagerController/getCtUserGradeList', page:true, id:'ctusergradeListId',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="ctusergradeListFilter" lay-size="lg"  >
-    <thead >
-    <tr >
+       lay-data="{height: 'full-150',width:610, url:'/CtuManagerController/getCtUserGradeList', page:true, id:'ctusergradeListId',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="ctusergradeListFilter" lay-size="lg">
+    <thead>
+    <tr>
         <th lay-data="{field:'grade_name', width:100}">会员等级</th>
         <th lay-data="{field:'accumulate_integral', width:100}">所需积分</th>
         <th lay-data="{field:'remark',align:'center', width:250}">等级说明</th>
-        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#ctusergradebar'}">操作</th>
+        <th lay-data="{ width:150, align:'center', toolbar: '#ctusergradebar'}">操作</th>
     </tr>
     </thead>
 </table>
 
 
 <script type="text/html" id="ctusergradebar">
-    <a class="layui-btn layui-btn-mini" lay-event = "add">增加</a>
-    <a class="layui-btn layui-btn-mini" lay-event = "edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event = "del">删除</a>
+    <a class="layui-btn layui-btn-mini" lay-event="add">增加</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
 
 
-<script>
-    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/JS_Constant.js}"></script>
 
+<script>
+    function onloadInit(upload, layform, laydate, element, table, layer, carousel) {
+        toollInit(table, layform,layer);
+    }
+
+
+    function toollInit(table, layform,layer) {
+        //监听工具条
+        table.on('tool(ctusergradeListFilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            activeManager[layEvent]?activeManager[layEvent].call(data,layer,layform):'';
+
+        });
+    }
+
+
+    var activeManager =   {
+        add:function(layer,layform){
+
+            var contenttmp = showAddWindow();
+
+            layer.open({
+                type: 1
+                , offset: '100px'
+                , area: '500px'
+                , id: 'layerDemo' + this.id //防止重复弹出
+                , content: contenttmp
+                , btn: ['确认', '重置', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+
+                    var posturl  = static_path+'CtuManagerController/addCtUserGrade';
+
+                    $.post(posturl, $(".ctUserGradeForm").serializeObject(), function (result) {
+                        if (result.code == '1000') {
+                            location.reload();
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }, "json");
+                }, btn2: function (index, layero) {
+                    $(".resetbtn").click();
+                    return false;
+                }, btn3: function (index, layero) {
+                    layer.closeAll();
+                }, success: function (layero, index) {
+                    //打开成功后的回调
+                    $(".normalinputwidth").css('width', '350px');
+                    layform.render();
+                    $(".requiredcontent").append("<span style='color:red;'>*</span>");
+
+                }
+            });
+
+
+        }
+        ,del:function () {
+            var data = this;
+            layer.confirm('真的删除行么', function (index) {
+                //更新url
+                var posturl  = static_path+"CtuManagerController/delGrade";
+
+                var objTmp = {id:data.id};
+                $.post(posturl,objTmp, function (result) {
+                    if (result.code == '1000') {
+                       location.reload();
+                    }else{
+                        layer.msg(result.msg)
+                    }
+                }, "json");
+            });
+        }
+        ,edit:function (layer,layform) {
+            var contenttmp = showAddWindow(this);
+            layer.open({
+                type: 1
+                , offset: '100px'
+                , area: '500px'
+                , id: 'layerDemo' + this.id //防止重复弹出
+                , content: contenttmp
+                , btn: ['确认', '重置', '关闭']
+                , btnAlign: 'c' //按钮居中
+                , shade: 0 //不显示遮罩
+                , yes: function () {
+
+                    var posturl  = static_path+'CtuManagerController/updateCtUserGrade';
+
+                    $.post(posturl, $(".ctUserGradeForm").serializeObject(), function (result) {
+                        if (result.code == '1000') {
+                            location.reload();
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }, "json");
+                }, btn2: function (index, layero) {
+                    $(".resetbtn").click();
+                    return false;
+                }, btn3: function (index, layero) {
+                    layer.closeAll();
+                }, success: function (layero, index) {
+                    //打开成功后的回调
+                    $(".normalinputwidth").css('width', '350px');
+                    layform.render();
+                    $(".requiredcontent").append("<span style='color:red;'>*</span>");
+                }
+            });
+
+
+        }
+    }
+
+
+    /**
+     * 拼接增加窗口
+     * @returns {string}
+     */
+    function showAddWindow(data) {
+
+        if(data==''||data==undefined){
+            data = new Object();
+            data.id="";
+            data.grade_name="";
+            data.accumulate_integral=0;
+            data.remark="";
+        }
+
+        var contenttmp = '<form class="layui-form ctUserGradeForm"  lay-filter="customcardlistform" method="post" action="CtuManagerController/updateCtUserInfo">\n' +
+            '<input type="hidden" name="id" value="'+data.id+'">'+
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label requiredcontent">会员等级</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="text" name="grade_name"    lay-verify="required"     \n' +
+            '      value="'+data.grade_name+'"        class="layui-input normalinputwidth">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '\n' +
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label requiredcontent">所需积分</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="number" name="accumulate_integral"  lay-verify="required"  ' +
+            '     value="'+data.accumulate_integral+'"    class="layui-input normalinputwidth">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '\n' +
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label">说明</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="text" name="remark"  ' +
+            '    value="'+data.remark+'"  class="layui-input normalinputwidth">\n' +
+            '            </div>\n' +
+            '        <button type="reset" style="display:none"  class="layui-btn layui-btn-primary resetbtn">重置</button>\n' +
+            '    </form>';
+
+        return contenttmp;
     }
 </script>
 </body>

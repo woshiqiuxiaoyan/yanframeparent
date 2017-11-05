@@ -19,6 +19,8 @@ import user.mapper.CtUserInfoMapper;
 import user.service.IAccountService;
 import user.service.ICtUserInfoService;
 
+import java.util.List;
+
 /**
  * <p>Title:AccountService </p>
  * <p>Description:</p>
@@ -35,7 +37,6 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
     @Autowired
     private CtUserInfoMapper ctUserInfoMapper;
-
 
 
     /**
@@ -119,6 +120,25 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
         Page<CtUserInfoDTO> list = PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
                 .doSelectPage(() -> ctUserInfoMapper.queryByCondition(ctUserInfoDTO));
 
+
+        //查询会员等级
+        List<CtUserGradeDTO> ctUserGradeDTOList = ctUserInfoMapper.queryCtUserGradeList(new CtUserGradeDTO());
+
+
+        list.stream().forEach(
+                (string) -> {
+                    ctUserGradeDTOList.stream().forEach((tmp1) -> {
+                        if (tmp1.getAccumulate_integral().intValue() <= string.getAccumulate_integral()) {
+                            string.setGrade_name(tmp1.getGrade_name());
+                        }
+                    });
+                }
+        );
+
+
+        list.forEach(System.out::println);
+
+
         return list;
     }
 
@@ -165,8 +185,6 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
     }
 
 
-
-
     /**
      * 判断当前用户是不是店长或者管理员
      *
@@ -189,6 +207,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
 
     /**
      * 获取会员等级列表
+     *
      * @param ctUserGradeDTO
      * @return
      */
@@ -199,5 +218,20 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
                 .doSelectPage(() -> ctUserInfoMapper.queryCtUserGradeList(ctUserGradeDTO));
 
         return list;
+    }
+
+    @Override
+    public int addCtUserGrade(CtUserGradeDTO ctUserGradeDTO) {
+        return ctUserInfoMapper.insertCtUserGrade(ctUserGradeDTO);
+    }
+
+    @Override
+    public int updateCtUserGrade(SysUserDTO sysUser, CtUserGradeDTO ctUserGradeDTO) {
+        return ctUserInfoMapper.updateCtUserGradeById(ctUserGradeDTO);
+    }
+
+    @Override
+    public int delCtUserGrade(Integer id) {
+        return ctUserInfoMapper.delCtUserGrade(id);
     }
 }

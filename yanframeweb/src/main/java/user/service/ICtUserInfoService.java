@@ -63,4 +63,26 @@ public interface ICtUserInfoService {
      * @return
      */
     Page<CtUserGradeDTO> getCtUserGradeList(CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 增加会员等级
+     * @param ctUserGradeDTO
+     * @return
+     */
+    int addCtUserGrade(CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 修改会员等级
+     * @param sysUser
+     * @param ctUserGradeDTO
+     * @return
+     */
+    int updateCtUserGrade(SysUserDTO sysUser, CtUserGradeDTO ctUserGradeDTO);
+
+    /**
+     * 删除会员等级
+     * @param id
+     * @return
+     */
+    int delCtUserGrade(Integer id);
 }

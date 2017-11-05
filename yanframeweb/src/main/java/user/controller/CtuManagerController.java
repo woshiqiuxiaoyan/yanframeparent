@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import system.controller.BaseController;
 import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
@@ -92,9 +89,82 @@ public class CtuManagerController extends BaseController {
     }
 
 
+    /**
+     * 增加会员等级
+     * @param sysUserDTO
+     * @param ctUserGradeDTO
+     * @return
+     */
+    @RequestMapping("/addCtUserGrade")
+    @ResponseBody
+    public ResultVo addCtUserGrade(@CurrentUser SysUserDTO sysUserDTO, CtUserGradeDTO ctUserGradeDTO){
+        try {
+            int effect =  ctUserInfoService.addCtUserGrade(ctUserGradeDTO);
+            if(effect>0){
+              return   ResultVo.create(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG);
+            }
+        }catch (CustomException e){
+            log.error("增加会员等级失败："+e.getMessage());
+            return  ResultVo.create(ErrorCode.sys_error.FAIL_CODE,e.getMessage());
+        }
+        catch (Exception e) {
+            log.error("增加会员等级失败："+e.getMessage());
+        }
+        return  ResultVo.create(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG);
+    }
 
 
 
+
+
+
+    /**
+     * 修改会员等级
+     *
+     * @param ctUserInfoDTO
+     * @return
+     */
+    @RequestMapping("/updateCtUserGrade")
+    @ResponseBody
+    public ResultVo updateCtUserGrade(@CurrentUser SysUserDTO sysUser, CtUserGradeDTO ctUserGradeDTO) {
+        try {
+            int effect = ctUserInfoService.updateCtUserGrade(sysUser, ctUserGradeDTO);
+            if (effect >= 0) {
+                return ResultVo.createCustomSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        } catch (CustomException e) {
+            log.error("会员等级更新失败:" + e.getMessage());
+            return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("会员等级更新失败:" + e.getMessage());
+        }
+
+        return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+    }
+
+    /**
+     * 删除会员等级
+     * @param sysUserDTO
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delGrade")
+    @ResponseBody
+    public ResultVo delGrade(  @RequestParam("id") Integer id){
+        try {
+            int effect = ctUserInfoService.delCtUserGrade(id);
+            if (effect >= 0) {
+                return ResultVo.createCustomSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        } catch (CustomException e) {
+            log.error("删除会员等级更新失败:" + e.getMessage());
+            return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("删除会员等级更新失败:" + e.getMessage());
+        }
+
+        return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+    }
 
 
     /**
@@ -122,6 +192,11 @@ public class CtuManagerController extends BaseController {
 
         return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
+
+
+
+
+
 
 
     /**
