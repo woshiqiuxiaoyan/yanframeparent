@@ -3,19 +3,17 @@
 
 <body th:fragment="maincontent">
 
-    <form class="layui-form search_ctuser_form" method="post" th:action="@{/SysUserInfoManager/getSysUserInfoList}">
+    <form class="layui-form search_ctuser_form" method="post" th:action="@{/SysUserInfoManager/getSysRoleList}">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label" style="text-align:center;" >用户名</label>
+                <label class="layui-form-label" style="text-align:center;" >角色名称</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="real_name"   autocomplete="off" class="layui-input">
+                    <input type="text" name="role_value"    class="layui-input">
                 </div>
                 <div class="layui-inline" style="float:right;">
                     <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
                 </div>
             </div>
-
-
         </div>
     </form>
 
@@ -25,17 +23,11 @@
        lay-filter="getSysRoleListFilter" lay-size="lg">
     <thead>
     <tr>
-        <th lay-data="{field:'login_account', width:150,align:'center'}">登录账号</th>
-        <th lay-data="{field:'user_name',align:'center', width:100}">昵称</th>
-        <th lay-data="{field:'user_phone',align:'center', width:150}">手机</th>
-        <th lay-data="{align:'center', width:100, sort: true,templet:'#templeuser_sex'}">性别</th>
-        <th lay-data="{width:180,align:'center', sort: true,templet:'#templeuser_birthday'}">出生日期</th>
-        <th lay-data="{align:'center', width:200, sort: true,templet:'#templeregister_time'}">创建时间</th>
-        <th lay-data="{field:'create_by_user_name',align:'center', width:100, sort: true}">创建者</th>
-        <th lay-data="{field:'real_name',align:'center', width:100, sort: true}">真实姓名</th>
-        <th lay-data="{field:'store_name',align:'center', width:150, sort: true}">所属店铺</th>
+        <th lay-data="{field:'role_key', width:150,align:'center'}">角色编码</th>
+        <th lay-data="{align:'center', width:200, sort: true,templet:'#templecreate_time'}">创建时间</th>
         <th lay-data="{field:'role_value',align:'center', width:150, sort: true}">角色名称</th>
-        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#getSysRoleListBar'}">操作</th>
+        <th lay-data="{field:'description',align:'center', width:150, sort: true}">描述</th>
+        <th lay-data="{ width:150, align:'center', toolbar: '#getSysRoleListBar'}">操作</th>
     </tr>
     </thead>
 </table>
@@ -60,13 +52,10 @@
         <div class="layui-table-cell laytable-cell-1-sex">女</div>
     {{#  } }}
 </script>
-<!--出生日期视图-->
-<script type="text/html" id="templeuser_birthday">
-    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.user_birthday,"yyyy-M-d h:m:s")}}</div>
-</script>
+
 <!--创建时间-->
-<script type="text/html" id="templeregister_time">
-    <div class="layui-table-cell  ">{{ Format(d.register_time,"yyyy-M-d h:m:s")}}</div>
+<script type="text/html" id="templecreate_time">
+    <div class="layui-table-cell  ">{{ Format(d.create_time,"yyyy-M-d h:m:s")}}</div>
 </script>
 
 
@@ -76,7 +65,6 @@
         if(datetime==undefined){
             return "无";
         }
-//        datetime = datetime.millis;
 
         if (parseInt(datetime)==datetime) {
             if (datetime.length==10) {

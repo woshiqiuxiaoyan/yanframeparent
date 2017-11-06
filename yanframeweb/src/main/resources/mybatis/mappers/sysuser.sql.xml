@@ -100,7 +100,12 @@
         SELECT *
         FROM sys_role
         WHERE
-          delete_flag = 0;
+          delete_flag = 0
+        <if test="role_value!=null and role_value!=''">
+            AND
+            role_value like concat(concat('%',#{role_value}),'%')
+        </if>
+
     </select>
 
     <!--系统店铺 -->

@@ -87,9 +87,9 @@ public class AccountService implements IAccountService {
     @Override
     public Page<SysRoleDTO> getSysRoleList(SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
 
-        Page<SysRoleDTO> sysUserDTOPage = PageHelper.startPage(sysRoleDTO.getPage(), sysRoleDTO.getLimit())
+        Page<SysRoleDTO> sysRoleDTOPage = PageHelper.startPage(sysRoleDTO.getPage(), sysRoleDTO.getLimit())
                 .doSelectPage(() -> sysUserMapper.querySysRoleByCondition(sysRoleDTO));
-        return sysUserDTOPage;
+        return sysRoleDTOPage;
     }
 
     /**
