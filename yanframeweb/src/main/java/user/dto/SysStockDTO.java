@@ -9,7 +9,7 @@ import pojo.SysStock;
 public class SysStockDTO extends SysStock{
 
 
-    private String user_name;//所属店铺
+    private String store_name;//所属店铺
 
     private String goods_id;
 

@@ -80,7 +80,7 @@
         INSERT INTO sys_stock (
             goods_info_id,
             total,
-            user_id,
+            store_id,
             create_time,
             remark,
             deleted
@@ -89,7 +89,7 @@
             (
                 #{goods_info_id}
                 , #{total}
-                , #{user_id}
+                , #{store_id}
                 , SYSDATE()
                 , #{remark}
                 ,1
@@ -132,15 +132,15 @@
         , sysgoodsinfo.goods_sale_price
         , sysgoodsinfo.goods_color
         , sysgoodsinfo.goods_size
-        , sysuser.user_name
+        , sysstore.store_name
         FROM
             sys_stock sysstock
         INNER JOIN sys_goods_info sysgoodsinfo
         ON sysgoodsinfo.id = sysstock.goods_info_id
         AND sysgoodsinfo.deleted = 1
-        LEFT JOIN sys_user sysuser
-        ON sysuser.user_id = sysstock.user_id
-        WHERE  sysstock.user_id = #{user_id}
+        LEFT JOIN sys_store sysstore
+        ON sysstore.store_id = sysstock.store_id
+        WHERE  sysstock.store_id = #{store_id}
         <if test="goods_id != null and goods_id != '' ">
             AND sysgoodsinfo.goods_id like CONCAT('%',#{goods_id},'%')
         </if>

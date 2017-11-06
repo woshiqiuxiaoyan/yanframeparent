@@ -40,7 +40,7 @@ public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodAr
         SysUserDTO sysUser = (SysUserDTO) subject.getSession().getAttribute(Constant.SYSUSERDTO);
 
 
-        //查询当前用店长（店铺）的会员列表
+      /*  //查询当前用店长（店铺）的会员列表
         if (ctUserInfoService.isShopKeeper(sysUser)) {
             //当前 店长 或者 管理员登录则 将自己设置成为会员所属店铺
             sysUser.setShopkeeper_user_id(sysUser.getUser_id());
@@ -49,7 +49,7 @@ public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodAr
             //普通员工取自己的创建者（店长）
             sysUser.setShopkeeper_user_id(sysUser.getCreate_by());
             sysUser.setShopKeeper(true);
-        }
+        }*/
         return sysUser;
     }
 

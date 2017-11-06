@@ -53,6 +53,63 @@
     </select>
 
 
+    <select id="queryByCondition" parameterType="sysUserDTO" resultType="sysUserDTO">
+        SELECT
+            sysuser.user_id
+            ,sysuser.login_account
+            ,sysuser.login_pass
+            ,sysuser.user_name
+            ,sysuser.user_head
+            ,sysuser.user_phone
+            ,sysuser.user_email
+            ,sysuser.user_sex
+            ,sysuser.user_birthday
+            ,sysuser.register_time
+            ,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id  = sysuser.user_id) create_by_user_name
+            ,sysuser.create_by
+            ,sysuser.real_name
+            ,sysuser.store_id
+            ,sysstore.store_name
+            ,sysrole.role_value
+        FROM
+            sys_user sysuser
+        LEFT JOIN sys_store sysstore
+        ON sysuser.store_id = sysstore.store_id
+        AND sysstore.store_deleted = 1
+        LEFT JOIN
+          sys_user_role sysuserrole
+        ON
+           sysuserrole.user_id = sysuser.user_id
+         LEFT JOIN sys_role sysrole
+         ON
+            sysrole.role_id = sysuserrole.role_id
+        WHERE
+          sysuser.store_id = #{store_id}
+        ORDER BY is_shop_keeper ASC ,sysuser.register_time DESC
+
+    </select>
+
+    <select id="queryStoreInfo" parameterType="sysStoreDTO" resultType="sysStoreDTO">
+        SELECT *
+        FROM sys_store sysstore
+        WHERE sysstore.store_user_id = #{store_user_id}
+    </select>
+
+    <!--查询用户角色-->
+    <select id="querySysRoleByCondition" parameterType="sysRoleDTO" resultType="sysRoleDTO">
+        SELECT *
+        FROM sys_role
+        WHERE
+          delete_flag = 0;
+    </select>
+
+    <!--系统店铺 -->
+    <select id="getSysStoreList" parameterType="sysStoreDTO" resultType="sysStoreDTO">
+        SELECT  *
+        FROM sys_store
+        WHERE
+          store_deleted = 1
+    </select>
 
 
 </mapper>

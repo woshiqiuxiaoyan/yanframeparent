@@ -17,6 +17,8 @@ public class ErrorCode {
         String SUCCESS_MSG="操作成功";
         String FAIL_MSG="操作失败";
         String PARAM_FAIL="参数错误";
+        String NOT_PERMISSION="权限不足";
+
     }
 
 

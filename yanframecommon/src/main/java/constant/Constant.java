@@ -40,6 +40,9 @@ public class Constant {
         public static String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
         public static String inStockPage="admin/StockManager/instockinfo";//进货页面
         public static String stockListPage="admin/StockManager/stocklist";//库存列表页面
+        public static String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
+        public static String  sysRolePage="admin/SysUserInfoManager/sysrole";//系统角色
+        public static String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
 
 
     }

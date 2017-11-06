@@ -62,6 +62,8 @@ public class CtuManagerController extends BaseController {
         return view(model, Constant.Views.ctUserGrade);
     }
 
+
+
     /**
      * 会员等级列表
      * @param ctUserGradeDTO
@@ -120,8 +122,8 @@ public class CtuManagerController extends BaseController {
 
     /**
      * 修改会员等级
-     *
-     * @param ctUserInfoDTO
+     * @param sysUser
+     * @param ctUserGradeDTO
      * @return
      */
     @RequestMapping("/updateCtUserGrade")
@@ -144,7 +146,6 @@ public class CtuManagerController extends BaseController {
 
     /**
      * 删除会员等级
-     * @param sysUserDTO
      * @param id
      * @return
      */

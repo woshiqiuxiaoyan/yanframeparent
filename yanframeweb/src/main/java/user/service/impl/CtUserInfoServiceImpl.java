@@ -60,6 +60,7 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             throw new CustomException(ErrorCode.create_card.REAL_NAME_ERROR);
         }
 
+
         //判断卡号是否已经存在
 
         CtUserInfoDTO tmp = ctUserInfoMapper.queryCtUserInfoByCardNo(ctUserInfoDTO.getCard_no());
@@ -69,15 +70,12 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
         }
 
 
-        if (isShopKeeper(sysUser)) {
-            //店长 或者 管理员 将自己设置成为会员所属店铺
-            ctUserInfoDTO.setShop_keeper_user_id(sysUser.getUser_id());
-        } else {
-            ctUserInfoDTO.setShop_keeper_user_id(sysUser.getCreate_by());
-        }
+
 
         //设置经办人
         ctUserInfoDTO.setUser_id(sysUser.getUser_id());
+        //设置店铺
+        ctUserInfoDTO.setStore_id(sysUser.getStore_id());
 
         //对推荐人卡号进行判断 是否输入正确
 
@@ -115,7 +113,8 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
         }
 
-        ctUserInfoDTO.setShop_keeper_user_id(sysUser.getShopkeeper_user_id());
+
+        ctUserInfoDTO.setStore_id(sysUser.getStore_id());
 
         Page<CtUserInfoDTO> list = PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
                 .doSelectPage(() -> ctUserInfoMapper.queryByCondition(ctUserInfoDTO));

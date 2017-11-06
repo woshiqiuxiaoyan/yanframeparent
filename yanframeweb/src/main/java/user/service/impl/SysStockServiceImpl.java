@@ -96,7 +96,8 @@ public class SysStockServiceImpl implements ISysStockService {
     @Override
     public Page<SysStockDTO> getStockInfoList(SysUserDTO sysUser, SysStockDTO sysStockDTO) {
 
-        sysStockDTO.setUser_id(sysUser.getShopkeeper_user_id());
+        //取店铺ID
+        sysStockDTO.setStore_id(sysUser.getStore_id());
 
         Page<SysStockDTO> list = PageHelper.startPage(sysStockDTO.getPage(), sysStockDTO.getLimit())
                 .doSelectPage(() -> sysStockMapper.queryByCondition(sysStockDTO));
@@ -129,14 +130,9 @@ public class SysStockServiceImpl implements ISysStockService {
             int effect = sysStockMapper.updateStockByGoodsInfoId(sysStockDTO);
 
             if (0 == effect) {
-                //查询当前用店长（店铺）的会员列表
-                if (ctUserInfoService.isShopKeeper(sysUser)) {
-                    //当前 店长 或者 管理员登录则 将自己设置成为会员所属店铺
-                    sysStockDTO.setUser_id(sysUser.getUser_id());
-                } else {
-                    //普通员工取自己的创建者（店长）
-                    sysStockDTO.setUser_id(sysUser.getCreate_by());
-                }
+                //设置店铺
+                sysStockDTO.setStore_id(sysUser.getStore_id());
+
                 effect = sysStockMapper.saveStock(sysStockDTO);
             }
 

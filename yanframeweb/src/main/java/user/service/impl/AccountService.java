@@ -1,14 +1,16 @@
 package user.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import constant.ErrorCode;
+import exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pojo.SysStore;
 import pojo.SysUser;
-import user.dto.SysAuthorityDTO;
-import user.dto.SysRoleDTO;
-import user.dto.SysUserDTO;
-import user.dto.TDemo;
+import user.dto.*;
 import user.mapper.SysUserMapper;
 import user.mapper.TDemoMapper;
 import user.service.IAccountService;
@@ -51,6 +53,56 @@ public class AccountService implements IAccountService {
      */
     public SysRoleDTO getUserRole(SysUserDTO sysUser) {
         return sysUserMapper.getUserRole(sysUser);
+    }
+
+    /**
+     * 获取系统用户列表
+     * @param sysUser
+     * @param sysUserDTO
+     * @return
+     */
+    @Override
+    public Page<SysUserDTO> getSysUserInfoList(SysUserDTO sysUser, SysUserDTO sysUserDTO) {
+        if (null == sysUser || null == sysUser.getUser_id()) {
+            //未登录异常
+            throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
+        }
+
+        sysUserDTO.setStore_id(sysUser.getStore_id());
+        
+        Page<SysUserDTO> sysUserDTOPage = PageHelper.startPage(sysUserDTO.getPage(), sysUserDTO.getLimit())
+                .doSelectPage(() -> sysUserMapper.queryByCondition(sysUserDTO));
+
+
+        return sysUserDTOPage;
+
+    }
+
+    /**
+     * 查询角色列表
+     * @param sysUser
+     * @param sysRoleDTO
+     * @return
+     */
+    @Override
+    public Page<SysRoleDTO> getSysRoleList(SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
+
+        Page<SysRoleDTO> sysUserDTOPage = PageHelper.startPage(sysRoleDTO.getPage(), sysRoleDTO.getLimit())
+                .doSelectPage(() -> sysUserMapper.querySysRoleByCondition(sysRoleDTO));
+        return sysUserDTOPage;
+    }
+
+    /**
+     * 查询店铺信息
+     * @param sysUser
+     * @param sysStoreDTO
+     * @return
+     */
+    @Override
+    public Page<SysStoreDTO> getSysStoreList(SysUserDTO sysUser, SysStoreDTO sysStoreDTO) {
+        Page<SysStoreDTO> sysStoreDTOPage = PageHelper.startPage(sysStoreDTO.getPage(), sysStoreDTO.getLimit())
+                .doSelectPage(() -> sysUserMapper.getSysStoreList(sysStoreDTO));
+        return sysStoreDTOPage;
     }
 
 

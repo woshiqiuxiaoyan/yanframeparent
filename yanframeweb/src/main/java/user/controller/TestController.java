@@ -13,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import pojo.SimplePojo;
+import pojo.SysStore;
 import pojo.TUserInfo;
 import system.controller.BaseController;
 import user.controller.validation.VaildatorGroup1;
@@ -329,10 +329,10 @@ public class TestController extends BaseController {
      */
     @RequestMapping(value = "/testRestFul/{userName}/{age}", method = {RequestMethod.POST, RequestMethod.GET})//,produces = "application/json")
     public @ResponseBody
-    SimplePojo testRestFul(@PathVariable("userName") String username, @PathVariable("age") int age) throws Exception, IOException {
-        SimplePojo smpojo = new SimplePojo();
-        smpojo.setUserName(username);
-        smpojo.setAge(age);
+    SysStore testRestFul(@PathVariable("userName") String username, @PathVariable("age") int age) throws Exception, IOException {
+        SysStore smpojo = new SysStore();
+        smpojo.setStore_name(username);
+        smpojo.setStore_id(age);
         return smpojo;
 
     }
@@ -348,10 +348,10 @@ public class TestController extends BaseController {
      */
     @RequestMapping(value = "/testLog/{userName}", method = {RequestMethod.POST, RequestMethod.GET})//,produces = "application/json")
     public @ResponseBody
-    SimplePojo testLog(@PathVariable("userName") String username ) throws Exception, IOException {
+    SysStore testLog(@PathVariable("userName") String username ) throws Exception, IOException {
         log.debug("试试...");
-        SimplePojo smpojo = new SimplePojo();
-        smpojo.setUserName(username);
+        SysStore smpojo = new SysStore();
+        smpojo.setStore_name(username);
         return smpojo;
 
     }

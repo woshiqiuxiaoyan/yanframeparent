@@ -17,6 +17,7 @@ import pojo.SysAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.function.Predicate;
@@ -52,11 +53,11 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
                 Subject subject = SecurityUtils.getSubject();
                 Session session = subject.getSession();
                 List<SysAuthority> menuList = (List<SysAuthority>) session.getAttribute(Constant.MENULIST);
-                String[] urls = httpServletRequest.getRequestURI().split("/");
+                String url = httpServletRequest.getRequestURI();
+                String[] urls = url.split("/");
                 String tmp = urls[urls.length - 1];
-                Predicate<SysAuthority> contain = n -> n.getMenu_code().equals(tmp);
+                Predicate<SysAuthority> contain = n -> (n.getMenu_code().equals(tmp) && n.getData_url().equals(url));
                 List<SysAuthority> sysAuthorities = menuList.stream().filter(contain).collect(Collectors.toList());
-                ;
                 if (null != sysAuthorities && sysAuthorities.size() > 0) {
                     return true;
                 } else {
@@ -92,12 +93,15 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
     //进入Handler之后,返回ModelAndView之前
     //应用场景：从ModelAndView 发出：将公用的模型数据在这里传到视图（比如：菜单导航），也可以在这里统一指定视图
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+
+        System.out.println("postHandle run!!!");
+
     }
 
 
     //进入Handler执行完后
     //应用场景：统一异常处理，统一日志处理
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-
+        System.out.println("afterCompletion run!!!");
     }
 }
