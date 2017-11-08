@@ -55,36 +55,57 @@
 
     <select id="queryByCondition" parameterType="sysUserDTO" resultType="sysUserDTO">
         SELECT
-            sysuser.user_id
-            ,sysuser.login_account
-            ,sysuser.login_pass
-            ,sysuser.user_name
-            ,sysuser.user_head
-            ,sysuser.user_phone
-            ,sysuser.user_email
-            ,sysuser.user_sex
-            ,sysuser.user_birthday
-            ,sysuser.register_time
-            ,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id  = sysuser.user_id) create_by_user_name
-            ,sysuser.create_by
-            ,sysuser.real_name
-            ,sysuser.store_id
-            ,sysstore.store_name
-            ,sysrole.role_value
+        sysuser.user_id
+        ,sysuser.login_account
+        ,sysuser.login_pass
+        ,sysuser.user_name
+        ,sysuser.user_head
+        ,sysuser.user_phone
+        ,sysuser.user_email
+        ,sysuser.user_sex
+        ,sysuser.user_birthday
+        ,sysuser.register_time
+        ,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id = sysuser.user_id) create_by_user_name
+        ,sysuser.create_by
+        ,sysuser.real_name
+        ,sysuser.store_id
+        ,sysstore.store_name
+        ,sysrole.role_value
         FROM
-            sys_user sysuser
+        sys_user sysuser
         LEFT JOIN sys_store sysstore
         ON sysuser.store_id = sysstore.store_id
         AND sysstore.store_deleted = 1
         LEFT JOIN
-          sys_user_role sysuserrole
+        sys_user_role sysuserrole
         ON
-           sysuserrole.user_id = sysuser.user_id
-         LEFT JOIN sys_role sysrole
-         ON
-            sysrole.role_id = sysuserrole.role_id
+        sysuserrole.user_id = sysuser.user_id
+        LEFT JOIN sys_role sysrole
+        ON
+        sysrole.role_id = sysuserrole.role_id
         WHERE
-          sysuser.store_id = #{store_id}
+        sysuser.store_id = #{store_id}
+        <if test="store_name!=null and store_name!=''">
+            AND sysstore.store_name like concat(concat('%',#{store_name}),'%')
+        </if>
+
+        <if test="user_name!=null and user_name!=''">
+            AND sysuser.user_name like concat(concat('%',#{user_name}),'%')
+        </if>
+
+        <if test="user_phone!=null and user_phone!=''">
+            AND sysuser.user_phone like concat(concat('%',#{user_phone}),'%')
+        </if>
+
+        <if test="start_time != null    ">
+            AND unix_timestamp( sysuser.register_time ) &gt; unix_timestamp(#{start_time})
+        </if>
+
+        <if test="end_time != null   ">
+            AND unix_timestamp( sysuser.register_time ) &lt; unix_timestamp(#{end_time})
+        </if>
+
+
         ORDER BY is_shop_keeper ASC ,sysuser.register_time DESC
 
     </select>
@@ -100,11 +121,17 @@
         SELECT *
         FROM sys_role
         WHERE
-          delete_flag = 0
+        delete_flag = 0
         <if test="role_value!=null and role_value!=''">
             AND
             role_value like concat(concat('%',#{role_value}),'%')
         </if>
+
+        <if test="create_by_user_id!=null and create_by_user_id!=''">
+            AND
+            create_by_user_id = #{create_by_user_id}
+        </if>
+
 
     </select>
 
@@ -116,5 +143,68 @@
           store_deleted = 1
     </select>
 
+    <!--获取角色权限-->
+    <select id="getRolePermissionByUserId" parameterType="sysUserDTO" resultType="sysRolePermissionDTO">
+      SELECT
+            sysrolepermission.*
+        FROM
+          sys_role_permission sysrolepermission
+          , sys_user_role sysuserrole
+        where
+          sysrolepermission.role_id = sysuserrole.role_id
+        and
+         sysuserrole.user_id = #{user_id}
+    </select>
+
+
+    <!--删除系统用户和对应的用户角色表-->
+    <delete id="delSysUserByUserId" parameterType="sysUserDTO">
+      DELETE sys_user, sys_user_role
+      FROM sys_user left JOIN sys_user_role
+      ON sys_user.user_id = sys_user_role.user_id
+      WHERE
+        sys_user.user_id = #{user_id}
+    </delete>
+
+    <select id="getSysuserByCheckPhone" resultType="sysUserDTO">
+        SELECT *
+        FROM sys_user
+        WHERE
+          user_phone = #{user_phone}
+    </select>
+
+    <!--增加系统用户-->
+    <insert id="insertSysUser" parameterType="sysUserDTO">
+        INSERT INTO  sys_user (
+             login_account
+             ,login_pass
+             ,user_name
+             ,user_phone
+             ,user_email
+             ,user_sex
+             ,user_birthday
+             ,register_time
+             ,create_by
+             ,real_name
+             ,store_id
+             ,is_shop_keeper
+        )
+        VALUES
+            (
+                #{login_account}
+                ,#{login_pass}
+                ,#{user_name}
+                ,#{user_phone}
+                ,#{user_email}
+                ,#{user_sex}
+                ,#{user_birthday}
+                ,SYSDATE()
+                ,#{create_by}
+                ,#{real_name}
+                ,#{store_id}
+                ,#{is_shop_keeper}
+            );
+
+    </insert>
 
 </mapper>

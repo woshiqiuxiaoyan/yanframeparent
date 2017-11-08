@@ -2,11 +2,9 @@ package user.service;
 
 import com.github.pagehelper.Page;
 import pojo.SysUser;
-import user.dto.SysAuthorityDTO;
-import user.dto.SysRoleDTO;
-import user.dto.SysStoreDTO;
-import user.dto.SysUserDTO;
+import user.dto.*;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface IAccountService {
@@ -56,4 +54,34 @@ public interface IAccountService {
      * @return
      */
     Page<SysStoreDTO> getSysStoreList(SysUserDTO sysUser, SysStoreDTO sysStoreDTO);
+
+    /**
+     * 获取角色按钮权限
+     * @param sysUserDTO
+     * @return
+     */
+    List<SysRolePermissionDTO> getRolePermission(SysUserDTO sysUserDTO);
+
+    /**
+     * 删除用户
+     * @param sysUserDTO
+     * @return
+     */
+    int delSysUser(SysUserDTO sysUserDTO);
+
+    /**
+     * 增加系统用户
+     * @param sysUser
+     * @param sysUserDTO
+     * @return
+     */
+    int addSysUser(SysUserDTO sysUser, SysUserDTO sysUserDTO) throws ParseException;
+
+    /**
+     * 不分页查询角色列表
+     * @param sysUser
+     * @param sysRoleDTO
+     * @return
+     */
+    List<SysRoleDTO> getSysRoleListNoPage(SysUserDTO sysUser, SysRoleDTO sysRoleDTO);
 }

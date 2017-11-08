@@ -6,9 +6,13 @@ import lombok.ToString;
 import org.joda.time.DateTime;
 import pojo.SysUser;
 
+import java.io.Serializable;
+
 @Data
 @ToString
-public class SysUserDTO extends SysUser {
+public class SysUserDTO extends SysUser  {
+
+    private String user_birthday_form;//   生日
 
     private String role_value;//角色名称
 

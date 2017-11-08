@@ -3,7 +3,7 @@
 
 <body th:fragment="maincontent">
 
-    <form class="layui-form search_ctuser_form" method="post" th:action="@{/SysUserInfoManager/getSysRoleList}">
+    <form class="layui-form search_getSysRoleList_form" method="post" th:action="@{/SysUserInfoManagerController/getSysRoleList}">
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label" style="text-align:center;" >角色名称</label>
@@ -19,7 +19,7 @@
 
 
 <table class="layui-table"
-       lay-data="{height:730, url:'/SysUserInfoManager/getSysRoleList', page:true, id:'getSysRoleListId',limit:5,limits:[5,10,15,20,25]}"
+       lay-data="{height:730, url:'/SysUserInfoManagerController/getSysRoleList', page:true, id:'getSysRoleListId',limit:5,limits:[5,10,15,20,25]}"
        lay-filter="getSysRoleListFilter" lay-size="lg">
     <thead>
     <tr>
@@ -96,8 +96,8 @@
         //查询按钮
         $(".search_btn").on('click',function () {
             table.reload('IdCtuserListTable', {
-                url: '/CtuManagerController/getCtuserList'
-                ,where: $(".search_ctuser_form").serializeObject()
+                url: '/SysUserInfoManagerController/getSysRoleList'
+                ,where: $(".search_getSysRoleList_form").serializeObject()
             });
 
         })

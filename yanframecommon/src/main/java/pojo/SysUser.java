@@ -2,9 +2,13 @@ package pojo;
 
 
 import lombok.Data;
+import lombok.ToString;
+
+import java.io.Serializable;
 
 @Data
-public class SysUser   {
+@ToString
+public class SysUser implements Serializable {
     private java.lang.Integer user_id;//   主键
 	private java.lang.String login_account;//   登录账号
 	private java.lang.String login_pass;//   登录密码

@@ -23,8 +23,6 @@ import user.service.ICtUserInfoService;
  */
 public class CurrentUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Autowired
-    private ICtUserInfoService ctUserInfoService;
 
     public boolean supportsParameter(MethodParameter parameter) {//有注解currentuser头部
         return parameter.hasParameterAnnotation(CurrentUser.class);

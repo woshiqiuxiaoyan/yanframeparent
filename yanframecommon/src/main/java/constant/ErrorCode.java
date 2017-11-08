@@ -29,6 +29,7 @@ public class ErrorCode {
         String SYS_ROLE_ERROR = "用户角色异常";
         String CARD_NO_ERROR = "会员卡号有误";
         String CREATE_CARD_ERROR = "开卡失败";
+        String USER_PHONE_IS_EXIST = "手机号已经被注册";
     }
 
     /**

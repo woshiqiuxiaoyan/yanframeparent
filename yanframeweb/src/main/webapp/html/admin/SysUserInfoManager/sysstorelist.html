@@ -3,161 +3,59 @@
 
 <body th:fragment="maincontent">
 
-    <form class="layui-form search_ctuser_form" method="post" th:action="@{/SysUserInfoManager/getSysUserInfoList}">
-        <div class="layui-form-item">
+    <form class="layui-form search_SysUserInfoManagerController_form" method="post" th:action="@{/SysUserInfoManagerController/getSysUserInfoList}">
+        <div class="demoTable">
+            店铺名称：
             <div class="layui-inline">
-                <label class="layui-form-label">登录账号</label>
-                <div class="layui-input-inline">
-                    <input type="number" name="login_account"  placeholder="建议与下面的手机号相同" class="layui-input">
-                </div>
-
-                <label class="layui-form-label" style="text-align:center;" >用户名</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="real_name"   autocomplete="off" class="layui-input">
-                </div>
-
-                <label class="layui-form-label" style="text-align:center;" >手机</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="mobile_phone"   autocomplete="off" class="layui-input">
-                </div>
-
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-inline">
-                    <select name="sex">
-                        <option value="1">男</option>
-                        <option value="2">女</option>
-                        <option value="3" selected>所有</option>
-                    </select>
-                </div>
-
-                <div class="layui-inline" style="float:right;">
-                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
-                </div>
+                <input class="layui-input" name="store_name" id="store_name" autocomplete="off">
             </div>
-
-            <div class="layui-inline">
-
-                <label class="layui-form-label">开卡时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
-                </div>
-                <label class="layui-form-label" style="text-align:center;">~</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
-                </div>
-            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
         </div>
     </form>
 
 
 <table class="layui-table"
-       lay-data="{height:730, url:'/SysUserInfoManager/getSysUserInfoList', page:true, id:'IdSysUserInfo',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="SysUserInfoFilter" lay-size="lg">
+       lay-data="{height:730, url:'/SysUserInfoManagerController/getSysStoreList', page:true, id:'getSysStoreList',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="getSysStoreList" lay-size="lg">
     <thead>
     <tr>
-        <th lay-data="{field:'login_account', width:150,align:'center'}">登录账号</th>
-        <th lay-data="{field:'user_name',align:'center', width:100}">昵称</th>
-        <th lay-data="{field:'user_phone',align:'center', width:150}">手机</th>
-        <th lay-data="{align:'center', width:100, sort: true,templet:'#templeuser_sex'}">性别</th>
-        <th lay-data="{width:180,align:'center', sort: true,templet:'#templeuser_birthday'}">出生日期</th>
-        <th lay-data="{align:'center', width:200, sort: true,templet:'#templeregister_time'}">创建时间</th>
-        <th lay-data="{field:'create_by_user_name',align:'center', width:100, sort: true}">创建者</th>
-        <th lay-data="{field:'real_name',align:'center', width:100, sort: true}">真实姓名</th>
-        <th lay-data="{field:'store_name',align:'center', width:150, sort: true}">所属店铺</th>
-        <th lay-data="{field:'role_value',align:'center', width:150, sort: true}">角色名称</th>
-        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#SysUserInfoBar'}">操作</th>
+        <th lay-data="{field:'store_name', width:150,align:'center'}">店铺名称</th>
+        <th lay-data="{field:'store_address',align:'center', width:100}">店铺地址</th>
+        <th lay-data="{field:'store_user_name',align:'center', width:150}">店铺负责人(店长）</th>
+        <th lay-data="{field:'store_tel',align:'center', width:100, sort: true}">店铺电话</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#getSysStoreListFilterbar'}">操作</th>
     </tr>
     </thead>
 </table>
 
 
-<script type="text/html" id="SysUserInfoBar">
+<script type="text/html" id="getSysStoreListFilterbar">
     <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 
-    <!-- 这里同样支持 laytpl 语法，如： -->
-    {{#  if(d.auth > 2){ }}
-    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
-    {{#  } }}
 </script>
 
-<!--性别-->
-<script type="text/html" id="templeuser_sex">
-    {{#  if(d.user_sex == 1){ }}
-        <div class="layui-table-cell laytable-cell-1-sex">男</div>
-    {{#  } else { }}
-        <div class="layui-table-cell laytable-cell-1-sex">女</div>
-    {{#  } }}
-</script>
-<!--出生日期视图-->
-<script type="text/html" id="templeuser_birthday">
-    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.user_birthday,"yyyy-M-d h:m:s")}}</div>
-</script>
-<!--创建时间-->
-<script type="text/html" id="templeregister_time">
-    <div class="layui-table-cell  ">{{ Format(d.register_time,"yyyy-M-d h:m:s")}}</div>
-</script>
 
 
 <script>
 
-    function Format(datetime,fmt) {
-        if(datetime==undefined){
-            return "无";
-        }
-//        datetime = datetime.millis;
-
-        if (parseInt(datetime)==datetime) {
-            if (datetime.length==10) {
-                datetime=parseInt(datetime)*1000;
-            } else if(datetime.length==13) {
-                datetime=parseInt(datetime);
-            }
-        }
-        datetime=new Date(datetime);
-        var o = {
-            "M+" : datetime.getMonth()+1,                 //月份
-            "d+" : datetime.getDate(),                    //日
-            "h+" : datetime.getHours(),                   //小时
-            "m+" : datetime.getMinutes(),                 //分
-            "s+" : datetime.getSeconds(),                 //秒
-            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
-            "S"  : datetime.getMilliseconds()             //毫秒
-        };
-        if(/(y+)/.test(fmt))
-            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
-        for(var k in o)
-            if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        return fmt;
-    }
 
     function onloadInit(upload,layform,laydate,element,table,layer) {
 
         //查询按钮
         $(".search_btn").on('click',function () {
-            table.reload('IdCtuserListTable', {
-                url: '/CtuManagerController/getCtuserList'
-                ,where: $(".search_ctuser_form").serializeObject()
+            table.reload('getSysStoreList', {
+                url: '/SysUserInfoManagerController/getSysStoreList'
+                ,where: $(".search_SysUserInfoManagerController_form").serializeObject()
             });
 
         })
 
-
-        laydate_manager(laydate);
         table_manger(table,layer,laydate,layform);
     }
 
-    function laydate_manager(laydate){
-        //单控件
-        laydate.render({
-            elem: '#condictionstart'
-        })
-        laydate.render({
-            elem: '#condictionend'
-        })
-    }
+
 
     function table_manger(table,layer,laydate,layform){
         //监听工具条

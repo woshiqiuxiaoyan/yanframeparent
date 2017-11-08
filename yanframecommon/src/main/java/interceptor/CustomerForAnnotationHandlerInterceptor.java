@@ -46,8 +46,6 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
             HandlerMethod handler2 = (HandlerMethod) handler;
             //菜单权限
             MenuAuthory menuAuthory = handler2.getMethodAnnotation(MenuAuthory.class);
-
-
             if (null != menuAuthory) {
 
                 Subject subject = SecurityUtils.getSubject();
@@ -67,25 +65,7 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
             }
         }
 
-        /*
 
-
-        Class<?> clazz = handler2.getBeanType();
-        //获取controller注解
-        HelloYan helloYanController = clazz.getAnnotation(HelloYan.class);
-        // 获取方法注解
-
-
-        if(null!=helloYanMethod){
-            log.info("加了helloYanMethod注解");
-        }
-
-        if(null!=helloYanController){
-            log.info("加了helloYanController注解");
-        }
-
-
-        return true;*/
         return true;
 
     }

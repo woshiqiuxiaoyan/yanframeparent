@@ -3,10 +3,7 @@ package user.mapper;
 
 import org.springframework.stereotype.Repository;
 import pojo.SysUser;
-import user.dto.SysAuthorityDTO;
-import user.dto.SysRoleDTO;
-import user.dto.SysStoreDTO;
-import user.dto.SysUserDTO;
+import user.dto.*;
 
 import java.util.List;
 
@@ -65,4 +62,27 @@ public interface SysUserMapper {
      * @return
      */
     List<SysStoreDTO> getSysStoreList(SysStoreDTO sysStoreDTO);
+
+    /**
+     * 获取按钮权限
+     * @param sysUserDTO
+     * @return
+     */
+    List<SysRolePermissionDTO> getRolePermissionByUserId(SysUserDTO sysUserDTO);
+
+    int delSysUserByUserId(SysUserDTO sysUserDTO);
+
+    /**
+     * 通过手机号查询注册用户
+     * @param user_phone
+     * @return
+     */
+    SysUserDTO getSysuserByCheckPhone(String user_phone);
+
+    /**
+     * 新增系统用户
+     * @param sysUserDTO
+     * @return
+     */
+    int insertSysUser(SysUserDTO sysUserDTO);
 }

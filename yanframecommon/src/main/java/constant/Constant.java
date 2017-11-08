@@ -31,24 +31,28 @@ public class Constant {
 
 
     public interface Views {
-        public static String createCard = "admin/CustomManager/createcustomcard";//开卡页面
-        public static String ctUserGrade = "admin/CustomManager/ctusergrademanager";//会员等级页面
-        public static String firstPage = "admin/content";//首页页面
-        public static String redirectFirstPage ="redirect:index";//重定向到首页
-        public static String  customList="admin/CustomManager/customcardlist";//会员列表页面
-        public static String createGoodsInfo = "admin/GoodsInfoManager/createsgoodsinfo";//产品入录页面
-        public static String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
-        public static String inStockPage="admin/StockManager/instockinfo";//进货页面
-        public static String stockListPage="admin/StockManager/stocklist";//库存列表页面
-        public static String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
-        public static String  sysRolePage="admin/SysUserInfoManager/sysrole";//系统角色
-        public static String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
+        String createCard = "admin/CustomManager/createcustomcard";//开卡页面
+        String ctUserGrade = "admin/CustomManager/ctusergrademanager";//会员等级页面
+        String firstPage = "admin/content";//首页页面
+        String redirectFirstPage ="redirect:index";//重定向到首页
+        String  customList="admin/CustomManager/customcardlist";//会员列表页面
+        String createGoodsInfo = "admin/GoodsInfoManager/createsgoodsinfo";//产品入录页面
+        String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
+        String inStockPage="admin/StockManager/instockinfo";//进货页面
+        String stockListPage="admin/StockManager/stocklist";//库存列表页面
+        String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
+        String  sysRolePage="admin/SysUserInfoManager/sysrole";//系统角色
+        String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
 
 
     }
 
     public interface NorMsg{
-        public static String CREATECARDREMARK="会员开卡";
+         String CREATECARDREMARK="会员开卡";
+    }
+
+    public interface sys_user{
+        String DEFAULT_PASSWORD ="6666666";//初始化密码
     }
 
     public  static int DefaultPageSize=5;//默认每页大小

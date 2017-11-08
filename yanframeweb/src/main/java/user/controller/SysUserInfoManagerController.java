@@ -5,23 +5,28 @@ import annotation.MenuAuthory;
 import com.github.pagehelper.Page;
 import constant.Constant;
 import constant.ErrorCode;
+import dto.ResultVo;
 import dto.ResultVoPage;
 import exception.CustomException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pojo.SysStore;
+import pojo.SysUser;
 import system.controller.BaseController;
-import user.dto.SysRoleDTO;
-import user.dto.SysStoreDTO;
-import user.dto.SysUserDTO;
+import user.dto.*;
 import user.service.IAccountService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>Title:SysUserInfoManager </p>
@@ -32,12 +37,12 @@ import java.util.ArrayList;
  * Time: 10:02
  */
 
-@RequestMapping("SysUserInfoManager")
+@RequestMapping("SysUserInfoManagerController")
 @Controller
-public class SysUserInfoManager extends BaseController {
+public class SysUserInfoManagerController extends BaseController {
 
 
-    private Logger log = LoggerFactory.getLogger(SysUserInfoManager.class);
+    private Logger log = LoggerFactory.getLogger(SysUserInfoManagerController.class);
 
     @Autowired
     private IAccountService accountService;
@@ -84,6 +89,31 @@ public class SysUserInfoManager extends BaseController {
     }
 
 
+    /**
+     * 系统角色列表接口不分页用于下拉绑定
+     * @param sysRoleDTO
+     * @return
+     */
+    @RequestMapping("/getSysRoleListNoPage")
+    @ResponseBody
+    public ResultVoPage getSysRoleListNoPage(@CurrentUser SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
+
+
+        try {
+
+            List<SysRoleDTO> sysRoleDTOPage = accountService.getSysRoleListNoPage(sysUser, sysRoleDTO);
+
+            if (null != sysRoleDTOPage && sysRoleDTOPage.size() > 0) {
+                return ResultVoPage.createCustomSuccess(0, ErrorCode.sys_error.SUCCESS_MSG, sysRoleDTOPage, sysRoleDTOPage.size());
+            }
+        } catch (CustomException e) {
+            log.error("系统角色列表查询:" + e.getMessage());
+            return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+        } catch (Exception e) {
+            log.error("系统角色列表查询失败:" + e.getMessage());
+        }
+        return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+    }
 
     /**
      * 系统角色列表
@@ -110,6 +140,64 @@ public class SysUserInfoManager extends BaseController {
         }
         return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
     }
+
+
+    /**
+     * 删除系统角色
+     * @param sysUserDTO
+     * @return
+     */
+    @RequiresPermissions("delSysUser")
+    @RequestMapping("/delSysUser")
+    @ResponseBody
+    public ResultVo delSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO){
+
+        try {
+
+            if(sysUser.getIs_shop_keeper().intValue()!=3) {
+                int effect = accountService.delSysUser(sysUserDTO);
+                if (effect != 0) {
+                    return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+                }
+            }
+        }catch (CustomException e){
+            log.error("删除系统角色失败："+e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }
+        catch (Exception e) {
+            log.error("删除系统角色失败："+e.getMessage());
+        }
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
+
+
+
+    /**
+     * 增加系统角色
+     * @param sysUserDTO
+     * @return
+     */
+    @RequestMapping("/addSysUser")
+    @ResponseBody
+    public ResultVo addSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO){
+
+        try {
+
+            int effect = accountService.addSysUser(sysUser,sysUserDTO);
+            if (effect != 0) {
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        }catch (CustomException e){
+            log.error("增加系统角色失败："+e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }
+        catch (Exception e) {
+            log.error("增加系统角色失败："+e.getMessage());
+        }
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
 
 
 

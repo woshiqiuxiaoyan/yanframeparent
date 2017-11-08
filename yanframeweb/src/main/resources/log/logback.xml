@@ -20,7 +20,7 @@
 
     <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>/todaylog/yanframeparent.log</file>
+        <file>../yanframeparentlog/yanframeparent.log</file>
         <Encoding>UTF-8</Encoding>
         <encoder>
             <pattern>%d %p [%t] [%c]:%L - %m%n</pattern>

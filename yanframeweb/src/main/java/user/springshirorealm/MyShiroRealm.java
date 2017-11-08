@@ -13,15 +13,12 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import pojo.SysAuthority;
-import pojo.SysUser;
 import user.dto.SysAuthorityDTO;
+import user.dto.SysRolePermissionDTO;
 import user.dto.SysUserDTO;
 import user.service.IAccountService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * <p>Title:MyShiroRealm </p>
@@ -32,11 +29,6 @@ import java.util.logging.Logger;
  * Time: 9:48
  */
 public class MyShiroRealm extends AuthorizingRealm {
-
-    @Override
-    public String getName() {
-        return "customRealm";
-    }
 
 
     // 支持什么类型的token
@@ -51,11 +43,17 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pc) {
 
-        //先自定义一个query权限，就不从数据库查询了
-        String username = (String) pc.fromRealm(getName()).iterator().next();
-        if (username != null) {
+        //取菜单权限
+        System.out.println(getName() + " ------------------------");
+        SysUserDTO sysUserDTO = (SysUserDTO) pc.fromRealm(getName()).iterator().next();
+        List<SysRolePermissionDTO> sysRolePermissionDTOList = accountService.getRolePermission(sysUserDTO);
+        if (sysRolePermissionDTOList != null && sysRolePermissionDTOList.size() > 0) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-            info.addStringPermission("query");//权限
+            sysRolePermissionDTOList.stream().forEach(
+                    (string) -> {
+                        info.addStringPermission(string.getPermissions());//权限
+                    }
+            );
             return info;
         }
         return null;
@@ -75,7 +73,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         SysUserDTO sysUser = new SysUserDTO();
         sysUser.setLogin_account(username);
 
-        if(null == token.getPassword()){
+        if (null == token.getPassword()) {
             return null;
         }
 
@@ -84,13 +82,14 @@ public class MyShiroRealm extends AuthorizingRealm {
         sysUser = accountService.login(sysUser);
         if (sysUser != null) {
             //查询对应菜单权限
-            List<SysAuthorityDTO> sysAuthorityDTOList =  accountService.getMenuList(sysUser);
+            List<SysAuthorityDTO> sysAuthorityDTOList = accountService.getMenuList(sysUser);
             Subject subject = SecurityUtils.getSubject();
-            Session session =  subject.getSession();
-            session.setAttribute(Constant.SYSUSERDTO,sysUser);//用户信息存入session 中
-            session.setAttribute(Constant.MENULIST,sysAuthorityDTOList);//菜单信息存入session 中
-
-            return new SimpleAuthenticationInfo(sysUser.getLogin_account(), sysUser.getLogin_pass(), getName());
+            Session session = subject.getSession();
+            session.setAttribute(Constant.SYSUSERDTO, sysUser);//用户信息存入session 中
+            session.setAttribute(Constant.MENULIST, sysAuthorityDTOList);//菜单信息存入session 中
+            setName(sysUser.getUser_id() + "");
+            System.out.println(getName());
+            return new SimpleAuthenticationInfo(sysUser, sysUser.getLogin_pass(), getName());
         }
         return null;
     }
