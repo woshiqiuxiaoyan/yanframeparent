@@ -29,3 +29,12 @@ function Format(datetime, fmt) {
     return fmt;
 }
 
+function laydate_manager(laydate){
+    //单控件
+    laydate.render({
+        elem: '#condictionstart'
+    })
+    laydate.render({
+        elem: '#condictionend'
+    })
+}

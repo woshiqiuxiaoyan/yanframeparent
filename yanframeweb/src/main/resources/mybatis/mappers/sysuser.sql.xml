@@ -19,6 +19,8 @@
     <select id="getAutorityListByUserId" parameterType="sysUserDTO" resultType="sysAuthorityDTO">
         SELECT
             sysauthority.*
+            ,sysrole.role_id
+            ,sysrole.role_key
         FROM
             sys_authority sysauthority
         , sys_role_authority sysroleauthority
@@ -32,6 +34,7 @@
           sysauthority.menu_code = sysroleauthority.menu_code
         and
          sysuserrole.user_id = #{user_id}
+         ORDER BY sysauthority.id ASC
     </select>
 
 
@@ -118,21 +121,25 @@
 
     <!--查询用户角色-->
     <select id="querySysRoleByCondition" parameterType="sysRoleDTO" resultType="sysRoleDTO">
-        SELECT *
-        FROM sys_role
+        SELECT
+            sysrole.*
+            ,sysuser.user_name
+        FROM
+            sys_role sysrole
+        LEFT JOIN
+            sys_user sysuser
+        ON
+            sysrole.create_by_user_id = sysuser.user_id
         WHERE
-        delete_flag = 0
+            sysrole.delete_flag = 0
         <if test="role_value!=null and role_value!=''">
             AND
-            role_value like concat(concat('%',#{role_value}),'%')
+            sysrole.role_value like concat(concat('%',#{role_value}),'%')
         </if>
-
         <if test="create_by_user_id!=null and create_by_user_id!=''">
             AND
-            create_by_user_id = #{create_by_user_id}
+            sysrole.create_by_user_id = #{create_by_user_id}
         </if>
-
-
     </select>
 
     <!--系统店铺 -->
@@ -174,7 +181,9 @@
     </select>
 
     <!--增加系统用户-->
-    <insert id="insertSysUser" parameterType="sysUserDTO">
+    <insert id="insertSysUser" useGeneratedKeys="true" parameterType="sysUserDTO" keyProperty="user_id">
+
+
         INSERT INTO  sys_user (
              login_account
              ,login_pass
@@ -205,6 +214,55 @@
                 ,#{is_shop_keeper}
             );
 
+    </insert>
+
+
+    <!--保存用户角色-->
+    <insert id="saveSysUserRole" parameterType="sysUserRoleDTO">
+       INSERT  INTO sys_user_role
+       VALUES (#{user_id},#{role_id})
+    </insert>
+
+
+
+    <!--通过role_id查询角色菜单权限-->
+    <select id="queryPerssionByRoleId" parameterType="sysAuthorityDTO" resultType="sysAuthorityDTO">
+       SELECT
+         sysauthority.*
+        ,sysrole.role_id
+        ,sysrole.role_key
+        FROM
+            sys_role sysrole
+        INNER JOIN sys_role_authority sysroleauthority
+        ON sysrole.role_key = sysroleauthority.role_key
+        INNER JOIN
+            sys_authority sysauthority
+        ON
+            sysauthority.menu_code = sysroleauthority.menu_code
+        WHERE
+            sysrole.role_id = #{role_id}
+        ORDER  BY  sysauthority.id ASC
+    </select>
+
+    <!--插入菜单权限-->
+    <insert id="insertRolePerssion" parameterType="sysAuthorityDTO">
+       INSERT INTO  `sys_role_authority` (
+            `menu_code`,
+            `role_key`,
+            `menu_type`
+        )
+        VALUES
+            ( #{menu_code}, #{role_key}, #{menu_type});
+    </insert>
+
+
+    <!--删除菜单权限-->
+    <insert id="delRolePerssion" parameterType="sysAuthorityDTO">
+        DELETE  FROM `sys_role_authority`
+        WHERE
+          menu_code = #{menu_code}
+        AND
+          role_key =  #{role_key}
     </insert>
 
 </mapper>

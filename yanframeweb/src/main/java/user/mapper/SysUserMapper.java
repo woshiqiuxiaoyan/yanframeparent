@@ -85,4 +85,30 @@ public interface SysUserMapper {
      * @return
      */
     int insertSysUser(SysUserDTO sysUserDTO);
+
+    /**
+     * 保存用户角色表
+     * @param sysUserRoleDTO
+     * @return
+     */
+    int saveSysUserRole(SysUserRoleDTO sysUserRoleDTO);
+
+    /**
+     * 系统角色查询权限
+     * @param sysAuthorityDTO
+     * @return
+     */
+    List<SysAuthorityDTO> queryPerssionByRoleId(SysAuthorityDTO sysAuthorityDTO);
+
+    /**
+    * 增加角色权限
+     */
+    int insertRolePerssion(SysAuthorityDTO sysAuthorityDTO);
+
+    /**
+     * 删除角色权限
+     * @param sysAuthorityDTO
+     * @return
+     */
+    int delRolePerssion(SysAuthorityDTO sysAuthorityDTO);
 }

@@ -173,6 +173,63 @@ public class SysUserInfoManagerController extends BaseController {
 
 
 
+
+    /**
+     * 系统角色查询权限
+     * @return
+     */
+    @RequestMapping("/queryPerssionByRoleId")
+    @ResponseBody
+    public ResultVo queryPerssionByRoleId(@CurrentUser SysUserDTO sysUser,  SysAuthorityDTO sysAuthorityDTO){
+        try {
+
+            List<SysAuthorityDTO> sysAuthorityDTOList = accountService.queryPerssionByRoleId(sysUser,sysAuthorityDTO);
+
+            if (null!=sysAuthorityDTOList && sysAuthorityDTOList.size()>0) {
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, sysAuthorityDTOList);
+            }
+        }catch (CustomException e){
+            log.error("系统角色查询权限失败："+e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }
+        catch (Exception e) {
+            log.error("系统角色查询权限失败："+e.getMessage());
+        }
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
+
+
+    /**
+     * 更新系统角色权限
+     * @return
+     */
+    @RequestMapping("/updateRolePerssion")
+    @ResponseBody
+    public ResultVo updateRolePerssion(@CurrentUser SysUserDTO sysUser,  SysAuthorityDTO sysAuthorityDTO){
+        System.out.println(1);
+        log.info(sysAuthorityDTO.toString());
+
+        try {
+
+            int effect =  accountService.updateRolePerssion(sysAuthorityDTO);
+
+            if(effect==0){
+                throw new CustomException(Constant.sys_user.UPDATE_PERMISSION_FAIL);
+            }
+
+            return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,null);
+        }catch (CustomException e){
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
+
+
     /**
      * 增加系统角色
      * @param sysUserDTO

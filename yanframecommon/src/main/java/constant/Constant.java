@@ -52,7 +52,9 @@ public class Constant {
     }
 
     public interface sys_user{
-        String DEFAULT_PASSWORD ="6666666";//初始化密码
+        String DEFAULT_PASSWORD ="666666";//初始化密码
+        String ADD_SYSUSER_FAIL ="增加系统用户失败";
+        String UPDATE_PERMISSION_FAIL ="系统用户权限更新失败";
     }
 
     public  static int DefaultPageSize=5;//默认每页大小

@@ -4,42 +4,47 @@
 <body th:fragment="maincontent">
 
 <style>
-    .normalinputwidth{
-        width:350px;
+    .normalinputwidth {
+        width: 350px;
+    }
+    .layui-form-label{
+        padding:9px 5px;
     }
 </style>
-    <form class="layui-form search_getSysUserInfoList_form" method="post" th:action="@{/SysUserInfoManagerController/getSysUserInfoList}">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">所属店铺</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="store_name"  placeholder="请输入店铺名称" class="layui-input">
-                </div>
+<form class="layui-form search_getSysUserInfoList_form" method="post"
+      th:action="@{/SysUserInfoManagerController/getSysUserInfoList}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属店铺</label>
+            <div class="layui-input-inline">
+                <input type="text" name="store_name" placeholder="请输入店铺名称" class="layui-input">
+            </div>
 
-                <label class="layui-form-label" style="text-align:center;" >昵称</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="user_name"     class="layui-input">
-                </div>
+            <label class="layui-form-label" style="text-align:center;">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_name" class="layui-input">
+            </div>
 
-                <label class="layui-form-label" style="text-align:center;" >手机</label>
-                <div class="layui-input-inline">
-                    <input type="number" name="user_phone"     class="layui-input">
-                </div>
+            <label class="layui-form-label" style="text-align:center;">手机</label>
+            <div class="layui-input-inline">
+                <input type="number" name="user_phone" class="layui-input">
+            </div>
 
-                <label class="layui-form-label">创建时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
-                </div>
-                <label class="layui-form-label" style="text-align:center;">~</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
-                </div>
-                <div class="layui-inline" style="float:right;">
-                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
-                </div>
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="start_time" placeholder="开始时间" ; class="layui-input" id="condictionstart"
+                       readonly>
+            </div>
+            <label class="layui-form-label" style="text-align:center;">~</label>
+            <div class="layui-input-inline">
+                <input type="text" name="end_time" placeholder="结束时间" id="condictionend" class="layui-input" readonly>
+            </div>
+            <div class="layui-inline" style="float:right;">
+                <input type="button" class="layui-btn layui-btn-radius search_btn" value="我要查询"></input>
             </div>
         </div>
-    </form>
+    </div>
+</form>
 
 
 <table class="layui-table"
@@ -71,9 +76,9 @@
 <!--性别-->
 <script type="text/html" id="templeuser_sex">
     {{#  if(d.user_sex == 1){ }}
-        <div class="layui-table-cell laytable-cell-1-sex">男</div>
+    <div class="layui-table-cell laytable-cell-1-sex">男</div>
     {{#  } else { }}
-        <div class="layui-table-cell laytable-cell-1-sex">女</div>
+    <div class="layui-table-cell laytable-cell-1-sex">女</div>
     {{#  } }}
 </script>
 
@@ -88,210 +93,19 @@
 </script>
 
 <script th:src="@{/static/js/common.js}"></script>
-
+<script th:src="@{/static/js/sysUserInfolist.js}"></script>
 
 <script>
 
-    var isDebugger =false;
-
-    function onloadInit(upload,layform,laydate,element,table,layer) {
+    function onloadInit(upload, layform, laydate, element, table, layer) {
 
         //查询按钮
-        $(".search_btn").on('click',function () {
-            table.reload('IdSysUserInfo', {
-                url: '/SysUserInfoManagerController/getSysUserInfoList'
-                ,where: $(".search_getSysUserInfoList_form").serializeObject()
-            });
-        })
+        initSearch_btn(table);
+        //渲染查询开始时间和结束时间
         laydate_manager(laydate);
-        table_manger(table,layer,laydate,layform);
+        //监听表格事件
+        table_manger(table, layer, laydate, layform);
     }
-
-    function laydate_manager(laydate){
-        //单控件
-        laydate.render({
-            elem: '#condictionstart'
-        })
-        laydate.render({
-            elem: '#condictionend'
-        })
-    }
-
-    function table_manger(table,layer,laydate,layform){
-        //监听工具条
-        table.on('tool(SysUserInfoFilter)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值
-            active[layEvent]?active[layEvent].call(data,layer,laydate,layform):"";
-        });
-    }
-
-
-
-    var active = {
-        add:function (layer,laydate,layform) {
-            var contenttmp= getContentTmp();
-
-            layer.open({
-                type: 1
-                ,offset: '200px'
-                ,area: '500px'
-                ,id: 'layerDemo'+this.id //防止重复弹出
-                ,content: contenttmp
-                ,btn: ['确认','重置','关闭']
-                ,btnAlign: 'c' //按钮居中
-                ,shade: 0 //不显示遮罩
-                ,yes: function(){
-
-                    var posturl  = static_path+$(".addSysUserForm").attr("action");
-
-                    if(isDebugger){
-                        posturl = static_path+"/SysUserInfoManagerController/addSysUserTest";
-                    }
-                    var tmp = $(".addSysUserForm").serializeObject();
-                    $.post(posturl,tmp, function (result) {
-                        console.log(JSON.stringify(result));
-                        if (result.code == '1000') {
-                            location.reload();
-                        }else{
-                            layer.msg(result.msg)
-                        }
-                    }, "json");
-                },btn2: function(index, layero){
-                    $(".resetbtn").click();
-                    return false;
-                },btn3: function(index, layero){
-                    layer.closeAll();
-                },success: function(layero, index){
-                    //打开成功后的回调
-                    $(".normalinputwidth").css('width','350px');
-                    //单控件
-                    laydate.render({
-                        elem: '#user_birthdayid'
-                    })
-                    layform.render();
-                    $(".requiredcontent").append("<span style='color:red;'>*</span>");
-                    $(".layui-form-select").addClass('normalinputwidth');
-
-                    //初始化select
-                    initSelect()
-
-
-                    layform.on('select(role_id_filter)', function(data){
-                        console.log(data.elem); //得到select原始DOM对象
-                        console.log(data.value); //得到被选中的值
-                        console.log(data.othis); //得到美化后的DOM对象
-                    });
-                }
-            });
-        },
-        del:function (layer){
-            var tmpdata = this;
-            layer.confirm('真的删除行么', function (index) {
-                var posturl  = static_path+"SysUserInfoManagerController/delSysUser";
-                var objTmp = {user_id:tmpdata.user_id};
-                console.log(objTmp)
-                $.post(posturl, objTmp, function (result) {
-                    console.log(result)
-                    if (result.code == '1000') {
-                        location.reload();
-                    }else{
-                        layer.msg(result.msg)
-                    }
-                }, "json");
-            });
-        }
-    }
-
-
-    /**
-     * 初始化se
-     */
-    function initSelect(){
-        var posturl = static_path+"/SysUserInfoManagerController/getSysRoleListNoPage";
-
-        $.post(posturl,{}, function (result) {
-            if (result.code == '0') {
-                console.log(result.data)
-                createOption(result.data);
-            }else{
-                layer.msg("角色数据加载异常，请联系管理员");
-            }
-        }, "json");
-    }
-
-
-    function createOption(data){
-        var html = '';
-        for(var i=0;i<data.length;i++){
-            html+=' <option value="'+data[i].role_id+'">'+data[i].role_value+'</option>\n ' ;
-        }
-        console.log(html)
-        var obj = $("#role_id_select_id");
-        debugger
-        $("#role_id_select_id").html(html);
-    }
-
-
-    //拼接弹出层
-    function getContentTmp(){
-        var contenttmp='<form class="layui-form addSysUserForm"  style="margin:30px auto;"  lay-filter="addSysUserFormFilter" method="post" ' +
-            'action="SysUserInfoManagerController/addSysUser">\n' +
-            '       <div class="layui-form-item">\n' +
-            '             <label class="layui-form-label requiredcontent">昵称</label>\n' +
-            '             <div class="layui-input-block">\n' +
-            '                <input type="text" name="user_name"    lay-verify="required"  class="layui-input normalinputwidth">\n' +
-            '             </div>\n' +
-            '        </div>\n' +
-            '\n' +
-            '        <div class="layui-form-item">\n' +
-            '            <label class="layui-form-label requiredcontent">手机</label>\n' +
-            '            <div class="layui-input-block"> ' +
-            '                <input type="number" name="user_phone" class="layui-input normalinputwidth"    >\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '        <div class="layui-form-item">\n' +
-            '            <label class="layui-form-label requiredcontent">邮箱</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <input type="text" name="user_email" lay-verify="required"   \n' +
-            '       class="layui-input normalinputwidth">\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '\n' +
-            '        <div class="layui-form-item" pane>\n' +
-            '            <label class="layui-form-label">性别</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <input type="radio" name="user_sex" value="1" title="男" checked  >\n' +
-            '                <input type="radio" name="user_sex" value="2" title="女"   >\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '\n' +
-            '        <div class="layui-form-item">\n' +
-            '            <label class="layui-form-label ">生日</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <input type="text" name="user_birthday_form" id="user_birthdayid" class="layui-input normalinputwidth"   >\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '        <div class="layui-form-item">\n' +
-            '            <label class="layui-form-label">真实姓名</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '                <input type="text" name="real_name" class="layui-input normalinputwidth">\n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '\n' +
-            '        <div class="layui-form-item">\n' +
-            '            <label class="layui-form-label">角色</label>\n' +
-            '            <div class="layui-input-block">\n' +
-            '               <select name="role_id" id="role_id_select_id" lay-filter="role_id_filter">\n' +
-            '                 <option value="">无</option>\n' +
-            '               </select>     \n' +
-            '            </div>\n' +
-            '        </div>\n' +
-            '        <button type="reset" style="display:none"  class="layui-btn layui-btn-primary resetbtn">重置</button>\n' +
-            '    </form>';
-        return contenttmp;
-    }
-
 
 
 </script>

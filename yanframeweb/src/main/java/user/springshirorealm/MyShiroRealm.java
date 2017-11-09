@@ -12,6 +12,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import user.dto.SysAuthorityDTO;
 import user.dto.SysRolePermissionDTO;
@@ -19,6 +20,7 @@ import user.dto.SysUserDTO;
 import user.service.IAccountService;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * <p>Title:MyShiroRealm </p>
@@ -44,14 +46,18 @@ public class MyShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pc) {
 
         //取菜单权限
-        System.out.println(getName() + " ------------------------");
         SysUserDTO sysUserDTO = (SysUserDTO) pc.fromRealm(getName()).iterator().next();
-        List<SysRolePermissionDTO> sysRolePermissionDTOList = accountService.getRolePermission(sysUserDTO);
-        if (sysRolePermissionDTOList != null && sysRolePermissionDTOList.size() > 0) {
+        List<SysAuthorityDTO> sysAuthorityDTOList = accountService.getMenuList(sysUserDTO);
+
+        if (sysAuthorityDTOList != null && sysAuthorityDTOList.size() > 0) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-            sysRolePermissionDTOList.stream().forEach(
+
+            Predicate<SysAuthorityDTO> predicate = (stringtmp)->!stringtmp.getData_url().equals("#")&&stringtmp.getMenu_type().equals("2");
+
+            sysAuthorityDTOList.stream().filter(predicate).forEach(
                     (string) -> {
-                        info.addStringPermission(string.getPermissions());//权限
+                        LoggerFactory.getLogger(MyShiroRealm.class).info("开放权限："+string.getData_url());
+                        info.addStringPermission(string.getData_url());//权限
                     }
             );
             return info;

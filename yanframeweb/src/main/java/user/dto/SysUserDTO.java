@@ -27,4 +27,6 @@ public class SysUserDTO extends SysUser  {
     private DateTime start_time;
 
     private DateTime end_time;
+
+    private Integer role_id;//角色ID
 }

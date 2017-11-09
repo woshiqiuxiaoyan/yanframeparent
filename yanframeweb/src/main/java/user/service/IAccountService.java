@@ -84,4 +84,19 @@ public interface IAccountService {
      * @return
      */
     List<SysRoleDTO> getSysRoleListNoPage(SysUserDTO sysUser, SysRoleDTO sysRoleDTO);
+
+    /**
+     * 系统角色查询权限
+     * @param sysUser
+     * @param sysAuthorityDTO
+     * @return
+     */
+    List<SysAuthorityDTO> queryPerssionByRoleId(SysUserDTO sysUser, SysAuthorityDTO sysAuthorityDTO);
+
+    /**
+     * 更新角色权限
+     * @param sysAuthorityDTO
+     * @return
+     */
+    int updateRolePerssion(SysAuthorityDTO sysAuthorityDTO);
 }

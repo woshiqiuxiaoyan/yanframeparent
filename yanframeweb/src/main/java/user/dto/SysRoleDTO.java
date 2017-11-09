@@ -1,1 +1,1 @@
-package user.dto;import lombok.Data;import pojo.SysRole;@Datapublic class SysRoleDTO extends SysRole {    private int page;    private int limit;}
+package user.dto;import lombok.Data;import pojo.SysRole;@Datapublic class SysRoleDTO extends SysRole {    private int page;    private int limit;    private String user_name;//用户名}
