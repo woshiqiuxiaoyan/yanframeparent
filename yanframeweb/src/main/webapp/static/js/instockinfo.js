@@ -137,9 +137,7 @@ var  instockbtnActive = {
             subTmp.remark = data[tmp].remark;
             subData[tmp] = (subTmp);
         }
-        if(isDebugger){
-            console.log(subData);
-        }
+
         var url = static_path+"SysStockController/inStock";
 
         $.ajax({
@@ -153,12 +151,10 @@ var  instockbtnActive = {
                         content: '是否继续入库？'
                         ,btn: ['继续', '不加了']
                         ,yes: function(index, layero){
-                            //按钮【按钮一】的回调
                             location.reload();
                         }
                         ,btn2: function(index, layero){
-                            //按钮【按钮二】的回调
-                            location.href=goodsInfoListurl;
+                            location.href=instockInfoListurl;
                         }
                     });
                 }

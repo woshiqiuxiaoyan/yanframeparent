@@ -39,12 +39,12 @@ var active = {
             , offset: '200px'
             , area: '500px'
             , id: 'layerDemo' + this.id //防止重复弹出
-            , content: getContentTmp()
+            , content: getContentTmp('')
             , btn: ['确认', '重置', '关闭']
             , btnAlign: 'c' //按钮居中
             , shade: 0 //不显示遮罩
             , yes: function () {
-                addSysUserInfoList(layer);
+                addUpdateSysUserInfoList(layer);
             }, btn2: function (index, layero) {
                 //重置
                 $(".resetbtn").click();
@@ -53,7 +53,7 @@ var active = {
                 //关闭
                 layer.closeAll();
             }, success: function (layero, index) {
-                InitLayOpen(laydate, layform);
+                InitLayOpen(laydate, layform,'');
             }
         });
     },
@@ -72,11 +72,39 @@ var active = {
                 }
             }, "json");
         });
+    },
+    edit:function (layer, laydate, layform) {
+        var objdata=this;
+        layer.open({
+            type: 1
+            ,offset: '200px'
+            ,area: '500px'
+            ,id: 'layerDemo'+this.id //防止重复弹出
+            ,content: getContentTmp(this)
+            ,btn: ['确认修改','我要重置','关闭全部']
+            ,btnAlign: 'c' //按钮居中
+            ,shade: 0 //不显示遮罩
+            ,yes: function(){
+                addUpdateSysUserInfoList(layer,objdata.user_id);
+            },btn2: function(index, layero){
+                $(".resetbtn").click();
+                return false;
+            },btn3: function(index, layero){
+                layer.closeAll();
+
+            },success: function(layero, index){
+                debugger
+                //打开成功后的回调
+                InitLayOpen(laydate, layform,objdata.role_id);
+
+            }
+        });
+
     }
 }
 
 //    渲染弹出层
-function InitLayOpen(laydate, layform) {
+function InitLayOpen(laydate, layform,role_id) {
     $(".normalinputwidth").css('width', '350px');
     $(".requiredcontent").append("<span style='color:red;'>*</span>");
 
@@ -85,16 +113,23 @@ function InitLayOpen(laydate, layform) {
     });
     layform.render();
     //初始化select
-    initSelect(layform);
+    initSelect(layform,role_id);
 }
 
 /**
  * 增加用户
  */
-function addSysUserInfoList(layer) {
+function addUpdateSysUserInfoList(layer,user_id) {
+
     var posturl = static_path +
         $(".addSysUserForm").attr("action")
         , tmp = $(".addSysUserForm").serializeObject();
+    if(isNotBlank(user_id)){
+        posturl = static_path +'SysUserInfoManagerController/addSysUser';
+        tmp.user_id = user_id
+    }
+
+
 
     if (!(isNotBlank(tmp.user_phone, "手机号", layer) && isNotBlank(tmp.user_name, "昵称", layer)
             && isNotBlank(tmp.role_id, "角色", layer))) {
@@ -114,11 +149,11 @@ function addSysUserInfoList(layer) {
 /**
  * 取下拉框数据
  */
-function initSelect(form) {
+function initSelect(form,role_id) {
     var posturl = static_path + "/SysUserInfoManagerController/getSysRoleListNoPage";
     $.post(posturl, {}, function (result) {
         if (result.code == '0' && result.data.length > 0) {
-            createOption(result.data);
+            createOption(result.data,role_id);
             form.render('select');
             $(".layui-form-select").addClass('normalinputwidth');
         } else {
@@ -131,10 +166,18 @@ function initSelect(form) {
  * 绑定角色下拉框的拼接
  * @param data
  */
-function createOption(data) {
-    var html = '';
+function createOption(data,role_id) {
+
+
+    var html = '\' <option value="">暂不选</option>\\n \'';
     for (var i = data.length - 1; i >= 0; i--) {
-        html += ' <option value="' + data[i].role_id + '">' + data[i].role_value + '</option>\n ';
+        if(role_id==data[i].role_id){
+            html += ' <option value="' + data[i].role_id + '" selected>' + data[i].role_value + '</option>\n ';
+        }else {
+            html += ' <option value="' + data[i].role_id + '" >' + data[i].role_value + '</option>\n ';
+        }
+
+
     }
     $("#role_id_select_id").html(html);
 }
@@ -142,55 +185,77 @@ function createOption(data) {
 /**
  * 拼接弹出层
  */
-function getContentTmp() {
+function getContentTmp(objdata) {
+
+    var user_phone ='<input type="number" value="'+objdata.user_phone+'" readonly  name="user_phone" class="layui-input normalinputwidth"    >';
+
+    if(objdata==''){
+        objdata = new Object();
+        objdata.user_name='';
+        objdata.user_phone='';
+        objdata.user_email='';
+        objdata.user_sex='1';
+        objdata.user_birthday=new Date();
+        objdata.real_name='';
+        objdata.role_id='';
+        user_phone ='<input type="number"     name="user_phone" class="layui-input normalinputwidth"    >';
+    }
+
+    var user_sex =  '<input type="radio" name="user_sex" value="1" title="男" checked  >' +
+                    '<input type="radio" name="user_sex" value="2" title="女"   >' ;
+    if(objdata.user_sex!='1'){
+        user_sex =  '<input type="radio" name="user_sex" value="1" title="男"   >' +
+                    '<input type="radio" name="user_sex" value="2" title="女"  checked >' ;
+    }
+
+
+
+
     var contenttmp = '<form class="layui-form addSysUserForm"  style="margin:30px auto;"  lay-filter="addSysUserFormFilter" method="post" ' +
         'action="SysUserInfoManagerController/addSysUser">\n' +
         '       <div class="layui-form-item">\n' +
         '             <label class="layui-form-label requiredcontent">昵称</label>\n' +
         '             <div class="layui-input-block">\n' +
-        '                <input type="text" name="user_name"    lay-verify="required"  class="layui-input normalinputwidth">\n' +
+        '                <input type="text" name="user_name" value="'+objdata.user_name+'"    lay-verify="required"  class="layui-input normalinputwidth">\n' +
         '             </div>\n' +
         '        </div>\n' +
         '\n' +
         '        <div class="layui-form-item">\n' +
         '            <label class="layui-form-label requiredcontent">手机</label>\n' +
-        '            <div class="layui-input-block"> ' +
-        '                <input type="number" name="user_phone" class="layui-input normalinputwidth"    >\n' +
+        '            <div class="layui-input-block"> ' + user_phone+
         '            </div>\n' +
         '        </div>\n' +
         '        <div class="layui-form-item">\n' +
         '            <label class="layui-form-label requiredcontent">邮箱</label>\n' +
         '            <div class="layui-input-block">\n' +
-        '                <input type="text" name="user_email" lay-verify="required"   \n' +
+        '                <input type="text" name="user_email"  value="'+objdata.user_email+'"  lay-verify="required"   \n' +
         '       class="layui-input normalinputwidth">\n' +
         '            </div>\n' +
         '        </div>\n' +
         '\n' +
         '        <div class="layui-form-item" pane>\n' +
         '            <label class="layui-form-label">性别</label>\n' +
-        '            <div class="layui-input-block">\n' +
-        '                <input type="radio" name="user_sex" value="1" title="男" checked  >\n' +
-        '                <input type="radio" name="user_sex" value="2" title="女"   >\n' +
+        '            <div class="layui-input-block">\n' +user_sex+
         '            </div>\n' +
         '        </div>\n' +
         '\n' +
         '        <div class="layui-form-item">\n' +
         '            <label class="layui-form-label ">生日</label>\n' +
         '            <div class="layui-input-block">\n' +
-        '                <input type="text" name="user_birthday_form" id="user_birthdayid" class="layui-input normalinputwidth" readonly   >\n' +
+        '                <input type="text" value="'+ Format(objdata.user_birthday,"yyyy-M-d")+'" name="user_birthday_form" id="user_birthdayid" class="layui-input normalinputwidth" readonly   >\n' +
         '            </div>\n' +
         '        </div>\n' +
         '        <div class="layui-form-item">\n' +
         '            <label class="layui-form-label">真实姓名</label>\n' +
         '            <div class="layui-input-block">\n' +
-        '                <input type="text" name="real_name" class="layui-input normalinputwidth">\n' +
+        '                <input type="text"  value=" '+objdata.real_name+'" name="real_name" class="layui-input normalinputwidth">\n' +
         '            </div>\n' +
         '        </div>\n' +
         '\n' +
         '        <div class="layui-form-item">\n' +
         '            <label class="layui-form-label requiredcontent">角色</label>\n' +
         '            <div class="layui-input-block">\n' +
-        '               <select name="role_id" id="role_id_select_id" lay-filter="role_id_filter">\n' +
+        '               <select name="role_id" id="role_id_select_id" lay-filter="role_id_filter"  value="'+objdata.role_id+'" >\n' +
         '               </select>     \n' +
         '            </div>\n' +
         '        </div>\n' +
@@ -210,7 +275,6 @@ function isNotBlank(obj, errorMsg, layer) {
     if (obj == undefined || obj == null || obj == '') {
         layer.msg(errorMsg + "不能为空");
         return false;
-        s
     }
     return true;
 }

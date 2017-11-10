@@ -41,7 +41,7 @@ public class Constant {
         String inStockPage="admin/StockManager/instockinfo";//进货页面
         String stockListPage="admin/StockManager/stocklist";//库存列表页面
         String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
-        String  sysRolePage="admin/SysUserInfoManager/sysrole";//系统角色
+        String  sysRolePage="admin/SysUserInfoManager/sysrolelist";//系统角色
         String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
 
 
@@ -55,6 +55,11 @@ public class Constant {
         String DEFAULT_PASSWORD ="666666";//初始化密码
         String ADD_SYSUSER_FAIL ="增加系统用户失败";
         String UPDATE_PERMISSION_FAIL ="系统用户权限更新失败";
+        String ADD_ROLE_FAIL ="系统角色增加失败";
+        String UPDATE_ROLE_FAIL ="系统角色更新失败";
+        String DEL_ROLE_FAIL="删除角色失败";
+        String ROLE_IS_USERING="该角色正在被使用，无法删除";
+
     }
 
     public  static int DefaultPageSize=5;//默认每页大小

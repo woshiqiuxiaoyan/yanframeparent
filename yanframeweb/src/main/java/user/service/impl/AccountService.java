@@ -2,11 +2,14 @@ package user.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sun.tools.internal.jxc.ap.Const;
 import constant.Constant;
 import constant.ErrorCode;
 import enums.IsShopKeeper;
 import exception.CustomException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,6 +36,10 @@ public class AccountService implements IAccountService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+
+
+    private Logger log = LoggerFactory.getLogger(AccountService.class);
 
 
     public SysUserDTO login(SysUserDTO sysUser) {
@@ -104,20 +111,7 @@ public class AccountService implements IAccountService {
         return sysRoleDTOPage;
     }
 
-    /**
-     * 查询店铺信息
-     *
-     * @param sysUser
-     * @param sysStoreDTO
-     * @return
-     */
-    @Override
-    public Page<SysStoreDTO> getSysStoreList(SysUserDTO sysUser, SysStoreDTO sysStoreDTO) {
 
-        Page<SysStoreDTO> sysStoreDTOPage = PageHelper.startPage(sysStoreDTO.getPage(), sysStoreDTO.getLimit())
-                .doSelectPage(() -> sysUserMapper.getSysStoreList(sysStoreDTO));
-        return sysStoreDTOPage;
-    }
 
     /**
      * 获取按钮权限
@@ -258,6 +252,7 @@ public class AccountService implements IAccountService {
 
         sysAuthorityDTOList.stream().forEach(
                 (string) -> {
+                    string.setRole_id(sysAuthorityDTO.getRole_id());
                     string.setChecked(false);
                     if(sysAuthoriTOListCur!=null && sysAuthoriTOListCur.size()>0){
                         List tmp = sysAuthoriTOListCur.stream().filter((cur) -> string.getId().intValue() == cur.getId().intValue()).collect(Collectors.toList());
@@ -267,8 +262,6 @@ public class AccountService implements IAccountService {
                     }
                 }
         );
-
-
         return sysAuthorityDTOList;
     }
 
@@ -289,6 +282,80 @@ public class AccountService implements IAccountService {
         }
 
         return effect;
+    }
+
+    @Override
+    public int addSysRole(SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
+        sysRoleDTO.setCreate_by_user_id(sysUser.getUser_id());
+        int effect = sysUserMapper.addSysRole(sysRoleDTO);
+        if(effect==0){
+            throw new CustomException(Constant.sys_user.ADD_ROLE_FAIL);
+        }
+        return effect;
+    }
+
+    /**
+     * 更新系统用户
+     * @param sysUserDTO
+     * @return
+     */
+    @Override
+    public int updateSysUser(SysUserDTO sysUserDTO) throws ParseException {
+        if(null==sysUserDTO.getUser_id()){
+            throw new CustomException(Constant.sys_user.UPDATE_ROLE_FAIL);
+        }
+
+
+        //对日期进行转化
+        if (StringUtils.isNotBlank(sysUserDTO.getUser_birthday_form())) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sysUserDTO.setUser_birthday(sdf.parse(sysUserDTO.getUser_birthday_form()));
+        }
+
+        log.info("----------------------更新系统用户------------------------------------");
+        sysUserMapper.updateSysUser(sysUserDTO);
+
+        SysUserRoleDTO sysUserRoleDTO = new SysUserRoleDTO();
+        sysUserRoleDTO.setRole_id(sysUserDTO.getRole_id());
+        sysUserRoleDTO.setUser_id(sysUserDTO.getUser_id());
+        sysUserMapper.updateSysUserRole(sysUserRoleDTO);
+
+
+        return 1;
+    }
+
+    /**
+     * 删除角色
+     * @param sysRoleDTO
+     * @return
+     */
+    @Override
+    public int delSysRole(SysRoleDTO sysRoleDTO) {
+
+        checkRoleIsUsed(sysRoleDTO);
+
+        //删除角色
+        int effect = sysUserMapper.delSysRoleAndSysRoleAuthority(sysRoleDTO);
+
+        if(effect==0){
+            throw  new CustomException(Constant.sys_user.DEL_ROLE_FAIL);
+        }
+        return effect;
+    }
+
+    /**
+     * 查询该角色是否正在被使用
+     * @param sysRoleDTO
+     * @return
+     */
+    private boolean checkRoleIsUsed(SysRoleDTO sysRoleDTO) {
+
+        List<SysUserRoleDTO> sysUserRoleDTOList =  sysUserMapper.querySysUserRole(sysRoleDTO);
+
+        if(null!=sysUserRoleDTOList&&sysUserRoleDTOList.size()>0){
+            throw new CustomException(Constant.sys_user.ROLE_IS_USERING);
+        }
+        return false;
     }
 
 

@@ -19,10 +19,6 @@ public class CustomDateTimeConverter implements Converter<String, DateTime> {
 
     public DateTime convert(String str) {
 
-        log.info("***********************************CustomDateTimeConverter***********************************");
-
-        log.info(str);
-
         DateTime dateTime = null;
 
         String []tmp =str.split(":");

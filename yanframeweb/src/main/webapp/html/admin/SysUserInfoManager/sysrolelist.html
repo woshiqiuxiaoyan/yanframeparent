@@ -1,0 +1,64 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+
+    <link rel="stylesheet" th:href="@{/static/css/zTreeStyle/zTreeStyle.css}" type="text/css">
+
+    <form class="layui-form search_getSysRoleList_form" method="post" th:action="@{/SysUserInfoManagerController/getSysRoleList}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="text-align:center;" >角色名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="role_value"    class="layui-input">
+                </div>
+                <div class="layui-inline" style="float:right;">
+                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+<table class="layui-table"
+       lay-data="{height:730, url:'/SysUserInfoManagerController/getSysRoleList', page:true, id:'getSysRoleListId',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="getSysRoleListFilter" lay-size="lg">
+    <thead>
+    <tr>
+        <th lay-data="{field:'role_key', width:150,align:'center'}">角色编码</th>
+        <th lay-data="{align:'center', width:200,  templet:'#templecreate_time'}">创建时间</th>
+        <th lay-data="{field:'role_value',align:'center', width:150   }">角色名称</th>
+        <th lay-data="{field:'description',align:'center', width:150   }">描述</th>
+        <th lay-data="{field:'user_name',align:'center', width:150   }">创建人</th>
+        <th lay-data="{ width:250, align:'center', toolbar: '#getSysRoleListBar'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="getSysRoleListBar">
+    <a class="layui-btn layui-btn-mini" lay-event="add">新增角色</a>
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看/编辑权限</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+
+<!--创建时间-->
+<script type="text/html" id="templecreate_time">
+    <div class="layui-table-cell  ">{{ Format(d.create_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+<script th:src="@{/static/js/common.js}"></script>
+<script th:src="@{/static/js/sysrole.js}"></script>
+
+<script>
+
+    function onloadInit(upload,layform,laydate,element,table,layer) {
+        //查询按钮
+        initSearch_btn(table);
+        table_manger(table,layer,laydate,layform,layui);
+    }
+
+</script>
+</body>
+</html>

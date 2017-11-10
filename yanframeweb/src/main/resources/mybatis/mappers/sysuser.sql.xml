@@ -5,14 +5,19 @@
 
     <select id="querySysUserByPwdAndUserName" parameterType="sysUserDTO" resultType="sysUserDTO">
         SELECT
-            *
+            sysuser.*
+            ,sysrole.role_id
         FROM
-            sys_user
+        sys_user sysuser
+        LEFT JOIN sys_user_role sysuserrole
+        ON sysuser.user_id = sysuserrole.user_id
+        LEFT JOIN sys_role sysrole
+        ON sysrole.role_id = sysuserrole.role_id
         WHERE
-            login_pass = #{login_pass}
+            sysuser.login_pass = #{login_pass}
         AND (
-            login_account = #{login_account}
-            OR user_phone = #{login_account}
+            sysuser.login_account = #{login_account}
+            OR sysuser.user_phone = #{login_account}
         )
     </select>
 
@@ -74,6 +79,7 @@
         ,sysuser.store_id
         ,sysstore.store_name
         ,sysrole.role_value
+        ,sysrole.role_id
         FROM
         sys_user sysuser
         LEFT JOIN sys_store sysstore
@@ -122,16 +128,16 @@
     <!--查询用户角色-->
     <select id="querySysRoleByCondition" parameterType="sysRoleDTO" resultType="sysRoleDTO">
         SELECT
-            sysrole.*
-            ,sysuser.user_name
+        sysrole.*
+        ,sysuser.user_name
         FROM
-            sys_role sysrole
+        sys_role sysrole
         LEFT JOIN
-            sys_user sysuser
+        sys_user sysuser
         ON
-            sysrole.create_by_user_id = sysuser.user_id
+        sysrole.create_by_user_id = sysuser.user_id
         WHERE
-            sysrole.delete_flag = 0
+        sysrole.delete_flag = 0
         <if test="role_value!=null and role_value!=''">
             AND
             sysrole.role_value like concat(concat('%',#{role_value}),'%')
@@ -142,13 +148,6 @@
         </if>
     </select>
 
-    <!--系统店铺 -->
-    <select id="getSysStoreList" parameterType="sysStoreDTO" resultType="sysStoreDTO">
-        SELECT  *
-        FROM sys_store
-        WHERE
-          store_deleted = 1
-    </select>
 
     <!--获取角色权限-->
     <select id="getRolePermissionByUserId" parameterType="sysUserDTO" resultType="sysRolePermissionDTO">
@@ -224,7 +223,6 @@
     </insert>
 
 
-
     <!--通过role_id查询角色菜单权限-->
     <select id="queryPerssionByRoleId" parameterType="sysAuthorityDTO" resultType="sysAuthorityDTO">
        SELECT
@@ -246,23 +244,102 @@
 
     <!--插入菜单权限-->
     <insert id="insertRolePerssion" parameterType="sysAuthorityDTO">
-       INSERT INTO  `sys_role_authority` (
-            `menu_code`,
-            `role_key`,
-            `menu_type`
-        )
-        VALUES
-            ( #{menu_code}, #{role_key}, #{menu_type});
+        INSERT INTO `sys_role_authority` (
+        `menu_code`,
+        `role_key`,
+        `menu_type`
+        ) SELECT
+
+        #{menu_code}
+        ,role_key
+        ,#{menu_type}
+        FROM
+        sys_role sysrole
+        WHERE
+        sysrole.role_id = #{role_id}
     </insert>
 
 
     <!--删除菜单权限-->
     <insert id="delRolePerssion" parameterType="sysAuthorityDTO">
-        DELETE  FROM `sys_role_authority`
+        DELETE
+        FROM
+            `sys_role_authority`
         WHERE
-          menu_code = #{menu_code}
-        AND
-          role_key =  #{role_key}
+            menu_code = #{menu_code}
+        AND role_key IN (
+            SELECT
+                role_key
+            FROM
+                sys_role sysrole
+            WHERE
+                sysrole.role_id = #{role_id}
+        )
     </insert>
+
+    <insert id="addSysRole" parameterType="sysRoleDTO">
+       INSERT INTO sys_role (
+            role_key
+            ,create_time
+            ,description
+            ,role_value
+            ,create_by_user_id
+            ,delete_flag
+        )
+        SELECT
+            (max(role_key) + 1)
+            ,sysdate()
+            ,#{description}
+            ,#{role_value}
+            ,#{create_by_user_id}
+            ,0
+        FROM
+            sys_role
+    </insert>
+
+    <!--更新用户角色-->
+    <update id="updateSysUserRole" parameterType="sysUserRoleDTO">
+      UPDATE sys_user_role
+      SET role_id= #{role_id}
+      WHERE user_id =#{user_id}
+    </update>
+
+
+    <!--更新系统用户-->
+    <update id="updateSysUser">
+        UPDATE sys_user
+        SET
+            user_name=#{user_name}
+            ,user_head=#{user_head}
+            ,user_email=#{user_email}
+            ,user_sex = #{user_sex}
+            ,user_birthday=#{user_birthday}
+            ,real_name=#{real_name}
+        <if test="login_pass!=null and login_pass !=''" >
+            ,login_pass = #{login_pass}
+        </if>
+        WHERE user_id = #{user_id}
+    </update>
+
+    <!--查询用户角色表-->
+    <select id="querySysUserRole" parameterType="sysRoleDTO" resultType="sysUserRoleDTO">
+        SELECT
+            *
+        FROM
+            sys_user_role
+        WHERE
+            role_id = #{role_id}
+    </select>
+
+
+    <!--删除用户角色-->
+    <delete id="delSysRoleAndSysRoleAuthority" parameterType="sysRoleDTO">
+      DELETE sys_role, sys_role_authority
+      FROM sys_role left JOIN sys_role_authority
+      ON sys_role.role_key = sys_role_authority.role_key
+      WHERE
+        sys_role.role_id = #{role_id}
+    </delete>
+
 
 </mapper>

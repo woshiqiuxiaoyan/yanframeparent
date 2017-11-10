@@ -47,13 +47,6 @@ public interface IAccountService {
      */
     Page<SysRoleDTO> getSysRoleList(SysUserDTO sysUser, SysRoleDTO sysRoleDTO);
 
-    /**
-     * 系统店铺列表
-     * @param sysUser
-     * @param sysStoreDTO
-     * @return
-     */
-    Page<SysStoreDTO> getSysStoreList(SysUserDTO sysUser, SysStoreDTO sysStoreDTO);
 
     /**
      * 获取角色按钮权限
@@ -99,4 +92,26 @@ public interface IAccountService {
      * @return
      */
     int updateRolePerssion(SysAuthorityDTO sysAuthorityDTO);
+
+    /**
+     * 增加系统角色
+     * @param sysUser
+     * @param sysRoleDTO
+     * @return
+     */
+    int addSysRole(SysUserDTO sysUser, SysRoleDTO sysRoleDTO);
+
+    /**
+     * 更新系统用户
+     * @param sysUserDTO
+     * @return
+     */
+    int updateSysUser(SysUserDTO sysUserDTO) throws ParseException;
+
+    /**
+     * 删除用户角色
+     * @param sysRoleDTO
+     * @return
+     */
+    int delSysRole(SysRoleDTO sysRoleDTO);
 }

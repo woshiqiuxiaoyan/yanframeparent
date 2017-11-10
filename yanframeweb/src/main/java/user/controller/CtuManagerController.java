@@ -229,7 +229,6 @@ public class CtuManagerController extends BaseController {
 
     /**
      * 删除会员
-     *
      * @param ctUserInfoDTO
      * @return
      */

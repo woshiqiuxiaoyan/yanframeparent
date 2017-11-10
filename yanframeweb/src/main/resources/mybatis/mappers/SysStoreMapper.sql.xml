@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.SysStoreMapper" >
+
+
+
+	<!--取系统店铺列表 -->
+	<select id="getSysStoreList" parameterType="sysStoreDTO" resultType="sysStoreDTO">
+		SELECT
+		store_id
+		,store_name
+		,store_address
+		,store_user_id
+		,store_tel
+		,store_deleted
+		FROM sys_store
+		WHERE
+			store_deleted = 1
+		  <if test="store_id !=null and store_id !=''">
+			AND  store_id = #{store_id}
+		  </if>
+		  <if test="store_name !=null and store_name !=''">
+		    	AND  store_name  like CONCAT('%',#{store_name},'%')
+		  </if>
+
+	</select>
+
+	<!--查询不是店长的系统用户列表-->
+	<select id="queryAllSysUser" resultType="sysUserDTO">
+		SELECT
+		sysuser.user_id
+		,sysuser.login_account
+		,sysuser.login_pass
+		,sysuser.user_name
+		,sysuser.user_head
+		,sysuser.user_phone
+		,sysuser.user_email
+		,sysuser.user_sex
+		,sysuser.user_birthday
+		,sysuser.register_time
+		,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id = sysuser.user_id) create_by_user_name
+		,sysuser.create_by
+		,sysuser.real_name
+		,sysuser.store_id
+		,sysstore.store_name
+		,sysrole.role_value
+		,sysrole.role_id
+		FROM
+		sys_user sysuser
+		LEFT JOIN sys_store sysstore
+		ON sysuser.store_id = sysstore.store_id
+		AND sysstore.store_deleted = 1
+		LEFT JOIN
+		sys_user_role sysuserrole
+		ON
+		sysuserrole.user_id = sysuser.user_id
+		LEFT JOIN sys_role sysrole
+		ON
+		sysrole.role_id = sysuserrole.role_id
+		WHERE
+		sysuser.is_shop_keeper NOT IN  (1,2)
+		ORDER BY  sysuser.register_time DESC
+	</select>
+
+  	
+</mapper>   

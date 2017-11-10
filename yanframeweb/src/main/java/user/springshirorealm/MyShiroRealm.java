@@ -86,6 +86,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         String tmp = String.valueOf(token.getPassword());
         sysUser.setLogin_pass(tmp);
         sysUser = accountService.login(sysUser);
+
         if (sysUser != null) {
             //查询对应菜单权限
             List<SysAuthorityDTO> sysAuthorityDTOList = accountService.getMenuList(sysUser);

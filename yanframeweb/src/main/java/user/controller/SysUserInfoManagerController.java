@@ -60,9 +60,9 @@ public class SysUserInfoManagerController extends BaseController {
     }
 
 
-
     /**
      * 系统用户列表
+     *
      * @param sysUser
      * @param
      * @return
@@ -91,6 +91,7 @@ public class SysUserInfoManagerController extends BaseController {
 
     /**
      * 系统角色列表接口不分页用于下拉绑定
+     *
      * @param sysRoleDTO
      * @return
      */
@@ -117,6 +118,7 @@ public class SysUserInfoManagerController extends BaseController {
 
     /**
      * 系统角色列表
+     *
      * @param sysRoleDTO
      * @return
      */
@@ -143,163 +145,203 @@ public class SysUserInfoManagerController extends BaseController {
 
 
     /**
-     * 删除系统角色
+     * 删除系统用户
+     *
      * @param sysUserDTO
      * @return
      */
     @RequiresPermissions("delSysUser")
     @RequestMapping("/delSysUser")
     @ResponseBody
-    public ResultVo delSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO){
+    public ResultVo delSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO) {
 
         try {
 
-            if(sysUser.getIs_shop_keeper().intValue()!=3) {
+            if (sysUser.getIs_shop_keeper().intValue() != 3) {
                 int effect = accountService.delSysUser(sysUserDTO);
                 if (effect != 0) {
                     return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
                 }
             }
-        }catch (CustomException e){
-            log.error("删除系统角色失败："+e.getMessage());
-            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        } catch (CustomException e) {
+            log.error("删除系统用户失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("删除系统用户失败：" + e.getMessage());
         }
-        catch (Exception e) {
-            log.error("删除系统角色失败："+e.getMessage());
-        }
-        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
 
 
+    /**
+     * 更新系统用户
+     *
+     * @param sysUserDTO
+     * @return
+     */
+    @RequiresPermissions("updateSysUser")
+    @RequestMapping("/updateSysUser")
+    @ResponseBody
+    public ResultVo updateSysUser(SysUserDTO sysUserDTO) {
 
+        try {
+            int effect = accountService.updateSysUser(sysUserDTO);
+            if (effect != 0) {
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        } catch (CustomException e) {
+            log.error("更新系统用户失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("更新系统用户失败：" + e.getMessage());
+        }
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+    }
 
 
     /**
      * 系统角色查询权限
+     *
      * @return
      */
     @RequestMapping("/queryPerssionByRoleId")
     @ResponseBody
-    public ResultVo queryPerssionByRoleId(@CurrentUser SysUserDTO sysUser,  SysAuthorityDTO sysAuthorityDTO){
+    public ResultVo queryPerssionByRoleId(@CurrentUser SysUserDTO sysUser, SysAuthorityDTO sysAuthorityDTO) {
         try {
 
-            List<SysAuthorityDTO> sysAuthorityDTOList = accountService.queryPerssionByRoleId(sysUser,sysAuthorityDTO);
+            List<SysAuthorityDTO> sysAuthorityDTOList = accountService.queryPerssionByRoleId(sysUser, sysAuthorityDTO);
 
-            if (null!=sysAuthorityDTOList && sysAuthorityDTOList.size()>0) {
+            if (null != sysAuthorityDTOList && sysAuthorityDTOList.size() > 0) {
                 return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, sysAuthorityDTOList);
             }
-        }catch (CustomException e){
-            log.error("系统角色查询权限失败："+e.getMessage());
-            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        } catch (CustomException e) {
+            log.error("系统角色查询权限失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("系统角色查询权限失败：" + e.getMessage());
         }
-        catch (Exception e) {
-            log.error("系统角色查询权限失败："+e.getMessage());
-        }
-        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
-
 
 
     /**
      * 更新系统角色权限
+     *
      * @return
      */
     @RequestMapping("/updateRolePerssion")
     @ResponseBody
-    public ResultVo updateRolePerssion(@CurrentUser SysUserDTO sysUser,  SysAuthorityDTO sysAuthorityDTO){
+    public ResultVo updateRolePerssion(@CurrentUser SysUserDTO sysUser, SysAuthorityDTO sysAuthorityDTO) {
         System.out.println(1);
         log.info(sysAuthorityDTO.toString());
 
         try {
 
-            int effect =  accountService.updateRolePerssion(sysAuthorityDTO);
+            int effect = accountService.updateRolePerssion(sysAuthorityDTO);
 
-            if(effect==0){
+            if (effect == 0) {
                 throw new CustomException(Constant.sys_user.UPDATE_PERMISSION_FAIL);
             }
 
-            return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,null);
-        }catch (CustomException e){
-            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
-        }catch (Exception e) {
+            return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+        } catch (CustomException e) {
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
 
 
+    /**
+     * 删除系统角色
+     *
+     * @return
+     */
+    @RequestMapping("/delSysRole")
+    @ResponseBody
+    public ResultVo delSysRole(@CurrentUser SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
+
+        try {
+            int effect = accountService.delSysRole(sysRoleDTO);
+            if (effect != 0) {
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
+            }
+        } catch (CustomException e) {
+            log.error("删除系统角色失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("删除系统角色失败：" + e.getMessage());
+        }
+
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+    }
+
 
     /**
-     * 增加系统角色
+     * 增加系统用户
+     *
      * @param sysUserDTO
      * @return
      */
     @RequestMapping("/addSysUser")
     @ResponseBody
-    public ResultVo addSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO){
+    public ResultVo addSysUser(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO) {
 
         try {
 
-            int effect = accountService.addSysUser(sysUser,sysUserDTO);
+            int effect = accountService.addSysUser(sysUser, sysUserDTO);
             if (effect != 0) {
                 return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
             }
-        }catch (CustomException e){
-            log.error("增加系统角色失败："+e.getMessage());
-            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        } catch (CustomException e) {
+            log.error("增加系统用户失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
+        } catch (Exception e) {
+            log.error("增加系统用户失败：" + e.getMessage());
         }
-        catch (Exception e) {
-            log.error("增加系统角色失败："+e.getMessage());
-        }
-        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
-
-
 
 
     /**
-     * 店铺列表(管理员才能看)
-     * @param sysStoreDTO
+     * 增加系统角色
+     *
+     * @param sysRoleDTO
      * @return
      */
-    @RequestMapping("/getSysStoreList")
+    @RequestMapping("/addSysRole")
     @ResponseBody
-    public ResultVoPage getSysStoreList(@CurrentUser SysUserDTO sysUser, SysStoreDTO sysStoreDTO) {
-
+    public ResultVo addSysRole(@CurrentUser SysUserDTO sysUser, SysRoleDTO sysRoleDTO) {
 
         try {
 
-            if(sysUser.getIs_shop_keeper().intValue()!=1){
-                throw new CustomException(ErrorCode.sys_error.NOT_PERMISSION);
-            }
-            Page<SysStoreDTO> sysStoreDTOPage = accountService.getSysStoreList(sysUser, sysStoreDTO);
-
-            if (null != sysStoreDTOPage && sysStoreDTOPage.size() > 0) {
-                return ResultVoPage.createCustomSuccess(0, ErrorCode.sys_error.SUCCESS_MSG, sysStoreDTOPage, sysStoreDTOPage.getTotal());
+            int effect = accountService.addSysRole(sysUser, sysRoleDTO);
+            if (effect != 0) {
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
             }
         } catch (CustomException e) {
-            log.error("店铺列表查询:" + e.getMessage());
-            return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+            log.error("增加系统角色失败：" + e.getMessage());
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
         } catch (Exception e) {
-            log.error("店铺列表查询失败:" + e.getMessage());
+            log.error("增加系统角色失败：" + e.getMessage());
         }
-        return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
     }
-
-
 
 
 
 
     /**
      * 店铺页面
+     *
      * @param model
      * @return
      */
     @MenuAuthory
     @RequestMapping("/sysStorePage/{menu_code}")
-    public String sysStorePage( Model model) {
+    public String sysStorePage(Model model) {
 
         return view(model, Constant.Views.sysStorePage);
     }
@@ -307,16 +349,16 @@ public class SysUserInfoManagerController extends BaseController {
 
     /**
      * 角色页面
+     *
      * @param model
      * @return
      */
     @MenuAuthory
     @RequestMapping("/sysRolePage/{menu_code}")
-    public String sysRolePage( Model model) {
+    public String sysRolePage(Model model) {
 
         return view(model, Constant.Views.sysRolePage);
     }
-
 
 
 }

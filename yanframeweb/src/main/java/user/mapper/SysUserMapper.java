@@ -56,12 +56,7 @@ public interface SysUserMapper {
      */
     List<SysRoleDTO> querySysRoleByCondition(SysRoleDTO sysRoleDTO);
 
-    /**
-     * 查询店铺列表
-     * @param sysStoreDTO
-     * @return
-     */
-    List<SysStoreDTO> getSysStoreList(SysStoreDTO sysStoreDTO);
+
 
     /**
      * 获取按钮权限
@@ -111,4 +106,38 @@ public interface SysUserMapper {
      * @return
      */
     int delRolePerssion(SysAuthorityDTO sysAuthorityDTO);
+
+    /**
+     * 增加角色
+     * @param sysRoleDTO
+     * @return
+     */
+    int addSysRole(SysRoleDTO sysRoleDTO);
+
+    /**
+     * 更新系统用户
+     * @param sysUserDTO
+     * @return
+     */
+    int updateSysUser(SysUserDTO sysUserDTO);
+
+    /**
+     * 更新用户角色
+     * @param sysUserRoleDTO
+     */
+     int updateSysUserRole(SysUserRoleDTO sysUserRoleDTO);
+
+    /**
+     * 通过role_id 查询是否有用户正在使用这个角色
+     * @param sysRoleDTO
+     * @return
+     */
+    List<SysUserRoleDTO> querySysUserRole(SysRoleDTO sysRoleDTO);
+
+    /**
+     * 删除用户角色
+     * @param sysRoleDTO
+     * @return
+     */
+    int delSysRoleAndSysRoleAuthority(SysRoleDTO sysRoleDTO);
 }
