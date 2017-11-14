@@ -106,6 +106,7 @@ public class AccountService implements IAccountService {
             //管理员 可查询所有角色
             sysRoleDTO.setCreate_by_user_id(null);
         }
+        sysRoleDTO.setRole_id(sysUser.getRole_id());
         Page<SysRoleDTO> sysRoleDTOPage = PageHelper.startPage(sysRoleDTO.getPage(), sysRoleDTO.getLimit())
                 .doSelectPage(() -> sysUserMapper.querySysRoleByCondition(sysRoleDTO));
         return sysRoleDTOPage;
@@ -254,6 +255,7 @@ public class AccountService implements IAccountService {
                 (string) -> {
                     string.setRole_id(sysAuthorityDTO.getRole_id());
                     string.setChecked(false);
+
                     if(sysAuthoriTOListCur!=null && sysAuthoriTOListCur.size()>0){
                         List tmp = sysAuthoriTOListCur.stream().filter((cur) -> string.getId().intValue() == cur.getId().intValue()).collect(Collectors.toList());
                         if (tmp != null && tmp.size() > 0) {

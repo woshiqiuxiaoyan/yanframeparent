@@ -21,7 +21,7 @@ public interface ISysStoreService {
      * 绑定用户列表下拉框
      * @return
      */
-    List<SysUserDTO> getSysUserList();
+    List<SysUserDTO> getSysUserList(String store_user_id);
 
     /**
      * 添加店铺
@@ -29,4 +29,13 @@ public interface ISysStoreService {
      * @return
      */
     int addSysStore(SysStoreDTO sysStoreDTO);
+
+    /**
+     * 更新店铺
+     * @param sysStoreDTO
+     * @return
+     */
+    int updateSysStore(SysStoreDTO sysStoreDTO);
+
+
 }

@@ -124,7 +124,7 @@ function addUpdateSysUserInfoList(layer,user_id) {
     var posturl = static_path +
         $(".addSysUserForm").attr("action")
         , tmp = $(".addSysUserForm").serializeObject();
-    if(isNotBlank(user_id)){
+    if(user_id ==undefined||user_id ==''){
         posturl = static_path +'SysUserInfoManagerController/addSysUser';
         tmp.user_id = user_id
     }

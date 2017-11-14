@@ -76,11 +76,11 @@
                 layer.confirm('真的删除行么', function (index) {
 
                     //更新url
-                    var posturl  = static_path+"CtuManagerController/delCtuser";
+                    var posturl  = static_path+"SysStoreController/delSysStore";
 
-                    var objTmp = {id:obj.data.id};
+                    var objTmp = {store_id:obj.data.store_id};
                     $.post(posturl, objTmp, function (result) {
-                        console.log(JSON.stringify(result));
+
                         if (result.code == '1000') {
                             obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                         }else{
@@ -111,9 +111,6 @@
                     ,yes: function(){
                         addUpdateSysStore(layer,'');
                     },btn2: function(index, layero){
-                        $(".resetbtn").click();
-                        return false;
-                    },btn3: function(index, layero){
                         layer.closeAll();
                     },success: function(layero, index){
                         //打开成功后的回调
@@ -134,7 +131,6 @@
                     ,shade: 0 //不显示遮罩
                     ,yes: function(){
                         addUpdateSysStore(layer,editthis.store_id);
-
                     },btn2: function(index, layero){
                         $(".resetbtn").click();
                         return false;
@@ -152,6 +148,21 @@
 
 
     /**
+     * 判断不为空
+     * @param obj
+     * @param errorMsg
+     * @param layer
+     * @returns {boolean}
+     */
+    function isNotBlank(obj, errorMsg, layer) {
+        if (obj == undefined || obj == null || obj == '') {
+            layer.msg(errorMsg + "不能为空");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * 更新店铺
      */
     function addUpdateSysStore(layer,store_id){
@@ -160,13 +171,21 @@
         var posturl = static_path + $(".sysstoreeidtform").attr("action");
 
         if(store_id==''){
-            posturl = static_path + $(".sysstoreeidtform").attr("action");
+            posturl = static_path + "SysStoreController/addSysStore";
         }
 
-        $.post(posturl, $(".customcardlistform").serializeObject(), function (result) {
-            console.log(JSON.stringify(result));
+        var objdata =$(".sysstoreeidtform").serializeObject();
+
+        objdata.store_id = store_id;
+
+        if(!(isNotBlank(objdata.store_name,"店铺名称",layer)&&isNotBlank(objdata.store_address,"店铺地址",layer)
+                &&isNotBlank(objdata.store_tel,"店铺电话",layer)&&isNotBlank(objdata.store_user_id,"负责人/店长",layer))){
+            return ;
+        }
+
+        $.post(posturl, objdata, function (result) {
             if (result.code == '1000') {
-                location.href = ctuserListurl;
+                location.reload();
             } else {
                 layer.msg(result.msg)
             }
@@ -191,13 +210,14 @@
      * 取下拉框数据
      */
     function initStoreSelect(form,store_user_id) {
+
         var posturl = static_path + "SysStoreController/getSysUserList";
-        $.post(posturl, {}, function (result) {
+        $.post(posturl, {"store_user_id":store_user_id}, function (result) {
             if (result.code=='1000' &&result.result.length > 0) {
                 createOption(result.result,store_user_id);
                 form.render('select');
             } else {
-                layer.msg("请先创建角色");
+                layer.msg("请先创建用户");
             }
             $(".layui-form-select").addClass('normalinputwidth');
             $(".normalinputwidth").css('width', '350px');
@@ -249,7 +269,7 @@
             '        <div class="layui-form-item">\n' +
             '            <label class="layui-form-label ">店铺地址</label>\n' +
             '            <div class="layui-input-block">\n' +
-            '                <input type="text" name="born_day"' +
+            '                <input type="text" name="store_address"' +
             ' value="'+objdata.store_address+'" class="layui-input normalinputwidth"   >\n' +
             '            </div>\n' +
             '        </div>\n' +

@@ -2,10 +2,18 @@ package user.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sun.tools.internal.jxc.ap.Const;
+import constant.Constant;
+import constant.ErrorCode;
+import enums.IsShopKeeper;
+import exception.CustomException;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import user.dto.SysStoreDTO;
 import user.dto.SysUserDTO;
 import user.mapper.SysStoreMapper;
@@ -54,8 +62,8 @@ public class SysStoreServiceImpl implements ISysStoreService {
     }
 
     @Override
-    public List<SysUserDTO> getSysUserList() {
-        return sysStoreMapper.queryAllSysUser();
+    public List<SysUserDTO> getSysUserList(String store_user_id) {
+        return sysStoreMapper.queryAllSysUser(store_user_id);
     }
 
     /**
@@ -63,9 +71,73 @@ public class SysStoreServiceImpl implements ISysStoreService {
      * @param sysStoreDTO
      * @return
      */
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public int addSysStore(SysStoreDTO sysStoreDTO) {
+        log.info("-----------------添加店铺-------------------");
 
-        return 0;
+        int effect = sysStoreMapper.insertSysStore(sysStoreDTO);
+
+        if(effect==0){
+            throw new CustomException(Constant.sys_store.ADD_STORE_FAIL);
+        }
+
+        //设置为店长
+        sysStoreDTO.setIs_shop_keeper(IsShopKeeper.SHOP_KEEPER.getValue());
+        updateUserForSysStore(sysStoreDTO);
+
+        return 1;
     }
+
+    /**
+     * 更新用户为店长/或者普通人
+     * @param sysStoreDTO
+     */
+    private void updateUserForSysStore(SysStoreDTO sysStoreDTO) {
+        int effect=0;
+        SysUserDTO sysUserDTO = new SysUserDTO();
+        sysUserDTO.setStore_id(sysStoreDTO.getStore_id());
+        sysUserDTO.setUser_id(sysStoreDTO.getStore_user_id());
+        sysUserDTO.setIs_shop_keeper(sysStoreDTO.getIs_shop_keeper());
+        effect = sysStoreMapper.updateUserForSysStore(sysUserDTO);
+
+        if(effect==0){
+            throw new CustomException(Constant.sys_store.ADD_STORE_FAIL);
+        }
+    }
+
+    /**
+     * 更新店铺
+     * @param sysStoreDTO
+     * @return
+     */
+    @Override
+    public int updateSysStore(SysStoreDTO sysStoreDTO) {
+
+        log.info("-----------------更新店铺-------------------");
+
+        SysStoreDTO sysStoreDTOTMP = sysStoreMapper.selectSysStoreByStoreId(sysStoreDTO);
+
+        if(null == sysStoreDTOTMP){
+            throw new CustomException(Constant.sys_store.UPDATE_STORE_FAIL);
+        }
+
+        //把原来的店长设置为普通员工
+        sysStoreDTOTMP.setIs_shop_keeper(IsShopKeeper.STAFF.getValue());
+        updateUserForSysStore(sysStoreDTOTMP);
+
+        int effect =  sysStoreMapper.updateSysStore(sysStoreDTO);
+
+        if(effect==0){
+            throw new CustomException(Constant.sys_store.UPDATE_STORE_FAIL);
+        }
+
+        //设置为店长
+        sysStoreDTO.setIs_shop_keeper(IsShopKeeper.SHOP_KEEPER.getValue());
+        updateUserForSysStore(sysStoreDTO);
+
+        return 1;
+    }
+
+
 }

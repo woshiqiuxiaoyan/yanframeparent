@@ -38,6 +38,12 @@
 
 <script>
 
+    function addClass(obj, cls){
+        var obj_class = obj.className,//获取 class 内容.
+            blank = (obj_class != '') ? ' ' : '';//判断获取到的 class 是否为空, 如果不为空在前面加个'空格'.
+        added = obj_class + blank + cls;//组合原来的 class 和需要添加的 class.
+        obj.className = added;//替换原来的 class.
+    }
 
     layui.use(['table','layer','laydate','form'], function () {
         var table = layui.table,layer = layui.layer
@@ -45,6 +51,17 @@
             ,upload = layui.upload,element = layui.element
             ,carousel = layui.carousel;
 
+        var tmpurl = window.location.href;
+        var tmpgroup =  tmpurl.split("/");
+
+        $(".myleft dd").each(function (i,n) {
+           if(tmpurl.indexOf(n.getAttribute("class"))!=-1){
+               addClass(n,"layui-this");
+           }
+        })
+
+
+        $(".leftneedadd").addClass("sfdsdffsd");
         onloadInit(upload,layform,laydate,element,table,layer,carousel);
     });
 </script>

@@ -1,40 +1,29 @@
 var isDebugger = true;//开发者模式
 
-//初始化日期控件
-function laydate_manager(laydate) {
-    //单控件
-    laydate.render({
-        elem: '#condictionstart'
-    })
-    laydate.render({
-        elem: '#condictionend'
-    })
-}
 
 
-//1渲染库存
+//1、渲染库存
+
 function tableSetting(table, datastring) {
-    if (isDebugger)
-        console.log("渲染库存 datastring：" + datastring);
-    inStockTableData = table.render({ //其它参数在此省略
-        id:"inStockTableId"
-        ,elem: '#inStockTableId' //或 elem: document.getElementById('test') 等
+
+    orderTableData  = table.render({ //其它参数在此省略
+        id:"sysorder_pro_id"
+        ,elem: '#sysorder_pro_id' //或 elem: document.getElementById('test') 等
         , data: datastring
-        , height: 'full-225'
-        , cols: [  [{align: 'center', title: '入库列表', colspan: 6}],
+        , height: 'full-350'
+        , cols: [  [{align: 'center', title: '订单列表', colspan: 6}],
             [ //标题栏
                 {align: 'center', checkbox: true,fixed:true, LAY_CHECKED: true}
-                , {field: 'goods_id', align: 'center', title: '商品货号', width: 120}
-                , {field: 'goods_name', align: 'center', title: '商品名称', width: 140}
+                , {field: 'goods_id', align: 'center', title: '商品货号', width: 150}
+                , {field: 'goods_name', align: 'center', title: '商品名称', width: 150}
                 , {field: 'num', align: 'center', title: '进货数量', width: 110, edit: 'text'}
-                , {field: 'remark', align: 'center', title: '备注', width: 210, edit: 'text'}
                 , {
                 fixed: 'right',
                 align: 'center',
                 title: '操作',
                 width: 150,
                 align: 'center',
-                toolbar: '#instockinfotabletoolbar'
+                toolbar: '#sysorder_protoolbar'
             } //这里的toolbar值是模板元素的选择器
             ]]
         , skin: 'row' //表格风格
@@ -44,8 +33,6 @@ function tableSetting(table, datastring) {
         , limit: 5 //默认采用60
         , page: true
     });
-    if (isDebugger)
-        console.log("渲染库存结果 inStockTableData：" + inStockTableData);
 }
 
 
@@ -176,3 +163,65 @@ var  instockbtnActive = {
     }
 };
 
+
+
+
+
+/**
+ * 选择会员弹出层
+ */
+var selectCtuUser = function(){
+
+    var contenttmp =  ' <table class="layui-table" id="customcardlisttableid" lay-filter="customcardlisttablefilter"' +
+        ' lay-size="sm"></table>';
+    layer.open({
+        type: 1
+        ,offset: '100px'
+        ,area: '300px;'
+        ,shade: 0.8
+        ,id: 'selectCtuUser' //设定一个id，防止重复弹出
+        ,btn: ['看完了']
+        ,btnAlign: 'c'
+        ,moveType: 1 //拖拽模式，0或者1
+        ,content: contenttmp
+        ,success: function(layero){
+
+            selectCtuUserPingjie();
+
+        }
+    });
+}
+
+
+function selectCtuUserPingjie() {
+
+    var dataString = '';
+    table.render({ //其它参数在此省略
+        id:"customcardlisttableid"
+        ,elem: '#customcardlisttableid' //或 elem: document.getElementById('test') 等
+        , data: dataString
+        , height: 'full-350'
+        , cols: [
+            [ //标题栏
+                {align: 'center', checkbox: true,fixed:true, LAY_CHECKED: true}
+                , {field: 'card_no', align: 'center', title: '卡号', width: 150}
+                , {field: 'real_name', align: 'center', title: '用户名', width: 150}
+                , {field: 'mobile_phone', align: 'center', title: '手机', width: 110, edit: 'text'}
+                , {
+                fixed: 'right',
+                align: 'center',
+                title: '操作',
+                width: 150,
+                align: 'center',
+                toolbar: '#sysorder_protoolbar'
+            } //这里的toolbar值是模板元素的选择器
+            ]]
+        , skin: 'row' //表格风格
+        , even: true
+        , size: 'sm' //小尺寸的表格
+        , limits: [5, 10, 15, 20, 25]
+        , limit: 5 //默认采用60
+        , page: true
+    });
+    
+}

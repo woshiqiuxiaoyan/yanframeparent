@@ -146,6 +146,12 @@
             AND
             sysrole.create_by_user_id = #{create_by_user_id}
         </if>
+
+        <if test="role_id!=null and role_id!=''">
+            OR
+            sysrole.role_id = #{role_id}
+        </if>
+
     </select>
 
 

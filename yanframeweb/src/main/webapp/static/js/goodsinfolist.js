@@ -255,3 +255,8 @@ var detailView = function(){
         }
     });
 }
+
+
+
+
+

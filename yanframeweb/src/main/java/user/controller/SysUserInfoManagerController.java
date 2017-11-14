@@ -8,21 +8,18 @@ import constant.ErrorCode;
 import dto.ResultVo;
 import dto.ResultVoPage;
 import exception.CustomException;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pojo.SysStore;
-import pojo.SysUser;
 import system.controller.BaseController;
-import user.dto.*;
+import user.dto.SysAuthorityDTO;
+import user.dto.SysRoleDTO;
+import user.dto.SysUserDTO;
 import user.service.IAccountService;
 
 import java.util.ArrayList;
@@ -71,7 +68,6 @@ public class SysUserInfoManagerController extends BaseController {
     @RequestMapping("/getSysUserInfoList")
     @ResponseBody
     public ResultVoPage getSysUserInfoList(@CurrentUser SysUserDTO sysUser, SysUserDTO sysUserDTO) {
-
 
         try {
             Page<SysUserDTO> sysUserInfoList = accountService.getSysUserInfoList(sysUser, sysUserDTO);

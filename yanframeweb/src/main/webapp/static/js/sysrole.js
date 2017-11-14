@@ -67,7 +67,6 @@ function table_manger(table,layer,laydate,layform){
                 ,offset: '100px'
                 ,area: '300px'
                 ,id: 'LAY_layuiprodetail' //设定一个id，防止重复弹出
-                ,btn: ['确认','重置','关闭']
                 ,btnAlign: 'c'
                 ,moveType: 1 //拖拽模式，0或者1
                 ,content: contenttmp

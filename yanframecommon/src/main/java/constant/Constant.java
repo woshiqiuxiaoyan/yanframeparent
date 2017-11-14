@@ -43,6 +43,7 @@ public class Constant {
         String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
         String  sysRolePage="admin/SysUserInfoManager/sysrolelist";//系统角色
         String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
+        String  consumePage="admin/OrderManager/quickconsume";//快速消费页面
 
 
     }
@@ -60,6 +61,12 @@ public class Constant {
         String DEL_ROLE_FAIL="删除角色失败";
         String ROLE_IS_USERING="该角色正在被使用，无法删除";
 
+    }
+
+    public interface sys_store{
+        String ADD_STORE_FAIL ="增加店铺失败";//增加店铺失败
+        String DEL_STORE_FAIL ="删除店铺失败";//删除店铺失败
+        String UPDATE_STORE_FAIL ="更新店铺失败";//删除店铺失败
     }
 
     public  static int DefaultPageSize=5;//默认每页大小

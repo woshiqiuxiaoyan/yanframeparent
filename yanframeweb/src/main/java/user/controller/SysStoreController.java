@@ -82,8 +82,8 @@ public class SysStoreController extends BaseController {
      */
     @RequestMapping("/getSysUserList")
     @ResponseBody
-    public ResultVo getSysUserList() {
-        List<SysUserDTO> sysUserDTOList = sysStoreService.getSysUserList();
+    public ResultVo getSysUserList(String store_user_id) {
+        List<SysUserDTO> sysUserDTOList = sysStoreService.getSysUserList(store_user_id);
         return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,sysUserDTOList);
     }
 
@@ -100,7 +100,7 @@ public class SysStoreController extends BaseController {
 
         try {
             int effect =  sysStoreService.addSysStore(sysStoreDTO);
-            if(effect==0){
+            if(effect!=0){
                 return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,null);
             }
         }catch (CustomException e){
@@ -112,6 +112,32 @@ public class SysStoreController extends BaseController {
         }
         return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
     }
+
+
+
+    /**
+     * 更新店铺
+     *
+     * @return
+     */
+    @RequestMapping("/updateSysStore")
+    @ResponseBody
+    public ResultVo updateSysStore(SysStoreDTO sysStoreDTO) {
+
+        try {
+            int effect = sysStoreService.updateSysStore(sysStoreDTO);
+            if(effect!=0){
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,null);
+            }
+        }catch (CustomException e){
+            e.printStackTrace();
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        }catch (Exception e) {
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+        }
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,null);
+    }
+
 
 
 

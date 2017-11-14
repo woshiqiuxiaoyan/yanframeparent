@@ -9,13 +9,16 @@
 	<!--取系统店铺列表 -->
 	<select id="getSysStoreList" parameterType="sysStoreDTO" resultType="sysStoreDTO">
 		SELECT
-		store_id
-		,store_name
-		,store_address
-		,store_user_id
-		,store_tel
-		,store_deleted
-		FROM sys_store
+		sysstore.store_id
+		,sysstore.store_name
+		,sysstore.store_address
+		,sysstore.store_user_id
+		,sysstore.store_tel
+		,sysstore.store_deleted
+		,sysuser.user_name store_user_name
+		FROM sys_store sysstore
+		LEFT JOIN sys_user sysuser
+		ON sysuser.user_id = sysstore.store_user_id
 		WHERE
 			store_deleted = 1
 		  <if test="store_id !=null and store_id !=''">
@@ -61,8 +64,69 @@
 		sysrole.role_id = sysuserrole.role_id
 		WHERE
 		sysuser.is_shop_keeper NOT IN  (1,2)
+		<if test="store_user_id != null and store_user_id !=''">
+			OR  sysuser.user_id = #{store_user_id}
+		</if>
 		ORDER BY  sysuser.register_time DESC
 	</select>
 
-  	
+	<!--添加店铺-->
+	<insert id="insertSysStore" parameterType="sysStoreDTO">
+		<selectKey resultType="int" order="AFTER" keyProperty="store_id">
+			SELECT LAST_INSERT_ID() AS store_id
+		</selectKey>
+		INSERT INTO sys_store (
+			store_name,
+			store_address,
+			store_user_id,
+			store_tel,
+			store_deleted
+		)
+		VALUES
+			(
+				#{store_name}
+				,#{store_address}
+				,#{store_user_id}
+				,#{store_tel}
+				,1
+			)
+	</insert>
+
+	<!--更新用户店铺-->
+	<update id="updateUserForSysStore" parameterType="sysUserDTO">
+		UPDATE sys_user
+		SET
+			store_id = #{store_id}
+			,is_shop_keeper = #{is_shop_keeper}
+		WHERE
+			user_id = #{user_id}
+	</update>
+	<!--删除店铺-->
+	<delete id="delSysStore" parameterType="sysStoreDTO">
+		DELETE
+		FROM
+			sys_store sysstore
+		WHERE
+			sysstore.store_id = #{store_id}
+	</delete>
+
+
+	<!--更新店铺-->
+	<update id="updateSysStore" parameterType="sysStoreDTO">
+		UPDATE sys_store
+		SET  store_name = #{store_name}
+		,store_address =#{store_address}
+		,store_user_id =#{store_user_id}
+		,store_tel = #{store_tel}
+		WHERE store_id =#{store_id}
+	</update>
+
+
+	<select id="selectSysStoreByStoreId" resultType="sysStoreDTO">
+		SELECT *
+		FROM sys_store sysstore
+		WHERE sysstore.store_id = #{store_id}
+	</select>
+
+
 </mapper>   

@@ -13,6 +13,11 @@ import pojo.SysStore;
  */
 @Data
 public class SysStoreDTO extends SysStore {
+
+    private Integer is_shop_keeper;// 1 管理员2店长 3普通员工
+
+    private String store_user_name;//店长名称
+
     private int page;
 
     private int limit;
