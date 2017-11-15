@@ -1,5 +1,5 @@
 var static_path = "http://114.215.116.198/";
-var isDebug=false;//开发者模式
+var isDebug=true;//开发者模式
 
 if(isDebug){
     static_path = "http://localhost:8080/";
@@ -30,3 +30,11 @@ $.prototype.serializeObject = function () {
     }
     return o;
 };
+
+
+Array.prototype.del = function (n) {　//n表示第几项，从0开始算起。
+    if (n < 0)　//如果n<0，则不进行任何操作。
+        return this;
+    else
+        return this.slice(0, n).concat(this.slice(n + 1, this.length));
+}

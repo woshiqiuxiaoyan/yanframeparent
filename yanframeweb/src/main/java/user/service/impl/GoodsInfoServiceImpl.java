@@ -80,8 +80,6 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
             return string;
         }).collect(Collectors.toList());
 
-        list.forEach(System.out::println);
-
         return list;
     }
 

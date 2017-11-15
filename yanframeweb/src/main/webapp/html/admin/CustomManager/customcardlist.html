@@ -18,7 +18,7 @@
 
                 <label class="layui-form-label" style="text-align:center;" >手机</label>
                 <div class="layui-input-inline">
-                    <input type="text" name="mobile_phone"   autocomplete="off" class="layui-input">
+                    <input type="number" name="mobile_phone"   autocomplete="off" class="layui-input">
                 </div>
 
                 <label class="layui-form-label">性别</label>
@@ -58,11 +58,8 @@
         <th lay-data="{ field:'id',checkbox:true, width:80}"></th>
         <th lay-data="{field:'card_no', width:150}">卡号</th>
         <th lay-data="{field:'real_name', width:100}">用户名</th>
-        <!--<th lay-data="{width:200, sort: true,templet:'#templetborn_day'}">出生日期</th>-->
         <th lay-data="{ width:80, sort: true,templet:'#templetsex'}">性别</th>
         <th lay-data="{field:'mobile_phone',align:'center', width:150}">手机</th>
-        <!--<th lay-data="{field:'id_card_number', width:200, sort: true}">身份证</th>-->
-        <!--<th lay-data="{field:'email', width:200, sort: true}">邮箱</th>-->
         <th lay-data="{field:'operatorName',align:'center', width:100, sort: true}">开卡人</th>
         <th lay-data="{field:'referee_card_no', width:150, sort: true}">推荐人卡号</th>
         <th lay-data="{field:'accumulate_integral', width:80, sort: true}">积分</th>
@@ -340,10 +337,8 @@
                     ,btnAlign: 'c' //按钮居中
                     ,shade: 0 //不显示遮罩
                     ,yes: function(){
-
                         //更新url
                         var posturl  = static_path+$(".customcardlistform").attr("action");
-
                         $.post(posturl, $(".customcardlistform").serializeObject(), function (result) {
                             console.log(JSON.stringify(result));
                             if (result.code == '1000') {

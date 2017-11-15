@@ -66,7 +66,8 @@ function settingData(obj) {
     }
     obj.num= 0;
     obj.remark="无";
-    dataString.push(obj);  return dataString;
+    dataString.push(obj);
+    return dataString;
 }
 
 Array.prototype.del = function (n) {　//n表示第几项，从0开始算起。

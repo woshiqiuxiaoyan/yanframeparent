@@ -113,16 +113,13 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
             throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
         }
 
-
         ctUserInfoDTO.setStore_id(sysUser.getStore_id());
 
         Page<CtUserInfoDTO> list = PageHelper.startPage(ctUserInfoDTO.getPage(), ctUserInfoDTO.getLimit())
                 .doSelectPage(() -> ctUserInfoMapper.queryByCondition(ctUserInfoDTO));
 
-
         //查询会员等级
         List<CtUserGradeDTO> ctUserGradeDTOList = ctUserInfoMapper.queryCtUserGradeList(new CtUserGradeDTO());
-
 
         list.stream().forEach(
                 (string) -> {
@@ -133,10 +130,6 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
                     });
                 }
         );
-
-
-        list.forEach(System.out::println);
-
 
         return list;
     }

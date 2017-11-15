@@ -3,11 +3,9 @@
 
 <body th:fragment="maincontent">
  <style>
-     .layui-table tr td {
-         height: 100px !important;
-     }
 
-     .layui-table[lay-size=sm] td .layui-table-cell {
+
+     .lefttable .layui-table[lay-size=sm] td .layui-table-cell {
          height: 100px !important;
          line-height: 100px !important;
          padding:0;
@@ -22,10 +20,6 @@
 
      .layui-table[lay-size=sm] th .layui-table-cell   {
          padding:0;
-     }
-
-     .layui-table  {
-         margin: 0;
      }
 
      .layui-table-view .layui-table th{
@@ -48,6 +42,22 @@
          width:97%;
          text-align:right;
      }
+
+     .width100{
+          width:100%;
+      }
+
+     .width60{
+         width:60% !important;
+     }
+
+     .righttable table{
+         margin:0;
+     }
+     .result span{
+         color:red;
+     }
+
  </style>
 
 
@@ -59,33 +69,19 @@
             <div class="layui-form-item">
                 <div class="layui-inline">
                     请输入卡号:
-                    <div class="layui-inline">
+                    <div class="layui-inline card_no_search" >
                         <input name="card_no" class="layui-input">
                     </div>
-               <!--     请输入姓名:
-                    <div class="layui-inline">
-                        <input name="real_name" class="layui-input">
-                    </div>
-                    请输入手机号:
-                    <div class="layui-inline">
-                        <input name="mobile_phone" class="layui-input">
-                    </div>-->
-                    <input type="button" class="layui-btn " onclick="javascript:selectCtuUser.call(this)" value="我要查询"></input>
+                    <input type="button" class="layui-btn " onclick="javascript:cardInfoSearch.call(this)" value="卡号查询"></input>
+                    <input type="button" class="layui-btn " onclick="javascript:selectCtuUser.call(this)" value="快速查询"></input>
                 </div>
             </div>
-            <div class="layui-form-item">
-                姓名：
+            <div class="layui-form-item showselectinfo" style="color:red;">
+                姓名：<span>#</span>
             </div>
         </form>
     </div>
 </fieldset>
-
-
-<!--<div class="layui-btn-group instockbtn">
-    <input type="button" class="layui-btn" data-type="getCheckData" value="保存选中入库"></input>
-    <input type="button" class="layui-btn" data-type="getCheckLength" value="全部入库"></input>
-    <input type="button" class="layui-btn" data-type="isAll" value="历史入库清单"></input>
-</div>-->
 
  <form class="layui-form search_goodsinfo_form" method="post"
        th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
@@ -104,7 +100,7 @@
      </div>
  </form>
 <!--左边表格-->
-<div style="width:61%;border:1px solid red;float:left;">
+<div style="width:60%;float:left;" class="lefttable">
 
     <table class="layui-table"
            lay-data="{  height: 'full-225', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
@@ -114,14 +110,14 @@
             <th lay-data="{align:'center'}" colspan="7">选择商品添加</th>
         </tr>
         <tr>
-            <th lay-data="{field:'goods_id', style:'background-color: #5FB878; color: #fff;', width:135,align:'center'}">
+            <th lay-data="{width:260, align:'center',templet:'#templetimgurl'}">图片</th>
+            <th lay-data="{field:'goods_id' , width:135,align:'center'}">
                 商品货号
             </th>
             <th lay-data="{field:'goods_name', width:130,align:'center'}">商品名称</th>
-            <th lay-data="{field:'goods_instock_price',align:'center', width:80}">进货价格</th>
+            <th lay-data="{field:'goods_sale_price',align:'center', width:80}">售货价格</th>
             <th lay-data="{field:'goods_color', width:120,align:'center' }">商品颜色</th>
             <th lay-data="{width:90, templet:'#templetgoods_size',align:'center'}">尺码</th>
-            <th lay-data="{width:260, align:'center',templet:'#templetimgurl'}">图片</th>
             <th lay-data="{fixed:'right', width:190, align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
         </tr>
         </thead>
@@ -168,17 +164,59 @@
 </div>
 
 <!--右边表格-->
- <div style="width:38%;border:1px solid red;float:right;">
+ <div style ="width:38%;float:right;" class="righttable">
     <table class="layui-table" id="sysorder_pro_id" lay-filter="sysorder_pro_filter" lay-size="sm">
     </table>
+
+     <div class="layui-form-item layui-form-text" style="border:1px solid #f2f2f2;">
+         <table class="layui-table">
+             <colgroup>
+                 <col width="100">
+                 <col>
+             </colgroup>
+
+             <thead>
+             <tr>
+                 <th colspan="2" style="text-align: left;" class="result">
+                     小计：
+                       <span>0.00</span>
+                     ，合计金额：
+                       <span>0.00</span>
+                     ，<span>清空</span>
+                 </th>
+             </tr>
+             </thead>
+             <tbody>
+             <tr>
+                 <td style="text-align:center; ">备注</td>
+                 <td style="text-align:left;">
+                     <textarea style="border:none"   placeholder="请输入内容" class="layui-textarea remarkTextArea"></textarea>
+                 </td>
+             </tr>
+             <tr>
+                 <td style="text-align:center;" colspan="2">
+                     <input type="button" class="layui-btn   layui-btn-radius accountresult"  value="结算">
+                     </input>
+                 </td>
+             </tr>
+             </tbody>
+         </table>
+     </div>
  </div>
 
 
 <!--右边工具条 （添加的仓库信息）-->
-<script type="text/html" id="instockinfotabletoolbar">
+<script type="text/html" id="sysorder_pro_toolbar">
     <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
+
+
+
+ <!--弹出工具条-->
+ <script type="text/html" id="ctusertoolbar">
+     <a class="layui-btn layui-btn-mini" lay-event="select">选择</a>
+ </script>
 
 
 <script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
@@ -195,13 +233,16 @@
     //左边商品表格数据
     var goodsInfoTableData = null;
 
+    //table
+    var statictable = null;
+
     /**
      * 查询左边按钮
      */
     function instockGoodsInfoTableIdTableSearch() {
 
         $(".search_btn").on('click', function () {
-            table.reload('instockGoodsInfoTableId', {
+            statictable.reload('instockGoodsInfoTableId', {
                 url: '/GoodsInfoManagerController/getGoodsInfoList'
                 , where: $(".search_goodsinfo_form").serializeObject()
             });
@@ -209,10 +250,11 @@
         });
     }
 
-
-
     //初始化入口
     function onloadInit(upload, layform, laydate, element, table, layer, carousel) {
+
+        statictable  = table;
+
         // 查询左边按钮
         instockGoodsInfoTableIdTableSearch();
 
@@ -228,11 +270,29 @@
     function table_manger(table, layer, laydate, layform) {
 
         //监听右边工具条
+        table.on('edit(sysorder_pro_filter)', function (obj) {
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+
+            if(isNaN(value)){
+                tableSetting(table, orderTableData);//渲染右边库存的表格
+                //不是数字
+                layer.msg('请输入数字');
+            }else{
+                sumMoneySet();
+            }
+        });
+
+
+        //监听右边工具条
         table.on('tool(sysorder_pro_filter)', function (obj) {
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值
             instockActive[layEvent] ? instockActive[layEvent].call(data) : '';
         });
+
+
         var instockActive = {
             detail: function () {
                 detailView.call(this);
@@ -263,12 +323,29 @@
             }
         };
 
-
-        //保存库存相应操作
-        $('.instockbtn .layui-btn').on('click', function () {
-            var type = $(this).data('type');
-            instockbtnActive[type] ? instockbtnActive[type].call(this, table) : '';
+        /**
+         * 结算
+         */
+        $(".accountresult").on('click', function () {
+            accountResultActive["submit"] ? accountResultActive["submit"].call(this) : '';
         });
+
+
+
+        //监听弹出层工具条
+        table.on('tool(quickSearchFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            quickSearchFilterActive[layEvent] ? quickSearchFilterActive[layEvent].call(data) : '';
+        });
+
+        var quickSearchFilterActive = {
+            select: function () {
+                $(".showselectinfo").html("姓名："+this.real_name+"  卡号："+this.card_no +"  手机号："+this.mobile_phone);
+                $(".card_no_search input").val(this.card_no);
+                layer.closeAll();
+            }
+        }
 
     }
 

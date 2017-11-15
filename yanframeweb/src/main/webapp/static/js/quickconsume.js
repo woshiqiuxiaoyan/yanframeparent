@@ -1,39 +1,37 @@
 var isDebugger = true;//开发者模式
 
-
-
 //1、渲染库存
 
 function tableSetting(table, datastring) {
 
-    orderTableData  = table.render({ //其它参数在此省略
+    var tmp = statictable.render({ //其它参数在此省略
         id:"sysorder_pro_id"
         ,elem: '#sysorder_pro_id' //或 elem: document.getElementById('test') 等
         , data: datastring
-        , height: 'full-350'
-        , cols: [  [{align: 'center', title: '订单列表', colspan: 6}],
-            [ //标题栏
-                {align: 'center', checkbox: true,fixed:true, LAY_CHECKED: true}
-                , {field: 'goods_id', align: 'center', title: '商品货号', width: 150}
+        , height: 'full-453'
+        , cols: [  [{align: 'center', title: '订单列表', colspan: 5}],
+            [  {field: 'goods_id', align: 'center', title: '商品货号', width: 150}
                 , {field: 'goods_name', align: 'center', title: '商品名称', width: 150}
-                , {field: 'num', align: 'center', title: '进货数量', width: 110, edit: 'text'}
+                , {field: 'num', align: 'center', title: '进货数量', width: 80, edit: 'text'}
+                , {field: 'goods_color', align: 'center', title: '商品颜色', width: 110, edit: 'text'}
                 , {
-                fixed: 'right',
                 align: 'center',
                 title: '操作',
                 width: 150,
                 align: 'center',
-                toolbar: '#sysorder_protoolbar'
+                toolbar: '#sysorder_pro_toolbar'
             } //这里的toolbar值是模板元素的选择器
             ]]
         , skin: 'row' //表格风格
         , even: true
         , size: 'sm' //小尺寸的表格
-        , limits: [5, 10, 15, 20, 25]
-        , limit: 5 //默认采用60
-        , page: true
     });
+    orderTableData = tmp.config.data;
+    sumMoneySet();
 }
+
+var sumMoney=0,         //合计
+    littleAccount=0;    //小计
 
 
 //2 将左边表格选中的数据拼接成右边表格的数据
@@ -41,7 +39,7 @@ function settingData(obj) {
     if (obj == '') {
         return false;
     }
-    var dataString = inStockTableData.config.data;
+    var dataString = orderTableData;
     //通过goods_id去除重复添加
     if (dataString.length > 0) {
         for (var i = 0; i < dataString.length; i++) {
@@ -51,16 +49,26 @@ function settingData(obj) {
             }
         }
     }
-    obj.num= 0;
+
+
+    obj.table=null;
+    obj.num= 1;
     obj.remark="无";
-    dataString.push(obj);  return dataString;
+    dataString.push(obj);
+    return dataString;
 }
 
-Array.prototype.del = function (n) {　//n表示第几项，从0开始算起。
-    if (n < 0)　//如果n<0，则不进行任何操作。
-        return this;
-    else
-        return this.slice(0, n).concat(this.slice(n + 1, this.length));
+/**
+ * 计算价格
+ */
+function sumMoneySet(){
+    sumMoney=0;
+    for(var tmp =0 ;tmp<  orderTableData.length;tmp++){
+        sumMoney+=orderTableData[tmp].goods_sale_price*orderTableData[tmp].num;
+    }
+
+    $(".result span")[0].innerHTML = sumMoney;
+    $(".result span")[1].innerHTML = sumMoney;
 }
 
 //del data删除元素
@@ -68,7 +76,7 @@ function delSettingData(obj) {
     if (obj == '') {
         return false;
     }
-    var dataString = inStockTableData.config.data;
+    var dataString = orderTableData;
     //通过goods_id去除重复添加
     if (dataString.length > 0) {
         for (var i = 0; i < dataString.length; i++) {
@@ -83,6 +91,7 @@ function delSettingData(obj) {
 
 //增加一行
 var addInstock = function () {
+
     var dataString = settingData(this);
     if (!dataString) {
         return;
@@ -105,25 +114,24 @@ var delInstock = function () {
 }
 
 //保存库存相应操作
-var  instockbtnActive = {
-    getCheckData: function(table){ //获取选中数据
-
-        var checkStatus = table.checkStatus('inStockTableId');
-        var data = checkStatus.data;
-        if(data.length==0){
-            layer.alert("未选中任何商品");
-            return ;
-        }
+var  accountResultActive = {
+    submit: function(table){ //获取选中数据
 
         var subData = [];//提交的数据
 
-        for(tmp in data){
+        var remark = $(".remarkTextArea").val();
+        debugger
+        for(tmp in orderTableData){
+            if(isNaN(tmp)){
+                continue;
+            }
             var subTmp = new Object();
-            subTmp.goods_info_id = data[tmp].id;
-            subTmp.num = data[tmp].num;
-            subTmp.remark = data[tmp].remark;
-            subData[tmp] = (subTmp);
+            subTmp.goods_info_id = orderTableData[tmp].id
+            subTmp.num = orderTableData[tmp].num;
+            subTmp.remark = remark;
+            subData.push(subTmp);
         }
+
 
         var url = static_path+"SysStockController/inStock";
 
@@ -150,17 +158,8 @@ var  instockbtnActive = {
             ,dataType:"json"
         });
 
-        // layer.alert(JSON.stringify(data));
     }
-    ,getCheckLength: function(table){ //获取选中数目
-        var checkStatus = table.checkStatus('inStockTableId')
-            ,data = checkStatus.data;
-        layer.msg('选中了：'+ data.length + ' 个');
-    }
-    ,isAll: function(table){ //验证是否全选
-        var checkStatus = table.checkStatus('inStockTableId');
-        layer.msg(checkStatus.isAll ? '全选': '未全选')
-    }
+
 };
 
 
@@ -172,56 +171,113 @@ var  instockbtnActive = {
  */
 var selectCtuUser = function(){
 
-    var contenttmp =  ' <table class="layui-table" id="customcardlisttableid" lay-filter="customcardlisttablefilter"' +
+    var contenttmp =
+        '<fieldset class="layui-elem-field">\n' +
+        '    <legend>选择会员</legend>\n' +
+        '    <div class="layui-field-box">\n' +
+        '        <form class="layui-form alert_quick_search_form" method="post"\n' +
+        '                      <label class="layui-form-label"></label>\n' +
+        '            <div class="layui-form-item">\n' +
+         '               <div class="layui-inline width100" >\n' +
+         '                     <label class="layui-form-label">卡号</label>\n' +
+         '                     <div class="layui-input-inline width60"  >\n' +
+         '                         <input type="text" name="card_no"  class="layui-input">\n' +
+         '                     </div>'+
+         '                </div>\n'+
+         '                <div class="layui-inline width100"  >\n' +
+         '                     <label class="layui-form-label">姓名</label>\n' +
+         '                     <div class="layui-input-inline width60">\n' +
+         '                         <input type="text" name="real_name"  class="layui-input">\n' +
+         '                     </div>'+
+         '                </div>\n'+
+         '                <div class="layui-inline width100"  >\n' +
+         '                     <label class="layui-form-label">手机号</label>\n' +
+         '                     <div class="layui-input-inline width60">\n' +
+         '                         <input type="number" name="mobile_phone"  class="layui-input">\n' +
+         '                     </div>'+
+         '                </div>\n'+
+         '               <div class="layui-inline width100" style="text-align:center" >\n' +
+         '                    <input type="button"  class="layui-btn " onclick="updateQuickSearch()" value="条件查询"></input>\n' +
+         '                </div>\n'+
+        '            </div>\n' +
+        '        </form>\n' +
+        '    </div>\n' +
+        '</fieldset>' +
+        '<table class="layui-table" id="quickSearchId" lay-filter="quickSearchFilter"' +
         ' lay-size="sm"></table>';
+
     layer.open({
         type: 1
-        ,offset: '100px'
-        ,area: '300px;'
+        ,offset: '50px'
+        ,area: '500px'
         ,shade: 0.8
         ,id: 'selectCtuUser' //设定一个id，防止重复弹出
-        ,btn: ['看完了']
-        ,btnAlign: 'c'
         ,moveType: 1 //拖拽模式，0或者1
         ,content: contenttmp
         ,success: function(layero){
-
-            selectCtuUserPingjie();
-
+            //回调函数
+            selectQuickSearch();
         }
     });
 }
 
+/**
+ * 卡号信息
+ */
+var cardInfoSearch = function () {
+    $.ajax({
+        type: 'POST',
+        dataType:"json",
+        url: static_path+ 'CtuManagerController/getCtuserList',
+        data: {card_no:$(".card_no_search input").val()},
+        success: function (result) {
+            if(result.data.length==1){
+                $(".showselectinfo").html("姓名："+result.data[0].real_name+"  卡号："+result.data[0].card_no +"  手机号："+result.data[0].mobile_phone);
+            }
+        },error:function (error) {
+        }
+    });
 
-function selectCtuUserPingjie() {
+}
 
-    var dataString = '';
-    table.render({ //其它参数在此省略
-        id:"customcardlisttableid"
-        ,elem: '#customcardlisttableid' //或 elem: document.getElementById('test') 等
-        , data: dataString
-        , height: 'full-350'
+/**
+ * 弹出层table 渲染
+ */
+function selectQuickSearch() {
+    statictable.render({ //其它参数在此省略
+        id:"quickSearchId"
+        ,url: static_path+ 'CtuManagerController/getCtuserList'
+        ,elem: '#quickSearchId'
+        , height: 'full-500'
+        , width: 500
         , cols: [
-            [ //标题栏
-                {align: 'center', checkbox: true,fixed:true, LAY_CHECKED: true}
-                , {field: 'card_no', align: 'center', title: '卡号', width: 150}
-                , {field: 'real_name', align: 'center', title: '用户名', width: 150}
-                , {field: 'mobile_phone', align: 'center', title: '手机', width: 110, edit: 'text'}
+            [    {field: 'card_no', align: 'center', title: '卡号', width: 150}
+                , {field: 'real_name', align: 'center', title: '用户名', width: 120}
+                , {field: 'mobile_phone', align: 'center', title: '手机', width: 135}
                 , {
-                fixed: 'right',
                 align: 'center',
                 title: '操作',
-                width: 150,
+                width: 90,
                 align: 'center',
-                toolbar: '#sysorder_protoolbar'
-            } //这里的toolbar值是模板元素的选择器
+                toolbar: '#ctusertoolbar'
+            }
             ]]
         , skin: 'row' //表格风格
         , even: true
         , size: 'sm' //小尺寸的表格
-        , limits: [5, 10, 15, 20, 25]
-        , limit: 5 //默认采用60
-        , page: true
+        , page: false
     });
-    
 }
+
+/**
+ * 重新 table 渲染
+ */
+function updateQuickSearch() {
+    statictable.reload('quickSearchId',{ //其它参数在此省略
+         height: 'full-500'
+        ,url: static_path+ 'CtuManagerController/getCtuserList'
+        ,where: $(".alert_quick_search_form").serializeObject()
+    });
+}
+
+
