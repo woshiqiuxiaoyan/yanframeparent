@@ -1,14 +1,25 @@
-<!DOCTYPE html>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
 <body>
-    11111111111111111111
-    <div th:text="${name}"></div>
-    <div th:text="${name}"/>
-    <div th:text="${yan}"/>
+
+
+
+    <form name='Spgateway' method='post'
+      action='https://ccore.spgateway.com/MPG/mpg_gateway'>
+        MerchantID：<input type='text' name='MerchantID' th:value='${MerchantID}'><br>
+        Version：<input type='text' name='Version' th:value='${Version}'><br>
+        TradeInfo：<input type='text' name='TradeInfo' th:value='${TradeInfo}'><br>
+        TradeSha：<input type='text' name='TradeSha' th:value='${TradeSha}'><br>
+
+    <input type='submit' value='Submit'>
+    </form>
+
+
 </body>
 </html>

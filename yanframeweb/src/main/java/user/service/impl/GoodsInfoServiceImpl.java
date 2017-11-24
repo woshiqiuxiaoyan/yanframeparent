@@ -54,7 +54,7 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
             throw new CustomException(ErrorCode.create_GoodsInfo.GOODS_NAME_FAIL);
         }
 
-        if (sysGoodsInfoDTO.getGoods_instock_price() <= new Double(0)) {
+        if (sysGoodsInfoDTO.getGoods_instock_price().intValue() <= 0) {
             throw new CustomException(ErrorCode.create_GoodsInfo.GOODS_INSTOCK_PRICE_FAIL);
         }
         sysGoodsInfoDTO.setCreate_by_user_id(sysUserDTO.getUser_id());

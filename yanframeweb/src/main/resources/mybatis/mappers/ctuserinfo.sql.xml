@@ -15,7 +15,7 @@
             user_id,
             referee_card_no,
             accumulate_integral,
-            shop_keeper_user_id,
+            store_id,
             head_url,
             remark,
             create_time,
@@ -33,7 +33,7 @@
         ,#{user_id},
         #{referee_card_no}
         ,0
-        ,#{shop_keeper_user_id}
+        ,#{store_id}
         ,#{head_url}
         ,#{remark}
         ,SYSDATE()

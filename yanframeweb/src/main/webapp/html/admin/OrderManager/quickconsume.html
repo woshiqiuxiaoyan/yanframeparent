@@ -341,12 +341,18 @@
 
         var quickSearchFilterActive = {
             select: function () {
-                $(".showselectinfo").html("姓名："+this.real_name+"  卡号："+this.card_no +"  手机号："+this.mobile_phone);
-                $(".card_no_search input").val(this.card_no);
+                setCtUserInfoId(this);
                 layer.closeAll();
             }
         }
 
+    }
+
+
+    function setCtUserInfoId(obj){
+        ct_user_info_id = obj.id;
+        $(".showselectinfo").html("姓名："+obj.real_name+"  卡号："+obj.card_no +"  手机号："+obj.mobile_phone);
+        $(".card_no_search input").val(obj.card_no);
     }
 
 </script>

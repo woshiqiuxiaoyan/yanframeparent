@@ -13,7 +13,7 @@ function tableSetting(table, datastring) {
             [  {field: 'goods_id', align: 'center', title: '商品货号', width: 150}
                 , {field: 'goods_name', align: 'center', title: '商品名称', width: 150}
                 , {field: 'num', align: 'center', title: '进货数量', width: 80, edit: 'text'}
-                , {field: 'goods_color', align: 'center', title: '商品颜色', width: 110, edit: 'text'}
+                , {field: 'goods_color', align: 'center', title: '商品颜色', width: 110  }
                 , {
                 align: 'center',
                 title: '操作',
@@ -115,50 +115,54 @@ var delInstock = function () {
 
 //保存库存相应操作
 var  accountResultActive = {
-    submit: function(table){ //获取选中数据
+    submit: function(table) { //获取选中数据
 
-        var subData = [];//提交的数据
 
-        var remark = $(".remarkTextArea").val();
-        debugger
-        for(tmp in orderTableData){
-            if(isNaN(tmp)){
+        var remark = $(".remarkTextArea").val()
+            ,subMitData=new Object();
+
+        subMitData.ctOrderDetailDTOS=[];
+
+        for (tmp in orderTableData) {
+            if (isNaN(tmp)) {
                 continue;
             }
             var subTmp = new Object();
-            subTmp.goods_info_id = orderTableData[tmp].id
-            subTmp.num = orderTableData[tmp].num;
-            subTmp.remark = remark;
-            subData.push(subTmp);
+            subTmp.sys_goods_info_id=orderTableData[tmp].id;
+            subTmp.goods_num=orderTableData[tmp].num;
+            subMitData.ctOrderDetailDTOS.push(subTmp);
         }
 
+        subMitData.ct_user_info_id = ct_user_info_id;
+        subMitData.remark = remark;
 
-        var url = static_path+"SysStockController/inStock";
+        var url = static_path + "ConsumeManagerController/accountResultActive";
 
         $.ajax({
             type: 'POST',
             url: url,
-            data: JSON.stringify(subData)
-            ,success: function (result) {
+            data: JSON.stringify(subMitData)
+            , success: function (result) {
                 layer.msg(result.msg)
                 if (result.code == '1000') {
                     layer.open({
-                        content: '是否继续入库？'
-                        ,btn: ['继续', '不加了']
-                        ,yes: function(index, layero){
+                        content: '是否继续下单？'
+                        , btn: ['继续', '不加了']
+                        , yes: function (index, layero) {
                             location.reload();
                         }
-                        ,btn2: function(index, layero){
-                            location.href=instockInfoListurl;
+                        , btn2: function (index, layero) {
+                          //  location.href = instockInfoListurl;
+                            layer.closeAll();
                         }
                     });
                 }
             }
-            ,contentType: "application/json; charset=UTF-8"
-            ,dataType:"json"
+            , contentType: "application/json; charset=UTF-8"
+            , dataType: "json"
         });
-
     }
+
 
 };
 
@@ -221,6 +225,9 @@ var selectCtuUser = function(){
     });
 }
 
+
+var ct_user_info_id= "";//会员信息
+
 /**
  * 卡号信息
  */
@@ -232,7 +239,9 @@ var cardInfoSearch = function () {
         data: {card_no:$(".card_no_search input").val()},
         success: function (result) {
             if(result.data.length==1){
-                $(".showselectinfo").html("姓名："+result.data[0].real_name+"  卡号："+result.data[0].card_no +"  手机号："+result.data[0].mobile_phone);
+                setCtUserInfoId(result.data[0])
+                // ct_user_info_id = result.data[0].id;
+                // $(".showselectinfo").html("姓名："+result.data[0].real_name+"  卡号："+result.data[0].card_no +"  手机号："+result.data[0].mobile_phone);
             }
         },error:function (error) {
         }

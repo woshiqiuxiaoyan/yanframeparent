@@ -185,10 +185,12 @@ public class CtuManagerController extends BaseController {
                 return ResultVo.createCustomSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, null);
             }
         } catch (CustomException e) {
+            e.printStackTrace();
             log.error("会员开卡失败:" + e.getMessage());
             return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
         } catch (Exception e) {
             log.error("会员开卡失败:" + e.getMessage());
+            e.printStackTrace();
         }
 
         return ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);

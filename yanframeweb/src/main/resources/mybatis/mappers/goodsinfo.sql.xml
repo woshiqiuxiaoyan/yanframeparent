@@ -48,7 +48,7 @@
         sys_goods_info sysgoodsinfo
         WHERE
         sysgoodsinfo.deleted = 1
-        AND sysgoodsinfo.id like CONCAT('%',#{id},'%')
+        AND sysgoodsinfo.id = #{id}
 
     </select>
 

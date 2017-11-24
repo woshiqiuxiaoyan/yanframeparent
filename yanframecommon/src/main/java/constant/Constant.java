@@ -69,6 +69,13 @@ public class Constant {
         String UPDATE_STORE_FAIL ="更新店铺失败";//删除店铺失败
     }
 
+
+   public  interface ct_order{
+        String INSERT_ORDER_FAIL = "订单保存失败";
+        String GOODS_NOT_EXIT = "商品不存在";
+
+    }
+
     public  static int DefaultPageSize=5;//默认每页大小
 
 }
