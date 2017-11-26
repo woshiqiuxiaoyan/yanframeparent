@@ -3,7 +3,7 @@
 <mapper namespace="user.mapper.CtuOrderMapper">
 
     <insert id="insertCtOrder" parameterType="ctOrdersDTO">
-        <selectKey resultType="java.lang.Short" order="AFTER" keyProperty="order_id">
+        <selectKey resultType="int" order="AFTER" keyProperty="order_id">
             SELECT LAST_INSERT_ID() AS order_id
         </selectKey>
 
@@ -17,13 +17,39 @@
         )
         VALUES
         (
-            NULL,
-            NULL,
-            NULL,
+            #{ct_user_info_id},
+            #{summoney},
+            #{remark},
             SYSDATE(),
-            NULL,
+            #{create_by},
             1
         )
+    </insert>
+
+
+    <!--插入订单详情-->
+    <insert id="insertOrderDetail" parameterType="ctOrderDetailDTO">
+        INSERT INTO  `ct_order_detail` (
+            `order_id`,
+            `sys_goods_info_id`,
+            `goods_name`,
+            `goods_num`,
+            `goods_price`,
+            `remark`,
+            `create_time`,
+            `deleted`
+        )
+        VALUES
+            (
+                #{order_id},
+                #{sys_goods_info_id},
+                #{goods_name},
+                #{goods_num},
+                #{goods_price},
+                #{remark},
+                sysdate(),
+                1
+            )
     </insert>
 
 </mapper>

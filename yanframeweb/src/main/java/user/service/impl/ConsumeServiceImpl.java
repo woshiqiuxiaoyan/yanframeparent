@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import user.dto.CtOrderDetailDTO;
 import user.dto.CtOrdersDTO;
 import user.dto.SysGoodsInfoDTO;
 import user.dto.SysUserDTO;
@@ -72,7 +73,15 @@ public class ConsumeServiceImpl implements IConsumeService {
         }
 
 
+        Stream.of(ctOrdersDTO.getCtOrderDetailDTOS()).forEach(
+                (ctOrderDetailDTOTmp )->{
 
-        return null;
+                    ctOrderDetailDTOTmp.setOrder_id(ctOrdersDTO.getOrder_id());
+
+                    ctuOrderMapper.insertOrderDetail(ctOrderDetailDTOTmp);
+                }
+        );
+
+        return String.valueOf(ctOrdersDTO.getOrder_id().intValue());
     }
 }
