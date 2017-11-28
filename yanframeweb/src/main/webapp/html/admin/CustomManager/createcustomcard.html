@@ -1,0 +1,156 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<style>
+
+    .createcardbody {
+        padding: 10px;
+    }
+
+</style>
+<div>
+    <form class="layui-form formcreatecard" method="post" th:action="@{/CtuManagerController/createCtUserInfo}">
+        <div class="layui-form-item">
+            <label class="layui-form-label requiredcontent">会员卡号</label>
+            <div class="layui-input-block">
+                <input type="text" name="card_no" lay-verify="required" required placeholder="请输入会员卡号"
+                       autocomplete="off" class="layui-input normalinputwidth">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label ">会员生日</label>
+            <div class="layui-input-block">
+                <input type="text" name="born_day"  class="layui-input" placeholder="请选择会员生日" id="test2" readonly>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label requiredcontent">会员姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="real_name" lay-verify="required" required placeholder="请输入会员姓名"
+                       autocomplete="on" class="layui-input normalinputwidth">
+            </div>
+        </div>
+
+        <div class="layui-form-item" pane>
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="1" title="男" checked>
+                <input type="radio" name="sex" value="2" title="女">
+                <input type="radio" name="sex" value="3" title="其他" disabled>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-block">
+                <input type="tel" name="mobile_phone" autocomplete="on" placeholder="请输入手机号"
+                       class="layui-input normalinputwidth">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" placeholder="请输入邮箱" autocomplete="on"
+                       class="layui-input normalinputwidth">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证</label>
+            <div class="layui-input-block">
+                <input type="text" name="id_card_number" autocomplete="on" placeholder="请输入身份证号"
+                       class="layui-input normalinputwidth">
+            </div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">推荐人卡号</label>
+            <div class="layui-input-block">
+                <input type="tel" name="referee_card_no" placeholder="请输入推荐人卡号" autocomplete="on"
+                       class="layui-input normalinputwidth">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" lay-verify="address" autocomplete="on" placeholder="请输入地址"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" class="layui-btn" lay-submit lay-filter="formcreatecard_submitbtn" value="立即提交"></input>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <br><br><br>
+
+    <script>
+
+        function onloadInit(upload,layform,laydate,element) {
+            $(".requiredcontent").append("<span style='color:red;'>*</span>");
+
+            element.init();
+
+            //单控件
+            laydate.render({
+                elem: '#test2'
+            })
+
+            form_submit(layform);
+        }
+
+
+        function  form_submit(layform) {
+
+            //自定义验证规则
+            layform.verify({
+                title: function (value) {
+                    if (value.length < 5) {
+                        return '标题也太短了吧';
+                    }
+                },
+                address: function (value) {
+                    return  ;
+                }
+            });
+
+            //会员开卡提交
+            layform.on('submit(formcreatecard_submitbtn)', function(data){
+                console.log($(".formcreatecard").serializeObject());
+                $.post($(".formcreatecard").attr("action"), $(".formcreatecard").serializeObject(), function (result) {
+                    console.log(JSON.stringify(result));
+                    if (result.code == '1000') {
+                        location.href=ctuserListurl;
+                    }else{
+                        layer.msg(result.msg)
+                    }
+                }, "json");
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        }
+
+    </script>
+</div>
+
+
+</body>
+</html>
+

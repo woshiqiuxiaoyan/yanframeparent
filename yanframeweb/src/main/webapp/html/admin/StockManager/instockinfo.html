@@ -1,0 +1,217 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<link href="/static/css/instockinfo.css" rel="stylesheet">
+<form class="layui-form search_goodsinfo_form" method="post"  th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label" style="text-align:center;" >货号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_id"     class="layui-input">
+            </div>
+
+            <label class="layui-form-label">商品颜色</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="goods_color"    class="layui-input">
+            </div>
+
+            <label class="layui-form-label" style="text-align:center;" >商品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="goods_name"   class="layui-input">
+            </div>
+
+            <label class="layui-form-label">尺码</label>
+            <div class="layui-input-inline">
+                <select name="goods_size">
+                    <option th:each="goodsize : ${GoodsSizeBound}"  th:value="${goodsize.value}" th:text="${goodsize.name}" selected></option>
+                </select>
+            </div>
+
+            <div class="layui-inline" style="float:right;">
+                <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
+            </div>
+        </div>
+
+        <div class="layui-inline">
+
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
+            </div>
+            <label class="layui-form-label" style="text-align:center;">~</label>
+            <div class="layui-input-inline">
+                <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="layui-btn-group instockbtn">
+    <input type="button" class="layui-btn" data-type="getCheckData" value="保存选中入库"></input>
+<!--    <input type="button" class="layui-btn" data-type="getCheckLength" value="全部入库"></input>
+    <input type="button" class="layui-btn" data-type="isAll" value="历史入库清单"></input>-->
+</div>
+
+
+<table class="layui-table"
+       lay-data="{width:600, height: 'full-225', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="instockGoodsInfoTableFilter" lay-size="sm"  >
+    <thead>
+    <tr><th lay-data="{align:'center'}" colspan="7">选择商品添加到右边的仓库中</th></tr>
+    <tr>
+        <th lay-data="{field:'goods_id', style:'background-color: #5FB878; color: #fff;', width:100,align:'center'}">商品货号</th>
+        <th lay-data="{field:'goods_name', width:100,align:'center'}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:55}">进货价格</th>
+        <th lay-data="{field:'goods_color', width:100,align:'center' }">商品颜色</th>
+        <th lay-data="{width:50, templet:'#templetgoods_size',align:'center'}">尺码</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetimgurl'}" >图片</th>
+        <th lay-data="{fixed:'right', width:190, align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+<!--左边工具条 （商品信息）-->
+<script type="text/html" id="instockGoodsInfoTableToolBar">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="add">添加</a>
+</script>
+
+
+<!--尺码视图-->
+<script type="text/html" id="templetgoods_size">
+    <!--6 无 ,0 S  ,1 M ,2 L,3 xl,4 xxl,5 xxxl '-->
+    {{#  if(d.goods_size == 6){ }}
+    <div class="layui-table-cell  layui-size">无码</div>
+    {{#  } else if(d.goods_size == 5){ }}
+    <div class="layui-table-cell  layui-size">XXXL</div>
+    {{#  } else if(d.goods_size == 4){ }}
+    <div class="layui-table-cell  layui-size">XXL</div>
+    {{#  } else if(d.goods_size == 3){ }}
+    <div class="layui-table-cell  layui-size">XL</div>
+    {{#  } else if(d.goods_size == 2){ }}
+    <div class="layui-table-cell  layui-size">L</div>
+    {{#  } else if(d.goods_size == 1){ }}
+    <div class="layui-table-cell  layui-size">M</div>
+    {{#  } else if(d.goods_size == 0){ }}
+    <div class="layui-table-cell  layui-size">S</div>
+    {{#  } }}
+</script>
+
+
+<!--图片视图-->
+<script type="text/html" id="templetimgurl">
+    <div class="layui-table-cell "  style="height: 100px;padding:0;">
+        <div class="layui-upload-list"  >
+            {{#  layui.each(d.img_url_show, function(index, item){ }}
+            <img    src="{{ item }}" onerror="this.src='/uploadimages/GoodsInfoUpload/default_pic.jpg'">
+            {{#  }); }}
+        </div>
+    </div>
+</script>
+
+<!--创建时间视图-->
+<script type="text/html" id="templetcreate_time">
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.creat_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+<table class="layui-table minestocktable" id="inStockTableId" lay-filter="inStockTableFilter"  lay-size="sm" >
+</table>
+
+
+<!--右边工具条 （添加的仓库信息）-->
+<script type="text/html" id="instockinfotabletoolbar">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/JS_Constant.js}"></script>
+<script th:src="@{/static/js/goodsinfolist.js}"></script>
+<script th:src="@{/static/js/instockinfo.js}"></script>
+
+<script>
+
+    var carouseltest=null;
+
+    //右边仓库表格数据
+    var inStockTableData=null;
+    //左边商品表格数据
+    var goodsInfoTableData=null;
+
+    //初始化入口
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+        //查询按钮
+        $(".search_btn").on('click',function () {
+            table.reload('instockGoodsInfoTableId', {
+                url: '/GoodsInfoManagerController/getGoodsInfoList'
+                ,where: $(".search_goodsinfo_form").serializeObject()
+            });
+
+        });
+
+        carouseltest = carousel;//存图片
+
+        laydate_manager(laydate);
+
+        tableSetting(table,[]);//渲染右边库存的表格
+
+        table_manger(table,layer,laydate,layform);
+    }
+
+
+
+    function table_manger(table,layer,laydate,layform){
+
+        //监听右边工具条
+        table.on('tool(inStockTableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            instockActive[layEvent] ? instockActive[layEvent].call(data) : '';
+        });
+        var instockActive ={
+            detail:function (){
+                detailView.call(this);
+            },
+            del:function (){
+                this.layer=layer;
+                this.table=table;
+                delInstock.call(this);
+            }
+        }
+
+        //监听左边工具条
+        table.on('tool(instockGoodsInfoTableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            instockGoodsInfoactive[layEvent] ? instockGoodsInfoactive[layEvent].call(data) : '';
+        });
+
+        //触发事件
+        var instockGoodsInfoactive = {
+            detail: function(){
+                detailView.call(this);
+            }
+            ,add: function(){
+                this.table =table;
+                addInstock.call(this);
+            }
+        };
+
+
+        //保存库存相应操作
+        $('.instockbtn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            instockbtnActive[type] ? instockbtnActive[type].call(this,table) : '';
+        });
+
+    }
+
+</script>
+</body>
+</html>

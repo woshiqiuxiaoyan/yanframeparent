@@ -24,6 +24,10 @@
           <scope>test</scope>
       </dependency>
 
+      <dependency>
+          <groupId>com.yan</groupId>
+          <artifactId>yan-frame-common</artifactId>
+      </dependency>
 
   </dependencies>
 

@@ -20,7 +20,7 @@
 
     <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>/todaylog/yanframeparent.log</file>
+        <file>../yanframeparentlog/yanframeparent.log</file>
         <Encoding>UTF-8</Encoding>
         <encoder>
             <pattern>%d %p [%t] [%c]:%L - %m%n</pattern>
@@ -61,17 +61,17 @@
     <logger name="org.springframework.data.jpa" level="DEBUG"/>
     <logger name="org.cometd" level="WARN"/>
     <logger name="ch.qos.logback" level="WARN"/>
-    <logger name="com.user" level="DEBUG"/>
+    <logger name="user" level="DEBUG"/>
     <logger name="enterUrl" level="DEBUG"/>
     <logger name="CustomSystemLog" level="DEBUG"/>
     <logger name="CustomerForAnnotationHandlerInterceptor" level="DEBUG"/>
-
+    <logger name="SpringIniterListener" level="INFO" />
 
 
     <root level="DEBUG">
         <appender-ref ref="stdout"/>
         <appender-ref ref="logfile"/>
-        <appender-ref ref="localtest"/>
+        <!--<appender-ref ref="localtest"/>-->
 
     </root>
 </configuration>

@@ -1,0 +1,300 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+
+<style>
+
+    .sysstoreeidtform{
+        margin-top:20px;
+    }
+</style>
+
+
+    <form class="layui-form search_SysStoreController_form" method="post" th:action="@{/SysStoreController/getSysUserInfoList}">
+        <div class="demoTable">
+            店铺名称：
+            <div class="layui-inline">
+                <input class="layui-input" name="store_name" id="store_name" autocomplete="off">
+            </div>
+            <input type="button" class="layui-btn search_btn"   value="搜索"></input>
+        </div>
+    </form>
+
+
+<table class="layui-table"
+       lay-data="{height:730, url:'/SysStoreController/getSysStoreList', page:true, id:'getSysStoreList',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="getSysStoreList" lay-size="lg">
+    <thead>
+    <tr>
+        <th lay-data="{field:'store_name', width:150,align:'center'}">店铺名称</th>
+        <th lay-data="{field:'store_address',align:'center', width:400}">店铺地址</th>
+        <th lay-data="{field:'store_user_name',align:'center', width:150}">店铺负责人(店长）</th>
+        <th lay-data="{field:'store_tel',align:'center', width:100, sort: true}">店铺电话</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#getSysStoreListFilterbar'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="getSysStoreListFilterbar">
+    <a class="layui-btn layui-btn-mini" lay-event="add">新增</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+
+</script>
+
+
+
+<script>
+
+
+    function onloadInit(upload,layform,laydate,element,table,layer) {
+
+        //查询按钮
+        $(".search_btn").on('click',function () {
+            table.reload('getSysStoreList', {
+                url: '/SysStoreController/getSysStoreList'
+                ,where: $(".search_SysStoreController_form").serializeObject()
+            });
+
+        })
+
+        table_manger(table,layer,laydate,layform);
+    }
+
+
+
+    function table_manger(table,layer,laydate,layform){
+        table.on('tool(getSysStoreList)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+
+            if (layEvent === 'add' || layEvent === 'edit') { //查看
+                active[layEvent] ? active[layEvent].call(data) : '';
+            } else if (layEvent === 'del'){//删除
+                layer.confirm('真的删除行么', function (index) {
+
+                    //更新url
+                    var posturl  = static_path+"SysStoreController/delSysStore";
+
+                    var objTmp = {store_id:obj.data.store_id};
+                    $.post(posturl, objTmp, function (result) {
+
+                        if (result.code == '1000') {
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }, "json");
+
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+
+                });
+            }
+        });
+
+        //触发事件
+        var active = {
+            add: function(obj,tmpdata){
+                var addthis = this;
+                layer.open({
+                    type: 1
+                    ,area: '500px'
+                    ,offset:'250px'
+                    ,id: 'add' //设定一个id，防止重复弹出
+                    ,btn: ['确定',"关闭"]
+                    ,btnAlign: 'c'
+                    ,moveType: 1 //拖拽模式，0或者1
+                    ,content: getContent('')
+                    ,yes: function(){
+                        addUpdateSysStore(layer,'');
+                    },btn2: function(index, layero){
+                        layer.closeAll();
+                    },success: function(layero, index){
+                        //打开成功后的回调
+                        InitLayOpen(layform,addthis.user_id);
+                    }
+                });
+            }
+            ,edit: function(){
+                var editthis =this;
+                layer.open({
+                    type: 1
+                    ,offset: '50px'
+                    ,area: '500px'
+                    ,id: 'layerDemo'+editthis.store_id //防止重复弹出
+                    ,content: getContent(editthis)
+                    ,btn: ['确认修改','我要重置','关闭全部']
+                    ,btnAlign: 'c' //按钮居中
+                    ,shade: 0 //不显示遮罩
+                    ,yes: function(){
+                        addUpdateSysStore(layer,editthis.store_id);
+                    },btn2: function(index, layero){
+                        $(".resetbtn").click();
+                        return false;
+                    },btn3: function(index, layero){
+                        layer.closeAll();
+                    },success: function(layero, index){
+                        //打开成功后的回调
+                        InitLayOpen(layform,editthis.store_user_id);
+                    }
+                });
+            }
+
+        };
+    }
+
+
+    /**
+     * 判断不为空
+     * @param obj
+     * @param errorMsg
+     * @param layer
+     * @returns {boolean}
+     */
+    function isNotBlank(obj, errorMsg, layer) {
+        if (obj == undefined || obj == null || obj == '') {
+            layer.msg(errorMsg + "不能为空");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 更新店铺
+     */
+    function addUpdateSysStore(layer,store_id){
+
+        //更新url
+        var posturl = static_path + $(".sysstoreeidtform").attr("action");
+
+        if(store_id==''){
+            posturl = static_path + "SysStoreController/addSysStore";
+        }
+
+        var objdata =$(".sysstoreeidtform").serializeObject();
+
+        objdata.store_id = store_id;
+
+        if(!(isNotBlank(objdata.store_name,"店铺名称",layer)&&isNotBlank(objdata.store_address,"店铺地址",layer)
+                &&isNotBlank(objdata.store_tel,"店铺电话",layer)&&isNotBlank(objdata.store_user_id,"负责人/店长",layer))){
+            return ;
+        }
+
+        $.post(posturl, objdata, function (result) {
+            if (result.code == '1000') {
+                location.reload();
+            } else {
+                layer.msg(result.msg)
+            }
+        }, "json");
+
+    }
+
+
+
+    //    渲染弹出层
+    function InitLayOpen( layform,store_user_id) {
+        $(".requiredcontent").append("<span style='color:red;'>*</span>");
+
+        layform.render();
+        //初始化select
+        initStoreSelect(layform,store_user_id);
+    }
+
+
+
+    /**
+     * 取下拉框数据
+     */
+    function initStoreSelect(form,store_user_id) {
+
+        var posturl = static_path + "SysStoreController/getSysUserList";
+        $.post(posturl, {"store_user_id":store_user_id}, function (result) {
+            if (result.code=='1000' &&result.result.length > 0) {
+                createOption(result.result,store_user_id);
+                form.render('select');
+            } else {
+                layer.msg("请先创建用户");
+            }
+            $(".layui-form-select").addClass('normalinputwidth');
+            $(".normalinputwidth").css('width', '350px');
+        }, "json");
+    }
+
+
+    /**
+     * 绑定角色下拉框的拼接
+     * @param data
+     */
+    function createOption(data,store_user_id) {
+        var html = '\' <option value="">暂不选</option>\\n \'';
+        for (var i = data.length - 1; i >= 0; i--) {
+            if(store_user_id==data[i].user_id){
+                html += ' <option value="' + data[i].user_id + '" selected>' + data[i].user_name + '</option>\n ';
+            }else {
+                html += ' <option value="' + data[i].user_id + '" >' + data[i].user_name + '</option>\n ';
+            }
+        }
+        $("#store_user_id_id").html(html);
+    }
+
+    /**
+     * 拼接弹出层
+     * @param objdata
+     * @returns {string}
+     */
+    function getContent(objdata){
+
+        if(objdata==''){
+            objdata = new Object();
+            objdata.store_name='';
+            objdata.store_address='';
+            objdata.store_tel='';
+            objdata.store_user_id='';
+        }
+
+        var contenttmp='<form class="layui-form sysstoreeidtform"  lay-filter="sysstoreeidtformfilter" method="post"' +
+            ' action="SysStoreController/updateSysStore">\n' +
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label requiredcontent">店铺名称</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="text" name="store_name"    lay-verify="required"   required  \n' +
+            '      value="'+objdata.store_name+'"   class="layui-input normalinputwidth">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '\n' +
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label ">店铺地址</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="text" name="store_address"' +
+            ' value="'+objdata.store_address+'" class="layui-input normalinputwidth"   >\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '\n' +
+            '        <div class="layui-form-item">\n' +
+            '            <label class="layui-form-label requiredcontent">店铺电话</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '                <input type="number" name="store_tel" lay-verify="required" required \n' +
+            '     value="'+objdata.store_tel+'"  class="layui-input normalinputwidth">\n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '\n' +
+            '        <div class="layui-form-item" pane>\n' +
+            '            <label class="layui-form-label">负责人/店长</label>\n' +
+            '            <div class="layui-input-block">\n' +
+            '               <select name="store_user_id" id="store_user_id_id"  lay-search lay-filter="store_user_id_filter"  value="'+objdata.store_user_id+'" >\n' +
+            '               </select>     \n' +
+            '            </div>\n' +
+            '        </div>\n' +
+            '        <button type="reset" style="display:none"  class="layui-btn layui-btn-primary resetbtn">重置</button>\n' +
+            '    </form>';
+        return contenttmp;
+    }
+
+
+</script>
+</body>
+</html>

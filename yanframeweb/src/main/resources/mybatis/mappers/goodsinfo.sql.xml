@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.GoodsInfoMapper">
+
+
+    <insert id="saveGoodsInfo" parameterType="sysGoodsInfoDTO">
+
+       INSERT INTO sys_goods_info (
+        goods_id,
+        goods_name,
+        goods_type,
+        goods_img_url,
+        goods_instock_price,
+        goods_sale_price,
+        goods_sku_id,
+        goods_color,
+        goods_size,
+        goods_discount_id,
+        creat_time,
+        create_by_user_id,
+        remark,
+        deleted
+    )
+    VALUES
+        (
+            #{goods_id}
+            ,#{goods_name}
+            ,#{goods_type}
+            ,#{goods_img_url}
+            ,#{goods_instock_price}
+            ,#{goods_sale_price}
+            ,#{goods_sku_id}
+            ,#{goods_color}
+            ,#{goods_size}
+            ,#{goods_discount_id}
+            ,SYSDATE()
+            ,#{create_by_user_id}
+            ,#{remark}
+            ,1
+        )
+
+    </insert>
+
+    <select id="queryById" parameterType="sysGoodsInfoDTO" resultType="sysGoodsInfoDTO">
+        SELECT
+        *
+        FROM
+        sys_goods_info sysgoodsinfo
+        WHERE
+        sysgoodsinfo.deleted = 1
+        AND sysgoodsinfo.id = #{id}
+
+    </select>
+
+
+    <select id="queryByCondition" parameterType="sysGoodsInfoDTO" resultType="sysGoodsInfoDTO">
+        SELECT
+        id,
+        goods_id,
+        goods_name,
+        goods_type,
+        goods_img_url,
+        goods_instock_price,
+        goods_sale_price,
+        goods_sku_id,
+        goods_color,
+        goods_size,
+        goods_discount_id,
+        creat_time,
+        create_by_user_id,
+        remark,
+        sysuser.user_name
+        FROM
+        sys_goods_info sysgoodsinfo
+        LEFT JOIN sys_user sysuser ON sysuser.user_id = sysgoodsinfo.create_by_user_id
+        WHERE
+        sysgoodsinfo.deleted = 1
+
+        <if test="goods_id != null and goods_id != '' ">
+            AND sysgoodsinfo.goods_id like CONCAT('%',#{goods_id},'%')
+        </if>
+        <if test="goods_name != null and goods_name != '' ">
+            AND sysgoodsinfo.goods_name like CONCAT('%',#{goods_name},'%')
+        </if>
+        <if test="goods_color != null and goods_color != ''">
+            AND sysgoodsinfo.goods_color like CONCAT('%',#{goods_color},'%')
+        </if>
+        <if test="goods_size != null and goods_size != 6 ">
+            AND sysgoodsinfo.goods_size = #{goods_size}
+        </if>
+
+        <if test="start_time != null    ">
+            AND unix_timestamp( creat_time ) &gt; unix_timestamp(#{start_time})
+        </if>
+
+        <if test="end_time != null   ">
+            AND unix_timestamp( creat_time ) &lt; unix_timestamp(#{end_time})
+        </if>
+
+    </select>
+
+
+    <delete id="delSysGoodsInfoById">
+        DELETE FROM  sys_goods_info
+        WHERE id= #{id}
+    </delete>
+
+    <update id="updateGoodsInfoById" parameterType="sysGoodsInfoDTO">
+        UPDATE sys_goods_info
+        SET goods_name = #{goods_name},
+         goods_instock_price = #{goods_instock_price},
+         goods_sale_price = #{goods_sale_price},
+         goods_color = #{goods_color},
+         goods_size = #{goods_size},
+         remark = #{remark},
+         update_by_user_id = #{update_by_user_id}
+        WHERE
+            id = #{id}
+    </update>
+
+
+    <select id="queryByIdList" resultType="sysGoodsInfoDTO">
+        SELECT *
+        FROM sys_goods_info
+        WHERE
+        deleted =1
+        AND id  IN
+        <foreach collection="idList" index="index" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </select>
+
+</mapper>

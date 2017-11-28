@@ -1,0 +1,261 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+<style>
+    .layui-table    tr  td {height: 100px !important;}
+
+    .layui-table[lay-size=lg]  td .layui-table-cell{
+        height: 100px !important;
+        line-height: 100px !important;
+    }
+
+
+    .layui-table  .layui-upload-list{
+        margin:0;
+    }
+
+    .normalinputwidth{
+        width:350px;
+    }
+</style>
+
+
+    <form class="layui-form search_goodsinfo_form" method="post" th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="text-align:center;" >货号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="goods_id"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">商品颜色</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="goods_color"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label" style="text-align:center;" >商品名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="goods_name"   autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">尺码</label>
+                <div class="layui-input-inline">
+                    <select name="goods_size">
+                        <option th:each="goodsize : ${GoodsSizeBound}"  th:value="${goodsize.value}" th:text="${goodsize.name}" selected></option>
+                    </select>
+                </div>
+
+                <div class="layui-inline" style="float:right;">
+                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
+                </div>
+                <label class="layui-form-label" style="text-align:center;">~</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+<table class="layui-table"
+       lay-data="{height: 'full-220', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="goodsinfolist" lay-size="lg"  >
+    <thead >
+    <tr>
+        <th lay-data="{ field:'id',checkbox:true, width:80}"></th>
+        <th lay-data="{ width:400, align:'center',templet:'#templetimgurl'}" >图片</th>
+        <th lay-data="{field:'goods_id', width:130}">商品货号</th>
+        <th lay-data="{field:'goods_name', width:150}">商品名称</th>
+        <th lay-data="{field:'goods_instock_price',align:'center', width:100}">进货价格</th>
+        <th lay-data="{field:'goods_sale_price',align:'center', width:80, sort: true}">售价</th>
+        <th lay-data="{field:'goods_color', width:100 }">商品颜色</th>
+        <th lay-data="{width:100, templet:'#templetgoods_size'}">商品尺码</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetcreate_time', sort: true}">创建时间</th>
+        <th lay-data="{field:'user_name',  width:200,align:'center' }">创建者</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+
+
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+
+    <!-- 这里同样支持 laytpl 语法，如： -->
+    {{#  if(d.auth > 2){ }}
+    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
+    {{#  } }}
+</script>
+
+<!--尺码视图-->
+<script type="text/html" id="templetgoods_size">
+    <!--6 无 ,0 S  ,1 M ,2 L,3 xl,4 xxl,5 xxxl '-->
+    {{#  if(d.goods_size == 6){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">无码</div>
+    {{#  } else if(d.goods_size == 5){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XXXL</div>
+    {{#  } else if(d.goods_size == 4){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XXL</div>
+    {{#  } else if(d.goods_size == 3){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">XL</div>
+    {{#  } else if(d.goods_size == 2){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">L</div>
+    {{#  } else if(d.goods_size == 1){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">M</div>
+    {{#  } else if(d.goods_size == 0){ }}
+        <div class="layui-table-cell laytable-cell-1-sex">S</div>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="templetcreate_time">
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.creat_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+
+
+
+<script type="text/html" id="templetimgurl">
+    <div class="layui-table-cell laytable-cell-1-create_time"  style="height: 100px;">
+         <div class="layui-upload-list"  >
+                {{#  layui.each(d.img_url_show, function(index, item){ }}
+                     <img    src="{{ item }}" onerror="this.src='/uploadimages/GoodsInfoUpload/default_pic.jpg'">
+                {{#  }); }}
+        </div>
+    </div>
+</script>
+
+<script th:src="@{/static/js/goodsinfolist.js}"></script>
+<script>
+
+    var carouseltest=null;
+
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
+
+        console.log($(".table-cell"));
+
+        $.each($(".table-cell"), function(name, value) {
+            console.log(value);
+        });
+
+
+        //查询按钮
+        $(".search_btn").on('click',function () {
+            table.reload('IdCtuserListTable', {
+                url: '/GoodsInfoManagerController/getGoodsInfoList'
+                ,where: $(".search_goodsinfo_form").serializeObject()
+            });
+
+        })
+
+
+        laydate_manager(laydate);
+        table_manger(table,layer,laydate,layform);
+        carouseltest = carousel;//存图片
+    }
+
+
+
+    function table_manger(table,layer,laydate,layform){
+        //监听工具条
+        table.on('tool(goodsinfolist)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'detail' || layEvent === 'edit') { //查看
+                goodsinfoactive[layEvent] ? goodsinfoactive[layEvent].call(data) : '';
+            } else if (layEvent === 'del'){//删除
+                layer.confirm('真的删除行么', function (index) {
+
+                    //更新url
+                    var posturl  = static_path+"GoodsInfoManagerController/delGoods";
+
+                    var objTmp = {id:obj.data.id};
+                    $.post(posturl, objTmp, function (result) {
+                        console.log(JSON.stringify(result));
+                        if (result.code == '1000') {
+                            obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+
+
+                        }else{
+                            layer.msg(result.msg)
+                        }
+                    }, "json");
+
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+
+                });
+            }
+        });
+
+        //触发事件
+        var goodsinfoactive = {
+            detail: function(obj,tmpdata){
+                detailView.call(this);
+            }
+            ,edit: function(){
+                var contenttmp= goodsInfoEditDataPingjie(this);
+                layer.open({
+                    type: 1
+                    ,offset: '50px'
+                    ,area: '500px'
+                    ,id: 'layerDemo'+this.id //防止重复弹出
+                    ,content: contenttmp
+                    ,btn: ['确认修改','我要重置','关闭全部']
+                    ,btnAlign: 'c' //按钮居中
+                    ,shade: 0 //不显示遮罩
+                    ,yes: function(){
+                        //更新url
+                        var posturl  = static_path+"GoodsInfoManagerController/upateGoodsInfo";;
+
+                        $.post(posturl, $(".editGoodsInfoForm").serializeObject(), function (result) {
+                            console.log(JSON.stringify(result));
+                            if (result.code == '1000') {
+                                location.reload();
+                            }else{
+                                layer.msg(result.msg)
+                            }
+                        }, "json");
+                    },btn2: function(index, layero){
+                        $(".resetbtn").click();
+                        return false;
+                    },btn3: function(index, layero){
+                        layer.closeAll();
+
+                    },success: function(layero, index){
+
+
+                        //渲染图片
+                        carousel_manager(carouseltest);
+                        $(".layui-carousel-arrow").remove();
+                        layform.render();
+                        $(".requiredcontent").append("<span style='color:red;'>*</span>");
+                        $(".layui-form-select").addClass('normalinputwidth');
+                        //打开成功后的回调
+                        $(".normalinputwidth").css('width','350px');
+
+                    }
+                });
+            }
+
+        };
+    }
+
+
+</script>
+</body>
+</html>

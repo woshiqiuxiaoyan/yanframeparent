@@ -3,7 +3,7 @@ package exception;
 /**
  * Created by t on 2017/8/18.
  */
-public class CustomException extends  Exception{
+public class CustomException extends RuntimeException {
 
     private String  message;
 

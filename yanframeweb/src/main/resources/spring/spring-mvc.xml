@@ -14,14 +14,35 @@
 
     <!--静态资源解析-->
     <mvc:resources mapping="/static/js/**" location="/static/js/" />
+    <mvc:resources mapping="/uploadimages/**" location="/uploadimages/" />
     <mvc:resources mapping="/static/layui/**" location="/static/layui/" />
+    <mvc:resources mapping="/static/css/**" location="/static/css/" />
+    <mvc:resources mapping="/static/images/**" location="/static/images/" />
     <mvc:resources mapping="/html/admin/static/**" location="/html/admin/static/" />
+
+    <!--
+   开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类，
+   并在必要时进行安全逻辑验证
+-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>
+
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"></property>
+    </bean>
+
+
 
     <!--启用注解驱动来扫描controller 包含了 映射器 和 适配器  conversionService自定义类型转换器 validator 自定义validator  -->
     <mvc:annotation-driven conversion-service="conversionService" validator="validator" >
+
+        <mvc:argument-resolvers>
+            <bean class="myhandlermethodargumentresolver.CurrentUserHandlerMethodArgumentResolver"></bean>
+        </mvc:argument-resolvers>
+
         <!--配置@ResponseBody由fastjson解析-->
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
                 <property name="defaultCharset" value="UTF-8"/>
             </bean>
 
@@ -30,10 +51,13 @@
                     <list>
                         <value>application/json;charset=UTF-8</value>
                         <value>application/*+json;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
                     </list>
                 </property>
             </bean>
         </mvc:message-converters>
+
+
     </mvc:annotation-driven>
 
 
@@ -104,6 +128,10 @@
             </set>
         </property>
     </bean>
+
+
+
+
 
 
     <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->

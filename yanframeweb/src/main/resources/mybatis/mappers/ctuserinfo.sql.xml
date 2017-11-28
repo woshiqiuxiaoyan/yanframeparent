@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.CtUserInfoMapper">
+
+    <insert id="saveCtUserInfo" parameterType="ctUserInfoDTO">
+       INSERT INTO ct_user_info (
+            real_name,
+            mobile_phone,
+            card_no,
+            born_day,
+            sex,
+            id_card_number,
+            email,
+            address,
+            user_id,
+            referee_card_no,
+            accumulate_integral,
+            store_id,
+            head_url,
+            remark,
+            create_time,
+            deleted
+        )
+        VALUES
+        ( #{real_name}
+        ,#{mobile_phone}
+        ,#{card_no}
+        ,#{born_day}
+        ,#{sex}
+        ,#{id_card_number}
+        ,#{email}
+        ,#{address}
+        ,#{user_id},
+        #{referee_card_no}
+        ,0
+        ,#{store_id}
+        ,#{head_url}
+        ,#{remark}
+        ,SYSDATE()
+        ,1)
+    </insert>
+
+    <!--通过卡号查询 -->
+    <select id="queryCtUserInfoByCardNo" resultType="ctUserInfoDTO">
+        SELECT
+            *
+        FROM
+            ct_user_info
+        WHERE
+            ct_user_info.card_no = #{card_no}
+        AND
+            ct_user_info.deleted = 1
+    </select>
+
+    <!--会员列表-->
+    <select id="queryByCondition" resultType="ctUserInfoDTO">
+
+        SELECT
+        id,
+        ctuserinfo.real_name,
+        mobile_phone,
+        card_no,
+        born_day,
+        sex,
+        id_card_number,
+        email,
+        address,
+        ctuserinfo.user_id,
+        sysuser.user_name OperatorName,
+        referee_card_no,
+        (
+        SELECT
+        real_name
+        FROM
+        ct_user_info ctuserinfotmp
+        WHERE
+        ctuserinfotmp.card_no = ctuserinfo.referee_card_no
+        ) referee,
+        accumulate_integral,
+        ctuserinfo.store_id,
+
+        head_url,
+        remark,
+        create_time,
+        ctuserinfo.deleted
+        FROM
+        ct_user_info ctuserinfo
+        LEFT JOIN
+          sys_user sysuser
+        ON
+          ctuserinfo.user_id = sysuser.user_id
+        LEFT JOIN
+          sys_store sysstore
+        ON
+          sysstore.store_id = ctuserinfo.store_id
+        WHERE
+          ctuserinfo.deleted = 1
+        AND ctuserinfo.store_id = #{store_id}
+        <if test="card_no != null and card_no != '' ">
+            AND ctuserinfo.card_no like CONCAT('%',#{card_no},'%')
+        </if>
+        <if test="real_name != null and real_name != ''">
+            AND ctuserinfo.real_name like CONCAT('%',#{real_name},'%')
+        </if>
+        <if test="mobile_phone != null and mobile_phone != '' ">
+            AND ctuserinfo.mobile_phone like CONCAT('%', #{mobile_phone},'%')
+        </if>
+        <if test="sex != null and sex != '' and sex != 3 ">
+            AND ctuserinfo.sex = #{sex}
+        </if>
+
+        <if test="start_time != null    ">
+            AND unix_timestamp( create_time ) &gt; unix_timestamp(#{start_time})
+        </if>
+
+        <if test="end_time != null   ">
+            AND unix_timestamp( create_time ) &lt; unix_timestamp(#{end_time})
+        </if>
+
+
+    </select>
+
+    <update id="updateCtUserInfo" parameterType="ctUserInfoDTO">
+        UPDATE ct_user_info
+        SET
+         born_day = #{born_day},
+         sex = #{sex},
+         mobile_phone = #{mobile_phone},
+         email = #{email},
+         address = #{address},
+         id_card_number = #{id_card_number},
+         referee_card_no = #{referee_card_no},
+         remark =#{remark},
+         real_name=#{real_name},
+         update_time = SYSDATE()
+        WHERE
+            card_no = #{card_no}
+    </update>
+
+    <update id="delCtuser" parameterType="ctUserInfoDTO">
+        DELETE  FROM  ct_user_info
+        WHERE  id =  #{id}
+    </update>
+
+
+    <!--会员等级查询-->
+    <select id="queryCtUserGradeList" resultType="ctUserGradeDTO">
+        SELECT
+            *
+        FROM
+            ct_user_grade
+        ORDER BY accumulate_integral ASC
+    </select>
+
+
+    <!--增加会员等级-->
+    <insert id="insertCtUserGrade" parameterType="ctUserGradeDTO">
+        INSERT INTO   `ct_user_grade` (
+        `grade_name`,
+        `accumulate_integral`,
+        `remark`
+    )
+    VALUES
+        (
+            #{grade_name}
+           ,${accumulate_integral}
+           ,#{remark}
+        );
+    </insert>
+
+    <update id="updateCtUserGradeById" parameterType="ctUserGradeDTO">
+        UPDATE ct_user_grade
+        SET grade_name=#{grade_name}
+        ,accumulate_integral=#{accumulate_integral}
+        ,remark =#{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delCtUserGrade">
+        DELETE FROM  ct_user_grade
+        WHERE id =#{id}
+    </delete>
+
+</mapper>

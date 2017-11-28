@@ -27,4 +27,13 @@
         <!--  可配置多个包   -->
         <package name="user.dto"/>
     </typeAliases>
+
+
+    <typeHandlers>
+        <typeHandler javaType="java.math.BigInteger"
+                     handler="typeheadler.BigIntegerTypeHandler" />
+        <typeHandler javaType="org.joda.time.DateTime"
+                     handler="typeheadler.JodaDateTimeTypeHandler" />
+    </typeHandlers>
+
 </configuration>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.mapper.SysStockMapper">
+
+
+    <select id="queryByStockRecordId" resultType="sysStockRecordDTO" >
+        SELECT
+            *
+        FROM
+            sys_stock_record t
+        WHERE
+            t.stock_record_id = #{stock_record_id}
+    </select>
+
+    <!-- 插入入库清单 -->
+    <insert id="saveSysStockRecordDTOList"   >
+
+        INSERT INTO sys_stock_record (
+            stock_record_id,
+            goods_info_id,
+            num,
+            type,
+            remark,
+            create_time,
+            create_by
+        )
+        VALUES
+        <foreach collection="sysStockRecordDTOList" index="index" item="item"   separator=","  >
+            (
+              #{item.stock_record_id}
+              ,#{item.goods_info_id}
+              ,#{item.num}
+              ,#{item.type}
+              ,#{item.remark}
+              ,SYSDATE()
+              ,#{item.create_by}
+            )
+        </foreach>
+    </insert>
+
+
+
+    <!--更新库存-->
+    <update id="updateStockByGoodsInfoId" parameterType="sysStockDTO">
+        <selectKey keyProperty='id' resultType='int' order='BEFORE'>
+            SELECT
+            (
+                SELECT
+                id
+                FROM
+                sys_stock
+                WHERE
+                deleted = 1
+                AND goods_info_id = #{goods_info_id}
+            ) id
+            FROM
+            DUAL
+        </selectKey>
+        UPDATE
+            sys_stock
+        SET
+            total = total+#{total},
+            update_time = SYSDATE(),
+            remark = #{remark}
+        WHERE
+            deleted = 1
+        AND
+            goods_info_id = #{goods_info_id}
+    </update>
+
+
+    <!--保存库存-->
+    <insert id="saveStock" parameterType="sysStockDTO" >
+        <selectKey resultType="int" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS id
+        </selectKey>
+
+        INSERT INTO sys_stock (
+            goods_info_id,
+            total,
+            store_id,
+            create_time,
+            remark,
+            deleted
+        )
+        VALUES
+            (
+                #{goods_info_id}
+                , #{total}
+                , #{store_id}
+                , SYSDATE()
+                , #{remark}
+                ,1
+            )
+    </insert>
+
+
+    <!--保存出入库履历-->
+    <insert id="saveStockLog" parameterType="sysStockLogDTO" >
+        INSERT INTO `yanframeweb`.`sys_stock_log` (
+            `stock_id`
+            ,`type`
+            ,`operator_num`
+            ,`create_by`
+            ,`price`
+            ,`remark`
+            ,`create_time`
+            ,stock_record_id
+        )
+        VALUES
+        (
+            #{stock_id}
+            ,#{type}
+            ,#{operator_num}
+            ,#{create_by}
+            ,#{price}
+            ,#{remark}
+            ,SYSDATE()
+            ,#{stock_record_id}
+        );
+    </insert>
+
+    <select id="queryByCondition" parameterType="sysStockDTO" resultType="sysStockDTO">
+        SELECT
+        sysstock.*
+        , sysgoodsinfo.goods_id
+        , sysgoodsinfo.goods_name
+        , sysgoodsinfo.goods_img_url
+        , sysgoodsinfo.goods_instock_price
+        , sysgoodsinfo.goods_sale_price
+        , sysgoodsinfo.goods_color
+        , sysgoodsinfo.goods_size
+        , sysstore.store_name
+        FROM
+            sys_stock sysstock
+        INNER JOIN sys_goods_info sysgoodsinfo
+        ON sysgoodsinfo.id = sysstock.goods_info_id
+        AND sysgoodsinfo.deleted = 1
+        LEFT JOIN sys_store sysstore
+        ON sysstore.store_id = sysstock.store_id
+        WHERE  sysstock.store_id = #{store_id}
+        <if test="goods_id != null and goods_id != '' ">
+            AND sysgoodsinfo.goods_id like CONCAT('%',#{goods_id},'%')
+        </if>
+        <if test="goods_name != null and goods_name != '' ">
+            AND sysgoodsinfo.goods_name like CONCAT('%',#{goods_name},'%')
+        </if>
+        <if test="goods_color != null and goods_color != ''">
+            AND sysgoodsinfo.goods_color like CONCAT('%',#{goods_color},'%')
+        </if>
+        <if test="goods_size != null and goods_size != 6 ">
+            AND sysgoodsinfo.goods_size = #{goods_size}
+        </if>
+
+        <if test="start_time != null    ">
+            AND unix_timestamp( sysstock.create_time ) &gt; unix_timestamp(#{start_time})
+        </if>
+
+        <if test="end_time != null   ">
+            AND unix_timestamp( sysstock.create_time ) &lt; unix_timestamp(#{end_time})
+        </if>
+
+        <if test="total != null   ">
+            AND sysstock.total = #{total}
+        </if>
+
+
+    </select>
+
+</mapper>   

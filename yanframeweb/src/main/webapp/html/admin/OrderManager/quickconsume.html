@@ -1,0 +1,360 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+ <style>
+
+
+     .lefttable .layui-table[lay-size=sm] td .layui-table-cell {
+         height: 100px !important;
+         line-height: 100px !important;
+         padding:0;
+     }
+
+
+     .layui-table[lay-size=sm] td .layui-table-cell .layui-upload-list {
+         padding:0;
+         margin:0;
+     }
+
+
+     .layui-table[lay-size=sm] th .layui-table-cell   {
+         padding:0;
+     }
+
+     .layui-table-view .layui-table th{
+         min-height:20px !important;
+         padding:5px auto !important;
+     }
+
+     .layui-size{
+         padding:0 !important;
+         text-align:center;
+     }
+
+     .layui-table-view .layui-form-checkbox[lay-skin=primary] i{
+         margin:0 25px;
+     }
+     .search_goodsinfo_form *{
+         font-size:small;
+     }
+     .instockbtn{
+         width:97%;
+         text-align:right;
+     }
+
+     .width100{
+          width:100%;
+      }
+
+     .width60{
+         width:60% !important;
+     }
+
+     .righttable table{
+         margin:0;
+     }
+     .result span{
+         color:red;
+     }
+
+ </style>
+
+
+<fieldset class="layui-elem-field">
+    <legend>选择会员</legend>
+    <div class="layui-field-box">
+        <form class="layui-form search_goodsinfo_form" method="post"
+              th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    请输入卡号:
+                    <div class="layui-inline card_no_search" >
+                        <input name="card_no" class="layui-input">
+                    </div>
+                    <input type="button" class="layui-btn " onclick="javascript:cardInfoSearch.call(this)" value="卡号查询"></input>
+                    <input type="button" class="layui-btn " onclick="javascript:selectCtuUser.call(this)" value="快速查询"></input>
+                </div>
+            </div>
+            <div class="layui-form-item showselectinfo" style="color:red;">
+                姓名：<span>#</span>
+            </div>
+        </form>
+    </div>
+</fieldset>
+
+ <form class="layui-form search_goodsinfo_form" method="post"
+       th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+     <div class="layui-form-item">
+         <div class="layui-inline">
+             货号
+             <div class="layui-inline">
+                 <input name="goods_id" class="layui-input">
+             </div>
+             商品名称
+             <div class="layui-inline">
+                 <input name="goods_name" class="layui-input">
+             </div>
+             <input type="button" class="layui-btn search_btn" value="商品查询"></input>
+         </div>
+     </div>
+ </form>
+<!--左边表格-->
+<div style="width:60%;float:left;" class="lefttable">
+
+    <table class="layui-table"
+           lay-data="{  height: 'full-225', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
+           lay-filter="instockGoodsInfoTableFilter" lay-size="sm">
+        <thead>
+        <tr>
+            <th lay-data="{align:'center'}" colspan="7">选择商品添加</th>
+        </tr>
+        <tr>
+            <th lay-data="{width:260, align:'center',templet:'#templetimgurl'}">图片</th>
+            <th lay-data="{field:'goods_id' , width:135,align:'center'}">
+                商品货号
+            </th>
+            <th lay-data="{field:'goods_name', width:130,align:'center'}">商品名称</th>
+            <th lay-data="{field:'goods_sale_price',align:'center', width:80}">售货价格</th>
+            <th lay-data="{field:'goods_color', width:120,align:'center' }">商品颜色</th>
+            <th lay-data="{width:90, templet:'#templetgoods_size',align:'center'}">尺码</th>
+            <th lay-data="{fixed:'right', width:190, align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+    <!--左边工具条 （商品信息）-->
+    <script type="text/html" id="instockGoodsInfoTableToolBar">
+        <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+        <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="add">添加</a>
+    </script>
+
+
+    <!--尺码视图-->
+    <script type="text/html" id="templetgoods_size">
+        <!--6 无 ,0 S  ,1 M ,2 L,3 xl,4 xxl,5 xxxl '-->
+        {{#  if(d.goods_size == 6){ }}
+        <div class="layui-table-cell  layui-size">无码</div>
+        {{#  } else if(d.goods_size == 5){ }}
+        <div class="layui-table-cell  layui-size">XXXL</div>
+        {{#  } else if(d.goods_size == 4){ }}
+        <div class="layui-table-cell  layui-size">XXL</div>
+        {{#  } else if(d.goods_size == 3){ }}
+        <div class="layui-table-cell  layui-size">XL</div>
+        {{#  } else if(d.goods_size == 2){ }}
+        <div class="layui-table-cell  layui-size">L</div>
+        {{#  } else if(d.goods_size == 1){ }}
+        <div class="layui-table-cell  layui-size">M</div>
+        {{#  } else if(d.goods_size == 0){ }}
+        <div class="layui-table-cell  layui-size">S</div>
+        {{#  } }}
+    </script>
+
+
+    <!--图片视图-->
+    <script type="text/html" id="templetimgurl">
+        <div class="layui-table-cell " style="height: 100px;padding:0;">
+            <div class="layui-upload-list">
+                {{# layui.each(d.img_url_show, function(index, item){ }}
+                <img src="{{ item }}" onerror="this.src='/uploadimages/GoodsInfoUpload/default_pic.jpg'">
+                {{# }); }}
+            </div>
+        </div>
+    </script>
+</div>
+
+<!--右边表格-->
+ <div style ="width:38%;float:right;" class="righttable">
+    <table class="layui-table" id="sysorder_pro_id" lay-filter="sysorder_pro_filter" lay-size="sm">
+    </table>
+
+     <div class="layui-form-item layui-form-text" style="border:1px solid #f2f2f2;">
+         <table class="layui-table">
+             <colgroup>
+                 <col width="100">
+                 <col>
+             </colgroup>
+
+             <thead>
+             <tr>
+                 <th colspan="2" style="text-align: left;" class="result">
+                     小计：
+                       <span>0.00</span>
+                     ，合计金额：
+                       <span>0.00</span>
+                     ，<span>清空</span>
+                 </th>
+             </tr>
+             </thead>
+             <tbody>
+             <tr>
+                 <td style="text-align:center; ">备注</td>
+                 <td style="text-align:left;">
+                     <textarea style="border:none"   placeholder="请输入内容" class="layui-textarea remarkTextArea"></textarea>
+                 </td>
+             </tr>
+             <tr>
+                 <td style="text-align:center;" colspan="2">
+                     <input type="button" class="layui-btn   layui-btn-radius accountresult"  value="结算">
+                     </input>
+                 </td>
+             </tr>
+             </tbody>
+         </table>
+     </div>
+ </div>
+
+
+<!--右边工具条 （添加的仓库信息）-->
+<script type="text/html" id="sysorder_pro_toolbar">
+    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+
+
+ <!--弹出工具条-->
+ <script type="text/html" id="ctusertoolbar">
+     <a class="layui-btn layui-btn-mini" lay-event="select">选择</a>
+ </script>
+
+
+<script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/static/js/JS_Constant.js}"></script>
+<script th:src="@{/static/js/goodsinfolist.js}"></script>
+<script th:src="@{/static/js/quickconsume.js}"></script>
+
+<script>
+
+    var carouseltest = null;
+
+    //右边仓库表格数据
+    var orderTableData = null;
+    //左边商品表格数据
+    var goodsInfoTableData = null;
+
+    //table
+    var statictable = null;
+
+    /**
+     * 查询左边按钮
+     */
+    function instockGoodsInfoTableIdTableSearch() {
+
+        $(".search_btn").on('click', function () {
+            statictable.reload('instockGoodsInfoTableId', {
+                url: '/GoodsInfoManagerController/getGoodsInfoList'
+                , where: $(".search_goodsinfo_form").serializeObject()
+            });
+
+        });
+    }
+
+    //初始化入口
+    function onloadInit(upload, layform, laydate, element, table, layer, carousel) {
+
+        statictable  = table;
+
+        // 查询左边按钮
+        instockGoodsInfoTableIdTableSearch();
+
+        carouseltest = carousel;//存图片
+
+        tableSetting(table, []);//渲染右边库存的表格
+
+        //监听表格工具条
+        table_manger(table, layer, laydate, layform);
+    }
+
+
+    function table_manger(table, layer, laydate, layform) {
+
+        //监听右边工具条
+        table.on('edit(sysorder_pro_filter)', function (obj) {
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+
+            if(isNaN(value)){
+                tableSetting(table, orderTableData);//渲染右边库存的表格
+                //不是数字
+                layer.msg('请输入数字');
+            }else{
+                sumMoneySet();
+            }
+        });
+
+
+        //监听右边工具条
+        table.on('tool(sysorder_pro_filter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            instockActive[layEvent] ? instockActive[layEvent].call(data) : '';
+        });
+
+
+        var instockActive = {
+            detail: function () {
+                detailView.call(this);
+            },
+            del: function () {
+                this.layer = layer;
+                this.table = table;
+                delInstock.call(this);
+            }
+        }
+
+        //监听左边工具条
+        table.on('tool(instockGoodsInfoTableFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            instockGoodsInfoactive[layEvent] ? instockGoodsInfoactive[layEvent].call(data) : '';
+        });
+
+        //触发事件
+        var instockGoodsInfoactive = {
+            detail: function () {
+                detailView.call(this);
+            }
+            , add: function () {
+                this.table = table;
+                addInstock.call(this);
+            }
+        };
+
+        /**
+         * 结算
+         */
+        $(".accountresult").on('click', function () {
+            accountResultActive["submit"] ? accountResultActive["submit"].call(this) : '';
+        });
+
+
+
+        //监听弹出层工具条
+        table.on('tool(quickSearchFilter)', function (obj) {
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            quickSearchFilterActive[layEvent] ? quickSearchFilterActive[layEvent].call(data) : '';
+        });
+
+        var quickSearchFilterActive = {
+            select: function () {
+                setCtUserInfoId(this);
+                layer.closeAll();
+            }
+        }
+
+    }
+
+
+    function setCtUserInfoId(obj){
+        ct_user_info_id = obj.id;
+        $(".showselectinfo").html("姓名："+obj.real_name+"  卡号："+obj.card_no +"  手机号："+obj.mobile_phone);
+        $(".card_no_search input").val(obj.card_no);
+    }
+
+</script>
+</body>
+</html>

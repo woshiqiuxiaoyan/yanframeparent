@@ -11,7 +11,7 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--&lt;!&ndash; 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。 &ndash;&gt;-->
-    <context:component-scan base-package="user.service,redis"> <!-- base-package如果多个，用“,”分隔 -->
+    <context:component-scan base-package="user.service,redis,user.mapper"> <!-- base-package如果多个，用“,”分隔 -->
         <context:exclude-filter type="annotation"
                                 expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
@@ -57,6 +57,19 @@
         <property name="dataSource" ref="dataSource" />
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
         <property name="mapperLocations" value="classpath:mybatis/mappers/*.sql.xml" />
+
+        <!-- 配置mybatis分页插件PageHelper -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!-- 什么都不配，使用默认的配置 -->
+                        <value>helperDialect=mysql</value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+
     </bean>
 
     <!--+++++++++++++++++++++++++++++++++事务开始+++++++++++++++++++++++++++++++++-->
@@ -72,7 +85,7 @@
     <!--+++++++++++++++++++++++++++++++++事务结束+++++++++++++++++++++++++++++++++-->
 
 
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer" >
         <!--如果有多个mapper,中间用半角逗号分隔-->
         <property name="basePackage" value="user.mapper" />
     </bean>

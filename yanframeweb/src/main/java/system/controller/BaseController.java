@@ -1,7 +1,15 @@
 package system.controller;
 
+import constant.Constant;
+import constant.ErrorCode;
+import dto.ResultVo;
 import exception.CustomException;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,31 +24,40 @@ import javax.servlet.http.HttpServletRequest;
 public class BaseController {
 
     /** 基于@ExceptionHandler异常处理 */
-    @ExceptionHandler
-    public String exp(HttpServletRequest request, Exception ex) {
-
-        ex.printStackTrace();
-
-
+    /**
+     * 处理权限异常
+     * @param request
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler({UnauthorizedException.class, AuthorizationException.class })
+    @ResponseBody
+    public ResultVo exp(HttpServletRequest request, Exception ex) {
         CustomException customException = null;
-
+        ex.printStackTrace();
         //解析全局错误
-        if( ex instanceof CustomException){
-            //用户自定义异常
-            customException = (CustomException) ex;
+        if( ex instanceof UnauthorizedException){
 
+            return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.NOT_PERMISSION,ex.getMessage());
         }else {
             //系统错误非自定义异常
             customException = new CustomException("未知错误");
-
         }
 
-        String message = customException.getMessage();
-
-        request.setAttribute("message",message);
-
-        return "errorpage";
-
+        return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE,ErrorCode.sys_error.FAIL_MSG,customException.getMessage());
     }
+
+    /**
+     * 打开指定页面
+     *
+     * @param model
+     * @param container
+     * @return
+     */
+    public String view(Model model, String container) {
+        model.addAttribute(Constant.LAY_CONTAIN, container);
+        return Constant.INEXPAGE;
+    }
+
 
 }

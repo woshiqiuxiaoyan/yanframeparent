@@ -1,0 +1,114 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="maincontent">
+
+<style>
+    .normalinputwidth {
+        width: 350px;
+    }
+    .layui-form-label{
+        padding:9px 5px;
+    }
+</style>
+<form class="layui-form search_getSysUserInfoList_form" method="post"
+      th:action="@{/SysUserInfoManagerController/getSysUserInfoList}">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">所属店铺</label>
+            <div class="layui-input-inline">
+                <input type="text" name="store_name" placeholder="请输入店铺名称" class="layui-input">
+            </div>
+
+            <label class="layui-form-label" style="text-align:center;">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="user_name" class="layui-input">
+            </div>
+
+            <label class="layui-form-label" style="text-align:center;">手机</label>
+            <div class="layui-input-inline">
+                <input type="number" name="user_phone" class="layui-input">
+            </div>
+
+            <label class="layui-form-label">创建时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="start_time" placeholder="开始时间" ; class="layui-input" id="condictionstart"
+                       readonly>
+            </div>
+            <label class="layui-form-label" style="text-align:center;">~</label>
+            <div class="layui-input-inline">
+                <input type="text" name="end_time" placeholder="结束时间" id="condictionend" class="layui-input" readonly>
+            </div>
+            <div class="layui-inline" style="float:right;">
+                <input type="button" class="layui-btn layui-btn-radius search_btn" value="我要查询"></input>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table class="layui-table"
+       lay-data="{height:730, url:'/SysUserInfoManagerController/getSysUserInfoList', page:true, id:'IdSysUserInfo',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="SysUserInfoFilter" lay-size="lg">
+    <thead>
+    <tr>
+        <th lay-data="{field:'login_account', width:150,align:'center'}">登录账号</th>
+        <th lay-data="{field:'user_name',align:'center', width:100}">昵称</th>
+        <th lay-data="{field:'user_phone',align:'center', width:150}">手机</th>
+        <th lay-data="{align:'center', width:100, sort: true,templet:'#templeuser_sex'}">性别</th>
+        <th lay-data="{width:180,align:'center', sort: true,templet:'#templeuser_birthday'}">出生日期</th>
+        <th lay-data="{align:'center', width:200, sort: true,templet:'#templeregister_time'}">创建时间</th>
+        <th lay-data="{field:'create_by_user_name',align:'center', width:100, sort: true}">创建者</th>
+        <th lay-data="{field:'real_name',align:'center', width:100, sort: true}">真实姓名</th>
+        <th lay-data="{field:'store_name',align:'center', width:150, sort: true}">所属店铺</th>
+        <th lay-data="{field:'role_value',align:'center', width:150, sort: true}">角色名称</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#SysUserInfoBar'}">操作</th>
+    </tr>
+    </thead>
+</table>
+
+
+<script type="text/html" id="SysUserInfoBar">
+    <a class="layui-btn layui-btn-mini" lay-event="add">增加</a>
+    <a class="layui-btn layui-btn-mini" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+</script>
+
+<!--性别-->
+<script type="text/html" id="templeuser_sex">
+    {{#  if(d.user_sex == 1){ }}
+    <div class="layui-table-cell laytable-cell-1-sex">男</div>
+    {{#  } else { }}
+    <div class="layui-table-cell laytable-cell-1-sex">女</div>
+    {{#  } }}
+</script>
+
+
+<!--出生日期视图-->
+<script type="text/html" id="templeuser_birthday">
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.user_birthday,"yyyy-M-d h:m:s")}}</div>
+</script>
+<!--创建时间-->
+<script type="text/html" id="templeregister_time">
+    <div class="layui-table-cell  ">{{ Format(d.register_time,"yyyy-M-d h:m:s")}}</div>
+</script>
+
+<script th:src="@{/static/js/common.js}"></script>
+<script th:src="@{/static/js/sysUserInfolist.js}"></script>
+
+<script>
+
+    function onloadInit(upload, layform, laydate, element, table, layer) {
+
+        //查询按钮
+        initSearch_btn(table);
+        //渲染查询开始时间和结束时间
+        laydate_manager(laydate);
+        //监听表格事件
+        table_manger(table, layer, laydate, layform);
+    }
+
+
+</script>
+</body>
+</html>
