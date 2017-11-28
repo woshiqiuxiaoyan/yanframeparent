@@ -6,11 +6,11 @@
     <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
-<body>
+<body style="display: none;">
 
 
 
-    <form name='Spgateway' method='post'
+    <form name='Spgateway' method='post' id="testformid"
       action='https://ccore.spgateway.com/MPG/mpg_gateway'>
         MerchantID：<input type='text' name='MerchantID' th:value='${MerchantID}'><br>
         Version：<input type='text' name='Version' th:value='${Version}'><br>
@@ -20,6 +20,20 @@
     <input type='submit' value='Submit'>
     </form>
 
+
+
+<script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        console.log($("#testformid").serialize())
+//        alert($("#testformid").serialize());
+
+
+
+        $("#testformid").submit();
+
+    });
+</script>
 
 </body>
 </html>

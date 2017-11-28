@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import pojo.SysStore;
 import pojo.TUserInfo;
+import sun.net.www.http.HttpClient;
 import system.controller.BaseController;
 import user.controller.validation.VaildatorGroup1;
 import user.dto.TDemo;
@@ -421,8 +422,12 @@ public class TestController extends BaseController {
     final String HashKey = "7J08gqtUGigZaZRYsSihZ3hR6tmNImPZ";
     final String HashIV = "EMV2aHnnX9vTQ0lj";
 
+
+
+
+
     @RequestMapping("/hello/{data}")
-    public String helloTest(@PathVariable("data") String data, Model model) {
+    public String helloTest(@PathVariable("data") String data,@RequestParam("email") String email, Model model) {
 
         String requestUrl = "https://ccore.spgateway.com/MPG/mpg_gateway";
 
@@ -487,7 +492,7 @@ public class TestController extends BaseController {
         map.put("MerchantOrderNo", "S_20171124_qxy001");
         map.put("Amt", 1);
         map.put("ItemDesc", "商品描述");
-        map.put("Email", "1290920112@qq.com");
+        map.put("Email",email);
         map.put("LoginType", 0);
         map.put("CREDIT", 1);
 
@@ -509,16 +514,26 @@ public class TestController extends BaseController {
         model.addAttribute("Version", 1.4);
 
 
+
+
         return "TestHello";
     }
 
 
-    /**
-     * 　　* 利用java原生的摘要实现SHA256加密
-     * 　　* @param str 加密后的报文
-     * 　　* @return
-     *
-     */
+
+    @RequestMapping("/hello1")
+    public String hello1(  Model model) {
+
+        return "TestHello1";
+    }
+
+
+        /**
+         * 　　* 利用java原生的摘要实现SHA256加密
+         * 　　* @param str 加密后的报文
+         * 　　* @return
+         *
+         */
     public static String getSHA256StrJava(String str) {
 
         System.out.println("SHA256:"+str);
