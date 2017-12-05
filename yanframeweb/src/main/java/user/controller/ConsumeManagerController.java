@@ -2,13 +2,11 @@ package user.controller;
 
 import annotation.CurrentUser;
 import annotation.MenuAuthory;
-import com.github.pagehelper.Page;
 import constant.Constant;
 import constant.ErrorCode;
 import dto.ResultVo;
-import dto.ResultVoPage;
-import enums.GoodsSize;
 import exception.CustomException;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,21 +15,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import pojo.CtOrders;
 import system.controller.BaseController;
 import user.dto.CtOrdersDTO;
-import user.dto.SysGoodsInfoDTO;
 import user.dto.SysUserDTO;
 import user.service.IConsumeService;
-import user.service.IGoodsInfoService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by t on 2017/8/16.
@@ -65,7 +53,7 @@ public class ConsumeManagerController extends BaseController {
      * @param
      * @return
      */
-
+    @ApiOperation(nickname = "accountResultActive", value = "结算", notes = "结算")
     @RequestMapping(value = "/accountResultActive", consumes = "application/json; charset=UTF-8")
     @ResponseBody
     public ResultVo accountResultActive(@CurrentUser SysUserDTO sysUser,@RequestBody  CtOrdersDTO  ctOrdersDTO ) {

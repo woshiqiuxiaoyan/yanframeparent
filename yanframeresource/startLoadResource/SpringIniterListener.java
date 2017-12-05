@@ -1,6 +1,7 @@
 import constant.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CommonTools;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -24,6 +25,8 @@ public class SpringIniterListener implements ServletContextListener {
         Constant.yanFrameParent_real_url = servletContextEvent.getServletContext().getRealPath("/");
         Constant.yanFrameParent_img_url = Constant.yanFrameParent_content_url  +Constant.PIC_URL_GOODS_UPLOAD;
         Constant.yanFrameParent_real_img_url= Constant.yanFrameParent_real_url +Constant.PIC_URL_GOODS_UPLOAD;
+
+
         log.info("全局路径:"+Constant.yanFrameParent_content_url);
         log.info("全局保存路径:"+Constant.yanFrameParent_real_url);
         log.info("全局图片显示路径:"+Constant.yanFrameParent_img_url);

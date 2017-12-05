@@ -8,8 +8,7 @@
 </head>
 <body style="display: none;">
 
-
-
+<!--
     <form name='Spgateway' method='post' id="testformid"
       action='https://ccore.spgateway.com/MPG/mpg_gateway'>
         MerchantID：<input type='text' name='MerchantID' th:value='${MerchantID}'><br>
@@ -18,20 +17,46 @@
         TradeSha：<input type='text' name='TradeSha' th:value='${TradeSha}'><br>
 
     <input type='submit' value='Submit'>
+    </form>-->
+
+    <form name='Spgateway' method='post' id="testformid"
+          action='https://ccore.spgateway.com/MPG/mpg_gateway'>
+        MerchantID：<input type='text' name='MerchantID' id="MerchantID"  ><br>
+        Version：<input type='text' name='Version' id="Version"  ><br>
+        TradeInfo：<input type='text' name='TradeInfo' id ="TradeInfo"  ><br>
+        TradeSha：<input type='text' name='TradeSha' id ="TradeSha"  ><br>
+
+        <input type='submit' id=""subbtn" value='Submit'>
     </form>
 
 
 
 <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
 <script>
+    window.onload=function(){
+        document.Spgateway.submit();
+    }
+
+
+
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+
+
     $(document).ready(function () {
-        console.log($("#testformid").serialize())
-//        alert($("#testformid").serialize());
-
-
-
+        var MerchantID = GetQueryString("MerchantID"),
+            Version = GetQueryString("Version"),
+            TradeInfo = GetQueryString("TradeInfo"),
+            TradeSha = GetQueryString("TradeSha") ;
+        $("#MerchantID").val(MerchantID);
+        $("#TradeInfo").val(TradeInfo);
+        $("#Version").val(Version);
+        $("#TradeSha").val(TradeSha);
         $("#testformid").submit();
-
     });
 </script>
 

@@ -10,6 +10,11 @@ package constant;
  */
 public class Constant {
 
+    public interface enviorment{
+        boolean isDebugger=true;
+        boolean isLocal=false;
+    }
+
     public static String SYSUSERDTO = "SYSUSERDTO";//登录session 的 key 值
 
     public static String MENULIST = "MENULIST";//菜单列表session key 值

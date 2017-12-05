@@ -8,9 +8,11 @@ import constant.ErrorCode;
 import dto.ResultVo;
 import dto.ResultVoPage;
 import exception.CustomException;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import system.controller.BaseController;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
  * Created by t on 2017/8/16.
  */
 @RequestMapping("CtuManagerController")
-@org.springframework.stereotype.Controller
+@Controller
 public class CtuManagerController extends BaseController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -56,6 +58,7 @@ public class CtuManagerController extends BaseController {
      * @param model
      * @return
      */
+    @ApiOperation(nickname = "swagger-helloworld", value = "Swagger的世界", notes = "测试HelloWorld")
     @MenuAuthory
     @RequestMapping("/ctUserGrade/{menu_code}")
     public String ctUserGrade( Model model) {

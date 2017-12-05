@@ -30,6 +30,7 @@ public class ErrorCode {
         String CARD_NO_ERROR = "会员卡号有误";
         String CREATE_CARD_ERROR = "开卡失败";
         String USER_PHONE_IS_EXIST = "手机号已经被注册";
+
     }
 
     /**
@@ -57,11 +58,16 @@ public class ErrorCode {
     /**
      * 库存操作
      */
-    public static interface manager_Stock{
+    public   interface manager_Stock{
         String INSTOCK_FAIL="商品入库失败";
         String INSTOCK_GOODS_NUM_FAIL="入库商品数量不能为0";
 
     }
+
+    public interface order_manager{
+        String NO_CHOOOSE_CUSTOM="请选择会员";
+    }
+
 
 
 

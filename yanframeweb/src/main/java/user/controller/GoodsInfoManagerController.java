@@ -13,21 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import pojo.SysGoodsInfo;
 import system.controller.BaseController;
-import user.dto.CtUserInfoDTO;
 import user.dto.SysGoodsInfoDTO;
 import user.dto.SysUserDTO;
-import user.service.ICtUserInfoService;
 import user.service.IGoodsInfoService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by t on 2017/8/16.

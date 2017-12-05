@@ -3,6 +3,7 @@ package user.controller;
 import constant.Constant;
 import constant.ErrorCode;
 import dto.ResultVo;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -50,6 +51,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/doLogin")
     @ResponseBody
+    @ApiOperation(nickname = "swagger-helloworld", value = "Swagger的世界", notes = "测试HelloWorld")
     public ResultVo doLogin(SysUser sysUser, @RequestParam(required = false, defaultValue = "true") boolean rememberMe) {
 
         if (sysUser == null) {

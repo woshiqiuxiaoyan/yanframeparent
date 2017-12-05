@@ -9,13 +9,43 @@
 <body>
 
 
-
-    <form name='Spgateway' method='post'
-      action='http://localhost:8081/TestController/hello/12'>
-        Email：<input type='text' name='email' ><br>
-             <input type='submit' value='Submit'>
+    <form name='Spgateway' method='post' id="Spgateway"
+      action='http://10.2.1.68:8090/TestController/hello/12'>
+        orderId：<input type='text' name='orderId' value="123" ><br>
+        storeConfigId：<input type='text' name='storeConfigId' value="MS32779620" ><br>
+        amt：<input type='text' name='amt' value="100" ><br>
+        itemDesc：<input type='text' name='itemDesc' value="1111" ><br>
+        email：<input type='text' name='email' value="1290920112@qq.com" ><br>
+             <input type='button' value='下单' onclick="subForm()" />
     </form>
+    <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+    <div th:include="admin/static/onload_js::onloadJs"></div>
+<script>
+//{"orderId":"123","storeConfigId":"MS32779620","amt":100,"itemDesc":"111111","email":"1290920112@qq.com"}
+    function subForm(){
+
+        console.log($("#Spgateway").serializeObject())
+        var url_preix = "http://10.2.1.68:8090/";
+        $.ajax({
+            type: "POST",
+            url: url_preix+"api/spagteway/unifyOrder",
+            data: JSON.stringify($("#Spgateway").serializeObject()),
+            dataType:"JSON",
+            contentType:"application/json",
+            success: function (data) {
+                if(data.code=='0'){
+                    location.href = url_preix+"api/spagteway/subPayInfo?sequence_id="+data.items;
+                }
+            },error:function(error){
+                alert("出错")
+            }
+        });
 
 
+    }
+
+
+
+</script>
 </body>
 </html>

@@ -14,11 +14,14 @@
 
     <!--静态资源解析-->
     <mvc:resources mapping="/static/js/**" location="/static/js/" />
+    <mvc:resources mapping="/html/**" location="/html/" />
     <mvc:resources mapping="/uploadimages/**" location="/uploadimages/" />
     <mvc:resources mapping="/static/layui/**" location="/static/layui/" />
     <mvc:resources mapping="/static/css/**" location="/static/css/" />
     <mvc:resources mapping="/static/images/**" location="/static/images/" />
     <mvc:resources mapping="/html/admin/static/**" location="/html/admin/static/" />
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
+    <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
 
     <!--
    开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类，
@@ -197,5 +200,8 @@
     <bean id="redisTemplate"
           class="org.springframework.data.redis.core.RedisTemplate"
           p:connection-factory-ref="jedisConnFactory"/>
+
+    <!--swagger ui 配置-->
+    <bean class="configcode.WebAppConfig"/>
 
 </beans>

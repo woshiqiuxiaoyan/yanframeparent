@@ -1,1 +1,1 @@
-package user.dto;import lombok.Data;import pojo.CtOrderDetail;/** *  * <br> * <b>功能：</b>CtOrderDetailEntity<br> * <b>作者：</b>qxy<br> * <b>日期：</b> ${date} <br> * <b>版权所有：<b>版权所有(C) 2017，芊朵恋<br> */@Datapublic class CtOrderDetailDTO extends CtOrderDetail {}
+package user.dto;import lombok.Data;import lombok.ToString;import pojo.CtOrderDetail;/** *  * <br> * <b>功能：</b>CtOrderDetailEntity<br> * <b>作者：</b>qxy<br> * <b>日期：</b> ${date} <br> * <b>版权所有：<b>版权所有(C) 2017，芊朵恋<br> */@Data@ToStringpublic class CtOrderDetailDTO extends CtOrderDetail {}

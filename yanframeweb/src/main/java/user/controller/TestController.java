@@ -497,6 +497,10 @@ public class TestController extends BaseController {
         map.put("CREDIT", 1);
 
 
+
+
+
+
         String encrp = pingjieAse(map);
 
         map.put("TradeInfo", encrp);
