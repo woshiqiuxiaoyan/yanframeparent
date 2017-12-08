@@ -142,8 +142,11 @@ public class SysStockServiceImpl implements ISysStockService {
 
             log.info("------------------------------保存库存履历------------------------------");
             //取商品入库价格
-            List<SysGoodsInfoDTO> list = sysGoodsInfoDTOList.stream().filter((sysGoodsInfoDTOTmp) -> sysGoodsInfoDTOTmp.getId().intValue() == string.getGoods_info_id().intValue()).collect(Collectors.toList());
+            List<SysGoodsInfoDTO> list = sysGoodsInfoDTOList.stream().filter(
+                    (sysGoodsInfoDTOTmp) -> sysGoodsInfoDTOTmp.getId().equals(string.getGoods_info_id()))
+                    .collect(Collectors.toList());
             double goods_instock_price = list.get(0).getGoods_instock_price();
+
             saveSysStockLog(sysStockDTO.getId(), sysStockDTO.getRemark(), sysUser.getUser_id(), string.getNum(), goods_instock_price, stock_record_id);
 
         });

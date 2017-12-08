@@ -11,12 +11,10 @@
          padding:0;
      }
 
-
      .layui-table[lay-size=sm] td .layui-table-cell .layui-upload-list {
          padding:0;
          margin:0;
      }
-
 
      .layui-table[lay-size=sm] th .layui-table-cell   {
          padding:0;
@@ -84,7 +82,7 @@
 </fieldset>
 
  <form class="layui-form search_goodsinfo_form" method="post"
-       th:action="@{/GoodsInfoManagerController/getGoodsInfoList}">
+       th:action="@{/SysStockController/getStockInfoList}">
      <div class="layui-form-item">
          <div class="layui-inline">
              货号
@@ -103,11 +101,11 @@
 <div style="width:60%;float:left;" class="lefttable">
 
     <table class="layui-table"
-           lay-data="{  height: 'full-225', url:'/GoodsInfoManagerController/getGoodsInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
+           lay-data="{  height: 'full-225', url:'/SysStockController/getStockInfoList', page:true, id:'instockGoodsInfoTableId',limit:5,limits:[5,10,15,20,25]}"
            lay-filter="instockGoodsInfoTableFilter" lay-size="sm">
         <thead>
         <tr>
-            <th lay-data="{align:'center'}" colspan="7">选择商品添加</th>
+            <th lay-data="{align:'center'}" colspan="8">选择商品添加</th>
         </tr>
         <tr>
             <th lay-data="{width:260, align:'center',templet:'#templetimgurl'}">图片</th>
@@ -116,9 +114,10 @@
             </th>
             <th lay-data="{field:'goods_name', width:130,align:'center'}">商品名称</th>
             <th lay-data="{field:'goods_sale_price',align:'center', width:80}">售货价格</th>
+            <th lay-data="{field:'total',align:'center', width:80}">库存数量</th>
             <th lay-data="{field:'goods_color', width:120,align:'center' }">商品颜色</th>
             <th lay-data="{width:80, templet:'#templetgoods_size',align:'center'}">尺码</th>
-            <th lay-data="{width:190, align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
+            <th lay-data="{fixed: 'right',width:120,align:'center', toolbar: '#instockGoodsInfoTableToolBar'}">操作</th>
         </tr>
         </thead>
     </table>
@@ -179,9 +178,9 @@
              <tr>
                  <th colspan="2" style="text-align: left;" class="result">
                      小计：
-                       <span>0.00</span>
+                       <span>0/分</span>
                      ，合计金额：
-                       <span>0.00</span>
+                       <span>0/分</span>
                      ，<span>清空</span>
                  </th>
              </tr>

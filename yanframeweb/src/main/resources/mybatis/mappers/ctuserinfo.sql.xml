@@ -181,4 +181,14 @@
         WHERE id =#{id}
     </delete>
 
+
+
+    <!--更新会员积分-->
+    <update id="updateCtUserIntegral" parameterType="ctOrdersDTO">
+        UPDATE ct_user_info
+        SET accumulate_integral = accumulate_integral + #{summoney}
+        WHERE
+        id = #{ct_user_info_id}
+    </update>
+
 </mapper>

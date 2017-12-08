@@ -55,23 +55,22 @@
 
 
 
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.remoting" level="INFO"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.springframework.remoting" level="DEBUG"/>
     <logger name="org.springframework.scheduling.quartz" level="INFO"/>
-    <logger name="org.springframework.data.jpa" level="INFO"/>
-    <logger name="org.cometd" level="INFO"/>
-    <logger name="ch.qos.logback" level="INFO"/>
+    <logger name="org.springframework.data.jpa" level="DEBUG"/>
+    <logger name="org.cometd" level="DEBUG"/>
+    <logger name="ch.qos.logback" level="DEBUG"/>
     <logger name="user" level="DEBUG"/>
     <logger name="enterUrl" level="DEBUG"/>
     <logger name="CustomSystemLog" level="DEBUG"/>
     <logger name="CustomerForAnnotationHandlerInterceptor" level="DEBUG"/>
-    <logger name="SpringIniterListener" level="INFO" />
+    <logger name="SpringIniterListener" level="DEBUG" />
 
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="stdout"/>
         <appender-ref ref="logfile"/>
         <!--<appender-ref ref="localtest"/>-->
-
     </root>
 </configuration>

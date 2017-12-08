@@ -124,7 +124,13 @@
 
     <select id="queryByCondition" parameterType="sysStockDTO" resultType="sysStockDTO">
         SELECT
-        sysstock.*
+        sysstock.id
+        , sysstock.goods_info_id
+        , sysstock.total
+        , sysstock.store_id
+        , sysstock.create_time
+        , sysstock.update_time
+        , sysstock.remark
         , sysgoodsinfo.goods_id
         , sysgoodsinfo.goods_name
         , sysgoodsinfo.goods_img_url
@@ -141,6 +147,10 @@
         LEFT JOIN sys_store sysstore
         ON sysstore.store_id = sysstock.store_id
         WHERE  sysstock.store_id = #{store_id}
+
+        <if test="id!=null and id !='' ">
+            AND sysstock.id = #{id}
+        </if>
         <if test="goods_id != null and goods_id != '' ">
             AND sysgoodsinfo.goods_id like CONCAT('%',#{goods_id},'%')
         </if>
@@ -168,5 +178,23 @@
 
 
     </select>
+
+    <!--更新库存-->
+    <update id="updateStockNum" parameterType="sysStockDTO">
+        <selectKey keyProperty='id' resultType='int' order='BEFORE'>
+            SELECT
+            id
+            FROM
+            sys_stock
+            WHERE
+            deleted = 1
+            AND goods_info_id = #{goods_info_id}
+        </selectKey>
+        UPDATE sys_stock
+        SET total = total + #{num}
+        WHERE
+            goods_info_id = #{goods_info_id}
+        AND total > - 1 * #{num}
+    </update>
 
 </mapper>   

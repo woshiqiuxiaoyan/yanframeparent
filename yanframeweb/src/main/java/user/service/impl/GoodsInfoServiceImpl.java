@@ -126,6 +126,11 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
             Stream.of(imgs).filter((string) -> StringUtils.isNotBlank(string)).forEach((tmp) -> {
                 boolean delFlag = CommonTools.deleteFile(Constant.yanFrameParent_real_img_url + tmp);
                 log.info("删除文件：" + tmp + "  结果：" + delFlag);
+
+                //删除备份图片
+                String backUp = Constant.yanFrameParent_real_url + "../" + Constant.PIC_URL_GOODS_UPLOAD;
+                boolean delFlagBackUp = CommonTools.deleteFile(backUp + tmp);
+                log.info("删除备份图片：" + tmp + "  结果：" + delFlagBackUp);
             });
         }
 
@@ -202,13 +207,16 @@ public class GoodsInfoServiceImpl implements IGoodsInfoService {
         String tmpPre = Constant.yanFrameParent_real_url + "uploadimages/" + sysGoodsInfoDTO.getCreate_by_user_id() + "/";
         String realPre = Constant.yanFrameParent_real_img_url;
 
+        String backUp = Constant.yanFrameParent_real_url + "../" + Constant.PIC_URL_GOODS_UPLOAD;
+
         Stream.of(tmpPaths).filter((a) -> StringUtils.isNotBlank(a)).forEach((imgName) -> {
             CommonTools.copyFile(tmpPre + imgName, realPre, imgName);
+            //备份图片
+            CommonTools.copyFile(tmpPre + imgName, backUp, imgName);
         });
 
         //清空临时文件
         CommonTools.deleteDirectory(tmpPre);
-
 
     }
 

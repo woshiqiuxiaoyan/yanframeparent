@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import user.dto.SpgateWayMpgGateWayDTO;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -155,6 +156,14 @@ public class PushDemoController {
         return result ;
     }
 
+
+
+    @RequestMapping(value = "/getSpgateWayCallBack")
+    @ResponseBody
+    public SpgateWayMpgGateWayDTO getSpgateWayCallBack(SpgateWayMpgGateWayDTO spgateWayMpgGateWayDTO){
+        log.info("--------------getSpgateWayCallBack:"+spgateWayMpgGateWayDTO);
+        return spgateWayMpgGateWayDTO;
+    }
 
 
 }

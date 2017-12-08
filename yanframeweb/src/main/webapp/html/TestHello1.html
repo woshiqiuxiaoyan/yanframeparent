@@ -23,9 +23,10 @@
 <script>
 //{"orderId":"123","storeConfigId":"MS32779620","amt":100,"itemDesc":"111111","email":"1290920112@qq.com"}
     function subForm(){
-
-        console.log($("#Spgateway").serializeObject())
         var url_preix = "http://10.2.1.68:8090/";
+
+        console.log(JSON.stringify($("#Spgateway").serializeObject()));
+
         $.ajax({
             type: "POST",
             url: url_preix+"api/spagteway/unifyOrder",
@@ -33,8 +34,11 @@
             dataType:"JSON",
             contentType:"application/json",
             success: function (data) {
+                console.log(JSON.stringify(data));
                 if(data.code=='0'){
-                    location.href = url_preix+"api/spagteway/subPayInfo?sequence_id="+data.items;
+                    location.href = url_preix+"api/spagteway/subPayInfo/"+data.items;
+                }else {
+                    alert(data.message);
                 }
             },error:function(error){
                 alert("出错")

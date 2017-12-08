@@ -1,6 +1,7 @@
 package user.mapper;
 
 import org.springframework.stereotype.Repository;
+import user.dto.CtOrdersDTO;
 import user.dto.CtUserGradeDTO;
 import user.dto.CtUserInfoDTO;
 
@@ -73,4 +74,11 @@ public interface CtUserInfoMapper  {
      * @return
      */
     int delCtUserGrade(Integer id);
+
+    /**
+     * 更新用户积分
+     * @param ctOrdersDTO
+     * @return
+     */
+    int updateCtUserIntegral(CtOrdersDTO ctOrdersDTO);
 }

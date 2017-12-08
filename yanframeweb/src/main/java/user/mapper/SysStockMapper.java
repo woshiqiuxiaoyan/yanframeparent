@@ -55,4 +55,11 @@ public interface SysStockMapper {
      * @return
      */
     List<SysStockDTO> queryByCondition(SysStockDTO sysStockDTO);
+
+    /**
+     * 更新库存数量
+      * @param sysStockDTO
+     * @return
+     */
+    int updateStockNum(SysStockDTO sysStockDTO);
 }

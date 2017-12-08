@@ -11,6 +11,7 @@
             ct_user_info_id,
             summoney,
             remark,
+            store_id,
             create_time,
             create_by,
             deleted
@@ -20,11 +21,62 @@
             #{ct_user_info_id},
             #{summoney},
             #{remark},
+            #{store_id},
             SYSDATE(),
             #{create_by},
             1
         )
     </insert>
+
+
+    <!--查询订单列表-->
+    <select id="queryOrder" resultType="ctOrdersDTO">
+        SELECT
+        ctorders.*, ctuserinfo.real_name,
+        ctuserinfo.card_no,
+        ctuserinfo.mobile_phone,
+        ctuserinfo.accumulate_integral,
+        sysuser.user_name
+        FROM
+        ct_orders ctorders
+        LEFT JOIN ct_user_info ctuserinfo
+        ON ctorders.ct_user_info_id = ctuserinfo.id
+        LEFT JOIN sys_user sysuser
+        ON sysuser.user_id = ctorders.create_by
+        WHERE
+        ctorders.deleted = 1
+        <if test="order_id !=null and order_id!=''">
+            AND ctorders.order_id =#{order_id}
+        </if>
+        <if test="real_name!=null and real_name!=''">
+            AND ctuserinfo.real_name LIKE CONCAT('%',#{real_name},'%')
+        </if>
+
+        <if test="store_id!=null and store_id!=''">
+            AND ctorders.store_id = #{store_id}
+        </if>
+
+        ORDER BY  ctorders.create_time DESC
+    </select>
+
+
+    <!--取订单详情-->
+    <select id="queryOrderDetail" parameterType="ctOrdersDTO" resultType="ctOrderDetailDTO">
+        SELECT
+            *
+            ,sysgoodsinfo.goods_img_url
+        FROM
+            ct_order_detail ctorderdetail
+        LEFT JOIN sys_goods_info sysgoodsinfo
+        ON sysgoodsinfo.id = ctorderdetail.sys_goods_info_id
+        WHERE
+            ctorderdetail.deleted = 1
+        AND
+            ctorderdetail.order_id = #{order_id}
+    </select>
+
+
+
 
 
     <!--插入订单详情-->

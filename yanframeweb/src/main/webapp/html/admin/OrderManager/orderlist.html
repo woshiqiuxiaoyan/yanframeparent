@@ -3,183 +3,89 @@
 
 <body th:fragment="maincontent">
 
-    <form class="layui-form search_ctuser_form" method="post" th:action="@{/CtuManagerController/getCtuserList}">
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">卡号</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="card_no"   autocomplete="off" class="layui-input">
-                </div>
-
-                <label class="layui-form-label" style="text-align:center;" >用户名</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="real_name"   autocomplete="off" class="layui-input">
-                </div>
-
-                <label class="layui-form-label" style="text-align:center;" >手机</label>
-                <div class="layui-input-inline">
-                    <input type="number" name="mobile_phone"   autocomplete="off" class="layui-input">
-                </div>
-
-                <label class="layui-form-label">性别</label>
-                <div class="layui-input-inline">
-                    <select name="sex">
-                        <option value="1">男</option>
-                        <option value="2">女</option>
-                        <option value="3" selected>所有</option>
-                    </select>
-                </div>
-
-                <div class="layui-inline" style="float:right;">
-                    <input type="button" class="layui-btn layui-btn-radius search_btn"   value="我要查询"></input>
-                </div>
-            </div>
-
-            <div class="layui-inline">
-
-                <label class="layui-form-label">开卡时间</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="start_time" placeholder="开始时间" ;   class="layui-input" id="condictionstart" readonly>
-                </div>
-                <label class="layui-form-label" style="text-align:center;">~</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="end_time" placeholder="结束时间"   id="condictionend"   class="layui-input" readonly>
-                </div>
-            </div>
+<form class="layui-form search_getOrdersList_form" method="post" th:action="@{/ConsumeManagerController/getOrdersList}">
+    <div class="demoTable">
+        订单编号：
+        <div class="layui-inline">
+            <input class="layui-input" name="order_id" >
         </div>
-    </form>
-
+        用户姓名：
+        <div class="layui-inline">
+            <input class="layui-input" name="real_name" >
+        </div>
+        <input type="button" class="layui-btn search_btn" value="搜索" ></input>
+    </div>
+</form>
 
 <table class="layui-table"
-       lay-data="{height:730, url:'/CtuManagerController/getCtuserList', page:true, id:'IdCtuserListTable',limit:5,limits:[5,10,15,20,25]}"
-       lay-filter="customcardlist" lay-size="lg">
+       lay-data="{height:730, url:'/ConsumeManagerController/getOrdersList', page:true, id:'IdgetOrdersList',limit:5,limits:[5,10,15,20,25]}"
+       lay-filter="getOrdersListFilter" lay-size="lg">
     <thead>
     <tr>
-        <th lay-data="{ field:'id',checkbox:true, width:80}"></th>
+        <th lay-data="{field:'order_id',align:'center', width:90}">订单编号</th>
         <th lay-data="{field:'card_no', width:150}">卡号</th>
-        <th lay-data="{field:'real_name', width:100}">用户名</th>
-        <th lay-data="{ width:80, sort: true,templet:'#templetsex'}">性别</th>
-        <th lay-data="{field:'mobile_phone',align:'center', width:150}">手机</th>
-        <th lay-data="{field:'operatorName',align:'center', width:100, sort: true}">开卡人</th>
-        <th lay-data="{field:'referee_card_no', width:150 }">推荐人卡号</th>
-        <th lay-data="{field:'accumulate_integral', width:80, sort: true}">积分</th>
-        <th lay-data="{field:'grade_name', width:150, sort: true}">会员等级</th>
-        <th lay-data="{width:200, sort: true ,align:'center',templet:'#templetcreate_time'}">开卡时间</th>
-        <th lay-data="{field:'remark',  width:200,align:'center', sort: true}">备注</th>
-        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#barDemo'}">操作</th>
+        <th lay-data="{field:'real_name', width:120}">用户名</th>
+        <th lay-data="{field:'summoney',align:'center', width:120 }">消费金额/分</th>
+        <th lay-data="{field:'accumulate_integral',align:'center', width:120 }">当前用户积分</th>
+        <th lay-data="{field:'user_name',width:120}">操作员</th>
+        <th lay-data="{width:200, align:'center',templet:'#templetcreate_time',sort:true}">创建时间</th>
+        <th lay-data="{field:'remark',  width:200,align:'center' }">备注</th>
+        <th lay-data="{fixed: 'right', width:150, align:'center', toolbar: '#bargetOrdersList'}">操作</th>
     </tr>
     </thead>
 </table>
 
-
-<script type="text/html" id="barDemo">
+<!--工具条-->
+<script type="text/html" id="bargetOrdersList">
     <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
-
-    <!-- 这里同样支持 laytpl 语法，如： -->
-    {{#  if(d.auth > 2){ }}
-    <a class="layui-btn layui-btn-mini" lay-event="check">审核</a>
-    {{#  } }}
 </script>
 
 
-<script type="text/html" id="templetsex">
-    {{#  if(d.sex == 1){ }}
-        <div class="layui-table-cell laytable-cell-1-sex">男</div>
-    {{#  } else { }}
-        <div class="layui-table-cell laytable-cell-1-sex">女</div>
-    {{#  } }}
-</script>
-
+<!--创建时间-->
 <script type="text/html" id="templetcreate_time">
-    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.create_time,"yyyy-M-d h:m:s.S")}}</div>
+    <div class="layui-table-cell laytable-cell-1-create_time">{{ Format(d.create_time,"yyyy-M-d h:m:s")}}</div>
 </script>
 
-<script type="text/html" id="templetborn_day">
-    <div class="layui-table-cell laytable-cell-1-born_day">{{ Format(d.born_day,"yyyy-M-d h:m:s.S")}}</div>
-</script>
-
+<script th:src="@{/static/js/common.js}"></script>
 
 <script>
+var carousel_static=null;
 
-    function Format(datetime,fmt) {
-
-        if(datetime==undefined){
-            return "无";
-        }
-        datetime = datetime.millis;
-
-        if (parseInt(datetime)==datetime) {
-            if (datetime.length==10) {
-                datetime=parseInt(datetime)*1000;
-            } else if(datetime.length==13) {
-                datetime=parseInt(datetime);
-            }
-        }
-        datetime=new Date(datetime);
-        var o = {
-            "M+" : datetime.getMonth()+1,                 //月份
-            "d+" : datetime.getDate(),                    //日
-            "h+" : datetime.getHours(),                   //小时
-            "m+" : datetime.getMinutes(),                 //分
-            "s+" : datetime.getSeconds(),                 //秒
-            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
-            "S"  : datetime.getMilliseconds()             //毫秒
-        };
-        if(/(y+)/.test(fmt))
-            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
-        for(var k in o)
-            if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        return fmt;
-    }
-
-    function onloadInit(upload,layform,laydate,element,table,layer) {
+    function onloadInit(upload,layform,laydate,element,table,layer,carousel) {
 
         //查询按钮
         $(".search_btn").on('click',function () {
-            table.reload('IdCtuserListTable', {
-                url: '/CtuManagerController/getCtuserList'
-                ,where: $(".search_ctuser_form").serializeObject()
+            table.reload('IdgetOrdersList', {
+                url: '/ConsumeManagerController/getOrdersList'
+                ,where: $(".search_getOrdersList_form").serializeObject()
             });
-
         })
 
+        carousel_static = carousel;//存图片
 
         laydate_manager(laydate);
         table_manger(table,layer,laydate,layform);
     }
 
-    function laydate_manager(laydate){
-        //单控件
-        laydate.render({
-            elem: '#condictionstart'
-        })
-        laydate.render({
-            elem: '#condictionend'
-        })
-    }
 
     function table_manger(table,layer,laydate,layform){
         //监听工具条
-        table.on('tool(customcardlist)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
+        table.on('tool(getOrdersListFilter)', function (obj) {
+            var data = obj.data;      //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值
-            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var tr = obj.tr;          //获得当前行 tr 的DOM对象
 
             if (layEvent === 'detail' || layEvent === 'edit') { //查看
                 var othis = $(this), method = layEvent;
                 active[method] ? active[method].call(data) : '';
             } else if (layEvent === 'del'){//删除
                 layer.confirm('真的删除行么', function (index) {
-
-                    //更新url
-                    var posturl  = static_path+"CtuManagerController/delCtuser";
-
+                    var posturl  = static_path+"ConsumeManagerController/delCtuser";
                     var objTmp = {id:obj.data.id};
                     $.post(posturl, objTmp, function (result) {
-                        console.log(JSON.stringify(result));
+
                         if (result.code == '1000') {
                             obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
                         }else{
@@ -199,48 +105,41 @@
         //触发事件
         var active = {
             detail: function(obj,tmpdata){
-                console.log( this.born_day);
 
-                var contenttmp = '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'
-                    +'ID     :'+this.id +'<br>'
-                    +'真实姓名:'+this.real_name +'<br>'
-                    +'手机号码:'+this.mobile_phone +'<br>'
-                    +'卡号    :'+this.card_no +'<br>'
-                    +'出生日期 :'+Format(this.born_day,"yyyy-M-d") +'<br>'
-                    +'性别    :'+this.sex +'<br>'
-                    +'身份证   :'+this.id_card_number +'<br>'
-                    +'邮箱     :'+this.email+'<br>'
-                    +'地址     :'+this.address+'<br>'
-                    +'经办人   :'+this.operatorName+'<br>'
-                    +'推荐人卡号:'+this.referee_card_no+'<br>'
-                    +'推荐人:'+this.referee+'<br>'
-                    +'积分    :'+this.accumulate_integral+'<br>'
-                    +'所属店长 :'+this.shop_keeper+'<br>'
-                    +'头像    :'+this.head_url+'<br>'
-                    +'备注    :'+this.remark+'<br>'
-                    +'创建时间 :'+this.create_time+'<br>';
+                var posturl  = static_path+ "ConsumeManagerController/getOrdersDetail";
 
+                $.post(posturl
+                    , {"order_id":this.order_id}
+                    , function (result) {
+                        if(1000==result.code){
+                           var content =  groupHtml(result.result);
 
-                //示范一个公告层
-                layer.open({
-                    type: 1
-                    ,title: false //不显示标题栏
-                    ,closeBtn: false
-                    ,area: '300px;'
-                    ,shade: 0.8
-                    ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                    ,btn: ['o 了']
-                    ,btnAlign: 'c'
-                    ,moveType: 1 //拖拽模式，0或者1
-                    ,content: contenttmp
-                    ,success: function(layero){
-                        console.log(layero);
-                    }
-                });
+                            layer.open({
+                                type: 1
+                                ,title: false //不显示标题栏
+                                ,closeBtn: false
+                                ,offset: '100px'
+                                ,area: '350px;'
+                                ,maxHeight:500
+                                ,shade: 0.8
+                                ,id: 'LAY'+this.order_id //设定一个id，防止重复弹出
+                                ,btn: ['关闭']
+                                ,btnAlign: 'c'
+                                ,moveType: 1 //拖拽模式，0或者1
+                                ,content: content
+                                ,success: function(layero){
+                                    //渲染图片
+                                    carousel_manager(carousel_static);
+                                }
+                            });
+                        }
+
+                }, "json");
+
             }
             ,edit: function(){
 
-                var contenttmp='<form class="layui-form customcardlistform"  lay-filter="customcardlistform" method="post" action="CtuManagerController/updateCtUserInfo">\n' +
+                var contenttmp='<form class="layui-form customcardlistform"  lay-filter="customcardlistform" method="post" action="ConsumeManagerController/updateCtUserInfo">\n' +
                     '        <div class="layui-form-item">\n' +
                     '            <label class="layui-form-label requiredcontent">会员卡号</label>\n' +
                     '            <div class="layui-input-block">\n' +
@@ -371,7 +270,73 @@
     }
 
 
+//    拼接
+    function groupHtml(result){
+        var contenttmp = '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'
+            +'订单编号:'+result.order_id +'<br>'
+            +'卡号:'+result.card_no +'<br>'
+            +'用户名:'+result.real_name +'<br>'
+            +'手机号码:'+result.mobile_phone +'<br>'
+            +'积分  :'+result.accumulate_integral+'<br>'
+            +'操作员  :'+result.user_name+'<br>'
+            +'创建时间:'+result.create_time+'<br>';
 
+        //拼接订单详情
+        var orderDetails =result.ctOrderDetailDTOS;
+        for(var i =0;i<orderDetails.length;i++){
+            contenttmp+='<br>';
+            contenttmp+='商品名称:'+orderDetails[i].goods_name+'<br>';
+            contenttmp+='商品数量:'+orderDetails[i].goods_num+'<br>';
+            contenttmp+='商品价格:'+orderDetails[i].goods_price+'<br><br>';
+            contenttmp+=imgShowHtml(orderDetails[i].img_url_show,orderDetails[i].order_detail_id);
+        }
+        contenttmp+='备注:'+result.remark+'<br>';
+        return contenttmp;
+    }
+
+
+    var order_detail_img_id  = [];
+
+    /**
+     * 拼接成轮播图片html
+     */
+    function imgShowHtml(img_url_show,order_detail_id){
+        var tmpdataimg= '';
+        if(img_url_show!=null&&img_url_show!=undefined&&img_url_show.length>0&&img_url_show[0]!='#'){
+            order_detail_img_id.push(order_detail_id);
+            tmpdataimg= '<div class="layui-carousel" id="orderlist'+order_detail_id+'">\n' +
+                '  <div carousel-item>\n';
+            for(var i=0;i<img_url_show.length;i++){
+                tmpdataimg +='    <div>  <img style="width:100%;height:100%;"   src="'+img_url_show[i]+'"></div>\n' ;
+            }
+            tmpdataimg+='  </div>\n' +
+                '</div>';
+        }
+
+        return tmpdataimg;
+    }
+
+    /**
+     * 宣染图片
+     */
+    function carousel_manager(carousel) {
+        for(var i=0;i<order_detail_img_id.length;i++){
+            carousel.render({
+                elem: '#orderlist'+order_detail_img_id[i]
+                ,width: '100%'
+                , interval: 5000
+            });
+        }
+
+
+
+
+    /*    carousel.render({
+            elem: '.layui-carousel'
+            ,width: '100%'
+            , interval: 5000
+        });*/
+    }
 
 </script>
 </body>

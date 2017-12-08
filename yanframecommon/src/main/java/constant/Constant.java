@@ -49,8 +49,7 @@ public class Constant {
         String  sysRolePage="admin/SysUserInfoManager/sysrolelist";//系统角色
         String  sysStorePage="admin/SysUserInfoManager/sysstorelist";//店铺页面
         String  consumePage="admin/OrderManager/quickconsume";//快速消费页面
-
-
+        String orderList ="admin/OrderManager/orderlist";//订单列表
     }
 
     public interface NorMsg{
@@ -77,8 +76,7 @@ public class Constant {
 
    public  interface ct_order{
         String INSERT_ORDER_FAIL = "订单保存失败";
-        String GOODS_NOT_EXIT = "商品不存在";
-
+        String GOODS_NOT_EXIT = "商品不存在或者库存不足";
     }
 
     public  static int DefaultPageSize=5;//默认每页大小

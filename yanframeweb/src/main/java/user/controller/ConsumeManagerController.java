@@ -2,9 +2,11 @@ package user.controller;
 
 import annotation.CurrentUser;
 import annotation.MenuAuthory;
+import com.github.pagehelper.Page;
 import constant.Constant;
 import constant.ErrorCode;
 import dto.ResultVo;
+import dto.ResultVoPage;
 import exception.CustomException;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +23,8 @@ import user.dto.CtOrdersDTO;
 import user.dto.SysUserDTO;
 import user.service.IConsumeService;
 
+import java.util.List;
+
 /**
  * Created by t on 2017/8/16.
  */
@@ -33,6 +37,7 @@ public class ConsumeManagerController extends BaseController {
     @Autowired
     private IConsumeService consumeService;
 
+
     /**
      * 进入快速消费页面
      * @param model
@@ -42,10 +47,9 @@ public class ConsumeManagerController extends BaseController {
     @RequestMapping("/consumePage/{menu_code}")
     public String consumePage(Model model) {
         log.info("-------------------------进入快速消费页面----------------------------");
+        model.addAttribute("title","快速消费");
         return view(model, Constant.Views.consumePage);
     }
-
-
 
     /**
      * 结算
@@ -76,6 +80,77 @@ public class ConsumeManagerController extends BaseController {
         return ResultVo.createCustomSuccess( ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG,null);
     }
 
+    /**
+     * 进入订单列表页面
+     * @param model
+     * @return
+     */
+    @MenuAuthory
+    @RequestMapping("/orderList/{menu_code}")
+    public String orderList(Model model) {
+        log.info("-------------------------进入订单列表页面----------------------------");
+        model.addAttribute("title","订单列表");
+        return view(model, Constant.Views.orderList);
+    }
 
+    /**
+     * 订单列表
+     * @param sysUser
+     * @param
+     * @return
+     */
+    @ApiOperation(nickname = "getOrdersList", value = "订单列表", notes = "订单列表")
+    @RequestMapping(value = "/getOrdersList")
+    @ResponseBody
+    public ResultVoPage getOrdersList(@CurrentUser SysUserDTO sysUser,CtOrdersDTO  ctOrdersDTO ) {
+
+        try{
+
+            Page<CtOrdersDTO> ctOrdersDTOList =  consumeService.getOrdersList(sysUser,ctOrdersDTO);
+
+            if(null!=ctOrdersDTOList  ){
+                return ResultVoPage.createCustomSuccess(0, ErrorCode.sys_error.SUCCESS_MSG, ctOrdersDTOList, ctOrdersDTOList.getTotal());
+            }
+
+        } catch (CustomException e) {
+            log.error("订单列表:" + e.getMessage());
+            return ResultVoPage.createSuccess(ErrorCode.sys_error.FAIL_CODE,e.getMessage(),null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("订单列表:" + e.getMessage());
+        }
+        return ResultVoPage.createSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG);
+    }
+
+
+
+
+    /**
+     * 订单详情
+     * @param sysUser
+     * @param
+     * @return
+     */
+    @ApiOperation(nickname = "getOrdersDetail", value = "订单详情", notes = "订单详情")
+    @RequestMapping(value = "/getOrdersDetail")
+    @ResponseBody
+    public ResultVo getOrdersDetail(@CurrentUser SysUserDTO sysUser,CtOrdersDTO  ctOrdersDTO ) {
+
+        try{
+
+            ctOrdersDTO =  consumeService.getOrdersDetail(sysUser,ctOrdersDTO);
+
+            if(null!=ctOrdersDTO  ){
+                return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,ctOrdersDTO);
+            }
+        } catch (CustomException e) {
+            log.error("查询订单详情失败:" + e.getMessage());
+            return ResultVo.create(ErrorCode.sys_error.FAIL_CODE,e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("查询订单详情失败:" + e.getMessage());
+        }
+        return ResultVo.create(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG);
+    }
 
 }

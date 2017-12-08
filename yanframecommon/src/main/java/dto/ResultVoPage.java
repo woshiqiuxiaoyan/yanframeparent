@@ -30,7 +30,7 @@ public class ResultVoPage implements Serializable
 	 * */
 	private Object data;
 
-	private long count;
+	private long count=0;
 
 
 	public ResultVoPage(){}
@@ -55,6 +55,7 @@ public class ResultVoPage implements Serializable
 		this.code = code;
 		this.msg = msg;
 		this.data = data;
+		this.count = 0;
 	}
 
 	public ResultVoPage(int code, String msg, Object data,long count)
@@ -64,6 +65,8 @@ public class ResultVoPage implements Serializable
 		this.data = data;
 		this.count = count;
 	}
+
+
 
 	
 	/**
@@ -89,6 +92,11 @@ public class ResultVoPage implements Serializable
 	 */
 	public static <T> ResultVoPage createSuccess(int code, String msg , T t){
 		return new ResultVoPage(code, msg, t);
+	}
+
+
+	public static   ResultVoPage createSuccess(int code, String msg ){
+		return new ResultVoPage(code, msg);
 	}
 	
 	/**

@@ -17,9 +17,9 @@ public class SysStockDTO extends SysStock{
 
     private String goods_img_url;
 
-    private double goods_instock_price;//进货价
+    private java.lang.Integer goods_instock_price;//进货价
 
-    private double goods_sale_price;//售价
+    private java.lang.Integer goods_sale_price;//售价
 
     private String goods_color;
 
@@ -34,5 +34,7 @@ public class SysStockDTO extends SysStock{
     private DateTime start_time;
 
     private DateTime end_time;
+
+    private Integer num;
 }
 

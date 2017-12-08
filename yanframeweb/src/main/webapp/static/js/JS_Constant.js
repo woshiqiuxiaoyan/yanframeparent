@@ -14,6 +14,7 @@ var menu_cod_goodsInfo="32";//产品列表 权限id
 var ctuserListurl = static_path+"CtuManagerController/ctuserList/"+menu_code_ctuserList//会员列表url
 var goodsInfoListurl = static_path+"GoodsInfoManagerController/goodsInfoList/"+menu_cod_goodsInfo//产品列表url
 var instockInfoListurl = static_path+"SysStockController/stockListPage/"+menu_code_instock//库存列表url
+var orderlisturl=static_path+'ConsumeManagerController/orderList/12';//订单列表
 
 
 //表单转对像

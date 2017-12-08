@@ -67,8 +67,8 @@ function sumMoneySet(){
         sumMoney+=orderTableData[tmp].goods_sale_price*orderTableData[tmp].num;
     }
 
-    $(".result span")[0].innerHTML = sumMoney;
-    $(".result span")[1].innerHTML = sumMoney;
+    $(".result span")[0].innerHTML = sumMoney/100+'/元';
+    $(".result span")[1].innerHTML = sumMoney/100+'/元';
 }
 
 //del data删除元素
@@ -114,9 +114,8 @@ var delInstock = function () {
 }
 
 //保存库存相应操作
-var  accountResultActive = {
+var accountResultActive = {
     submit: function(table) { //获取选中数据
-
 
         var remark = $(".remarkTextArea").val()
             ,subMitData=new Object();
@@ -128,7 +127,7 @@ var  accountResultActive = {
                 continue;
             }
             var subTmp = new Object();
-            subTmp.sys_goods_info_id=orderTableData[tmp].id;
+            subTmp.stock_id=orderTableData[tmp].id;
             subTmp.goods_num=orderTableData[tmp].num;
             subMitData.ctOrderDetailDTOS.push(subTmp);
         }
@@ -152,8 +151,8 @@ var  accountResultActive = {
                             location.reload();
                         }
                         , btn2: function (index, layero) {
-                          //  location.href = instockInfoListurl;
-                            layer.closeAll();
+                             location.href = orderlisturl;
+
                         }
                     });
                 }
@@ -240,8 +239,6 @@ var cardInfoSearch = function () {
         success: function (result) {
             if(result.data.length==1){
                 setCtUserInfoId(result.data[0])
-                // ct_user_info_id = result.data[0].id;
-                // $(".showselectinfo").html("姓名："+result.data[0].real_name+"  卡号："+result.data[0].card_no +"  手机号："+result.data[0].mobile_phone);
             }
         },error:function (error) {
         }
