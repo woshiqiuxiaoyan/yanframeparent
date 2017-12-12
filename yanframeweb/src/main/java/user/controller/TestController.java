@@ -1,6 +1,5 @@
 package user.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import exception.CustomException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -15,11 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import pojo.SysStore;
 import pojo.TUserInfo;
-import sun.net.www.http.HttpClient;
 import system.controller.BaseController;
 import user.controller.validation.VaildatorGroup1;
 import user.dto.TDemo;
 import user.service.TestService;
+import utils.HexUtil;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -39,8 +38,6 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by t on 2017/8/16.
@@ -522,6 +519,9 @@ public class TestController extends BaseController {
 
         return "TestHello";
     }
+
+
+
 
 
 

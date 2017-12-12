@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import user.dto.SpgateWayMpgGateWayDTO;
+import utils.HexUtil;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
@@ -162,8 +166,36 @@ public class PushDemoController {
     @ResponseBody
     public SpgateWayMpgGateWayDTO getSpgateWayCallBack(SpgateWayMpgGateWayDTO spgateWayMpgGateWayDTO){
         log.info("--------------getSpgateWayCallBack:"+spgateWayMpgGateWayDTO);
+
+        try {
+            decrypt(spgateWayMpgGateWayDTO.getTradeInfo(),"utf-8","7J08gqtUGigZaZRYsSihZ3hR6tmNImPZ","EMV2aHnnX9vTQ0lj");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return spgateWayMpgGateWayDTO;
     }
 
+
+    // 解密
+    public static String decrypt(String content, String encodingFormat, String sKey, String ivParameter) throws Exception {
+        try {
+
+            byte[] raw = sKey.getBytes("ASCII");
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            byte[] encrypted1 = HexUtil.hexStr2Str(content);
+            byte[] original = cipher.doFinal(encrypted1);
+            String originalString = new String(original, encodingFormat);
+            System.out.println("解密后数据 ："+originalString);
+            return originalString;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
 }
