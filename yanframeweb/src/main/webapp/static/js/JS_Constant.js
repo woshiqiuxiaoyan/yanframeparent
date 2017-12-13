@@ -1,5 +1,5 @@
 var static_path = "http://114.215.116.198/";
-var isDebug=true;//开发者模式
+var isDebug=false;//开发者模式
 
 if(isDebug){
     static_path = "http://localhost:8091/";
