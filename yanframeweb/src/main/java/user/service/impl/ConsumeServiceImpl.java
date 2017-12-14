@@ -60,13 +60,18 @@ public class ConsumeServiceImpl implements IConsumeService {
 
         log.info("结算:"+ctOrdersDTO.toString());
 
+        if(sysUser.getUser_id()==null){
+            //登录异常
+            throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
+        }
+
         if(null==ctOrdersDTO.getCt_user_info_id()){
             throw new CustomException(ErrorCode.order_manager.NO_CHOOOSE_CUSTOM);
         }
         //设置店铺
         ctOrdersDTO.setStore_id(sysUser.getStore_id());
 
-        //生成订单详情
+        log.info("------------生成订单详情DTO 检查商品和库存------------");
         List<CtOrderDetailDTO> ctOrderDetailDTOS = createOrderDetail(ctOrdersDTO);
 
         //算总合
@@ -139,8 +144,9 @@ public class ConsumeServiceImpl implements IConsumeService {
             ctOrderDetailDTO -> {
                 SysStockDTO sysStockDTO = new SysStockDTO();
                 sysStockDTO.setStore_id(sysUser.getStore_id());//设置店铺
-                sysStockDTO.setGoods_info_id(ctOrderDetailDTO.getSys_goods_info_id());//设置店铺
+                sysStockDTO.setGoods_info_id(ctOrderDetailDTO.getSys_goods_info_id());//设置商品
                 sysStockDTO.setNum(ctOrderDetailDTO.getGoods_num()*-1);//设置操作数量
+                sysStockDTO.setRemark("快速消费");
                 int effect =  sysStockMapper.updateStockNum(sysStockDTO);
                 if(effect==0){
                     log.info("更新库存失败");
@@ -163,6 +169,7 @@ public class ConsumeServiceImpl implements IConsumeService {
      */
     private String saveStockRecordList(SysUserDTO sysUser, List<CtOrderDetailDTO> ctOrderDetailDTOList) {
 
+        //生成批次单号
         String stock_record_id = CommonTools.createRandomString();
 
         //生成订单批次/
@@ -175,6 +182,7 @@ public class ConsumeServiceImpl implements IConsumeService {
                     tmp.setType(StockRecordType.OUTSTOCK.getValue());
                     tmp.setRemark(ctOrderDetailDTO.getRemark());
                     tmp.setCreate_by(sysUser.getUser_id());
+                    tmp.setStore_id(sysUser.getStore_id());
                     return tmp;
                 }
         ).collect(Collectors.toList());
@@ -201,6 +209,7 @@ public class ConsumeServiceImpl implements IConsumeService {
      * @param ctOrdersDTO
      */
     private void updateUserIntegral(CtOrdersDTO ctOrdersDTO) {
+
         int effect = ctUserInfoMapper.updateCtUserIntegral(ctOrdersDTO);
 
         if(effect==0){
@@ -306,16 +315,20 @@ public class ConsumeServiceImpl implements IConsumeService {
     }
 
     /**
-     * 生成订单详情
+     * 生成订单详情DTO 检查商品和库存
      * @param ctOrdersDTO
      * @return
      */
     private List<CtOrderDetailDTO> createOrderDetail(CtOrdersDTO ctOrdersDTO) {
-        List<CtOrderDetailDTO> ctOrderDetailDTOList =  Arrays.stream(ctOrdersDTO.getCtOrderDetailDTOS()).map(
+
+        List<CtOrderDetailDTO> ctOrderDetailDTOList =  Arrays.stream(ctOrdersDTO.getCtOrderDetailDTOS()).filter(
+                (string)->string.getStock_id()!=null //过滤库存ID不为空
+        ).map(
             ctOrderDetailDTO->{
                 SysStockDTO sysStockDTO = new SysStockDTO();
                 sysStockDTO.setId(ctOrderDetailDTO.getStock_id());
                 sysStockDTO.setStore_id(ctOrdersDTO.getStore_id());
+                //查库存
                 List<SysStockDTO> sysStockDTOList =   sysStockMapper.queryByCondition(sysStockDTO);
                 if(sysStockDTOList!=null && sysStockDTOList.size()==1
                         &&ctOrderDetailDTO.getGoods_num()<=sysStockDTOList.get(0).getTotal()){
@@ -323,6 +336,7 @@ public class ConsumeServiceImpl implements IConsumeService {
                     ctOrderDetailDTO.setGoods_price(sysStockDTOList.get(0).getGoods_sale_price());
                     ctOrderDetailDTO.setRemark(ctOrdersDTO.getRemark());
                     ctOrderDetailDTO.setSys_goods_info_id(sysStockDTOList.get(0).getGoods_info_id());
+                    ctOrderDetailDTO.setStock_id(sysStockDTOList.get(0).getId());
                     return   ctOrderDetailDTO;
                 }
                 throw  new CustomException(Constant.ct_order.GOODS_NOT_EXIT);

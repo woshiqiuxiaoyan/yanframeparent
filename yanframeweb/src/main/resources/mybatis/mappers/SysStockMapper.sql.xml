@@ -24,7 +24,8 @@
             type,
             remark,
             create_time,
-            create_by
+            create_by,
+            store_id
         )
         VALUES
         <foreach collection="sysStockRecordDTOList" index="index" item="item"   separator=","  >
@@ -36,39 +37,13 @@
               ,#{item.remark}
               ,SYSDATE()
               ,#{item.create_by}
+              ,#{item.store_id}
             )
         </foreach>
     </insert>
 
 
 
-    <!--更新库存-->
-    <update id="updateStockByGoodsInfoId" parameterType="sysStockDTO">
-        <selectKey keyProperty='id' resultType='int' order='BEFORE'>
-            SELECT
-            (
-                SELECT
-                id
-                FROM
-                sys_stock
-                WHERE
-                deleted = 1
-                AND goods_info_id = #{goods_info_id}
-            ) id
-            FROM
-            DUAL
-        </selectKey>
-        UPDATE
-            sys_stock
-        SET
-            total = total+#{total},
-            update_time = SYSDATE(),
-            remark = #{remark}
-        WHERE
-            deleted = 1
-        AND
-            goods_info_id = #{goods_info_id}
-    </update>
 
 
     <!--保存库存-->
@@ -179,7 +154,7 @@
 
     </select>
 
-    <!--更新库存-->
+    <!--更新库存出库-->
     <update id="updateStockNum" parameterType="sysStockDTO">
         <selectKey keyProperty='id' resultType='int' order='BEFORE'>
             SELECT
@@ -189,12 +164,15 @@
             WHERE
             deleted = 1
             AND goods_info_id = #{goods_info_id}
+            AND store_id= #{store_id}
         </selectKey>
         UPDATE sys_stock
-        SET total = total + #{num}
+        SET total = total + #{num},
+        remark = #{remark}
         WHERE
             goods_info_id = #{goods_info_id}
-        AND total > - 1 * #{num}
+        AND total >= - 1 * #{num}
+        AND store_id= #{store_id}
     </update>
 
 </mapper>   

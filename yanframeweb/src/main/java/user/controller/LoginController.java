@@ -3,6 +3,7 @@ package user.controller;
 import constant.Constant;
 import constant.ErrorCode;
 import dto.ResultVo;
+import enums.ErrorEnum;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
@@ -55,17 +56,17 @@ public class LoginController extends BaseController {
     public ResultVo doLogin(SysUser sysUser, @RequestParam(required = false, defaultValue = "true") boolean rememberMe) {
 
         if (sysUser == null) {
-            ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
+            return   ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_error.FAIL_MSG, null);
         }
 
         //帐号或者手机号无效
         if (StringUtils.isBlank(sysUser.getLogin_account())) {
-            ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_user.USERNAME_FAIL, null);
+            return   ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_user.USERNAME_FAIL, null);
         }
 
         //密码无效
         if (StringUtils.isBlank(sysUser.getLogin_pass())) {
-            ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_user.PASS_FAIL, null);
+          return  ResultVo.createCustomSuccess(ErrorCode.sys_error.FAIL_CODE, ErrorCode.sys_user.PASS_FAIL, null);
         }
 
         Subject subject = SecurityUtils.getSubject();
@@ -83,17 +84,17 @@ public class LoginController extends BaseController {
             e.printStackTrace();
             log.error("登录失败次数过多");
         } catch (LockedAccountException e) {
-            StringBuilder msg = new StringBuilder("帐号已被锁定. The account for username " + token.getPrincipal() + " was locked.");
+            StringBuilder msg = new StringBuilder("帐号已被锁定:" + token.getPrincipal()  );
             e.printStackTrace();
             log.error(msg.toString());
         } catch (DisabledAccountException e) {
-            StringBuilder msg = new StringBuilder("帐号已被禁用. The account for username " + token.getPrincipal() + " was disabled.");
+            StringBuilder msg = new StringBuilder("帐号已被禁用:" + token.getPrincipal() );
             e.printStackTrace();
             log.error(msg.toString());
         } catch (UnknownAccountException e) {
-            StringBuilder msg = new StringBuilder("帐号不存在. There is no user with username of " + token.getPrincipal());
-            e.printStackTrace();
-            log.error(msg.toString());
+            StringBuilder msg = new StringBuilder("帐号不存在:" + token.getPrincipal());
+            log.error(msg.toString(),e);
+            return ResultVo.createCustomSuccess(ErrorEnum.ACCOUNT_NOT_EXIST.getCode(),ErrorEnum.ACCOUNT_NOT_EXIST.getMessage());
         } catch (UnauthorizedException e) {
             StringBuilder msg = new StringBuilder("您没有得到相应的授权！" + e.getMessage());
             e.printStackTrace();

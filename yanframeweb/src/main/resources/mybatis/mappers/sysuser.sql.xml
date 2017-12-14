@@ -73,7 +73,7 @@
         ,sysuser.user_sex
         ,sysuser.user_birthday
         ,sysuser.register_time
-        ,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id = sysuser.user_id) create_by_user_name
+        ,(SELECT user_name from sys_user tmpsysuser where tmpsysuser.user_id = sysuser.create_by) create_by_user_name
         ,sysuser.create_by
         ,sysuser.real_name
         ,sysuser.store_id
@@ -93,7 +93,11 @@
         ON
         sysrole.role_id = sysuserrole.role_id
         WHERE
-        sysuser.store_id = #{store_id}
+           1=1
+        <if test="isAdmin != 'admin'.toString() ">
+           AND sysuser.store_id = #{store_id}
+        </if>
+
         <if test="store_name!=null and store_name!=''">
             AND sysstore.store_name like concat(concat('%',#{store_name}),'%')
         </if>

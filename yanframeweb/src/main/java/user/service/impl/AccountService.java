@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.sun.tools.internal.jxc.ap.Const;
 import constant.Constant;
 import constant.ErrorCode;
+import enums.ErrorEnum;
 import enums.IsShopKeeper;
 import exception.CustomException;
 import org.apache.commons.lang.StringUtils;
@@ -78,6 +79,17 @@ public class AccountService implements IAccountService {
         if (null == sysUser || null == sysUser.getUser_id()) {
             //未登录异常
             throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
+        }
+
+        if(sysUser.getRole_id()==null){
+            //角色异常
+            throw new CustomException(ErrorEnum.ROLE_ID_ERROR.getMessage());
+        }
+
+        if(sysUser.getRole_id().equals(Constant.ADMIN.role_id)){
+            sysUserDTO.setIsAdmin("admin");
+        }else{
+            sysUserDTO.setIsAdmin("");
         }
 
         sysUserDTO.setStore_id(sysUser.getStore_id());
@@ -357,6 +369,7 @@ public class AccountService implements IAccountService {
         if(null!=sysUserRoleDTOList&&sysUserRoleDTOList.size()>0){
             throw new CustomException(Constant.sys_user.ROLE_IS_USERING);
         }
+
         return false;
     }
 

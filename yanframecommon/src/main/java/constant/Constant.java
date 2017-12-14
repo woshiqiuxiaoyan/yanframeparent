@@ -8,32 +8,23 @@ package constant;
  * Date: 2017/10/10
  * Time: 10:09
  */
-public class Constant {
+ public class Constant {
 
     public interface enviorment{
-        boolean isDebugger=true;
-        boolean isLocal=false;
+        boolean isDebugger=false;
+        boolean isLocal=true;
     }
 
-    public static String SYSUSERDTO = "SYSUSERDTO";//登录session 的 key 值
-
-    public static String MENULIST = "MENULIST";//菜单列表session key 值
-
-    public static String LAY_CONTAIN = "lay_contain"; //指定内容页面
-
-
-    public static String INEXPAGE = "admin/index";//主页
-
-    public static String PIC_URL_GOODS_UPLOAD = "uploadimages/GoodsInfoUpload/";//图片上传保存的真正路径
-
-    public static String yanFrameParent_content_url="/"; //全局路径
-
-    public static String yanFrameParent_real_url="/"; //全局真正路径
-
-    public static String yanFrameParent_img_url="";//上传图片路径
-
-    public static String yanFrameParent_real_img_url="";//上传图片真正路径
-
+    public static  String SYSUSERDTO = "SYSUSERDTO";//登录session 的 key 值
+    public static  String MENULIST = "MENULIST";//菜单列表session key 值
+    public static  String LAY_CONTAIN = "lay_contain"; //指定内容页面
+    public static  String INEXPAGE = "admin/index";//主页
+    public static  String PIC_URL_GOODS_UPLOAD = "uploadimages/GoodsInfoUpload/";//图片上传保存的真正路径
+    public static  String yanFrameParent_content_url="/"; //全局路径
+    public static  String yanFrameParent_real_url="/"; //全局真正路径
+    public static  String yanFrameParent_img_url="";//上传图片路径
+    public static  String yanFrameParent_real_img_url="";//上传图片真正路径
+    public static int DefaultPageSize=5;//默认每页大小
 
     public interface Views {
         String createCard = "admin/CustomManager/createcustomcard";//开卡页面
@@ -44,6 +35,7 @@ public class Constant {
         String createGoodsInfo = "admin/GoodsInfoManager/createsgoodsinfo";//产品入录页面
         String goodsInfoList = "admin/GoodsInfoManager/goodsinfolist";//产品入录页面
         String inStockPage="admin/StockManager/instockinfo";//进货页面
+        String inStockTransfer="admin/StockManager/instocktransfer";//库存调拨
         String stockListPage="admin/StockManager/stocklist";//库存列表页面
         String  sysUserInfoList="admin/SysUserInfoManager/sysUserInfolist";//系统用户列表
         String  sysRolePage="admin/SysUserInfoManager/sysrolelist";//系统角色
@@ -79,6 +71,14 @@ public class Constant {
         String GOODS_NOT_EXIT = "商品不存在或者库存不足";
     }
 
-    public  static int DefaultPageSize=5;//默认每页大小
+
+
+    //后期配置到redis中
+    //管理员信息特殊处理
+    public interface ADMIN{
+        int role_id=8;//管理员角色
+        int store_id=1;//店铺
+    }
+
 
 }

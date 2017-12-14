@@ -96,6 +96,18 @@ public class ResultVo  implements Serializable
 	public static ResultVo createCustomSuccess(int code, String msg, Object result) {
 		return new ResultVo(code, msg, result);
 	}
+
+	/**
+	 * @Method描述: 自定义返回成功
+	 * @创建时间: 2016-6-27下午2:07:07
+	 * @param code
+	 * @param msg
+	 * @return
+	 */
+	public static ResultVo createCustomSuccess(int code, String msg) {
+		return new ResultVo(code, msg, null);
+	}
+
 	public static ResultVo createFail(int code,String msg){
 		return new ResultVo(code, msg);
 	}

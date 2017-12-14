@@ -38,4 +38,9 @@ public interface ISysStoreService {
     int updateSysStore(SysStoreDTO sysStoreDTO);
 
 
+    /**
+     * 取店铺下拉列表
+     * @return
+     */
+    List<SysStoreDTO> getgetStoreListForSelect();
 }

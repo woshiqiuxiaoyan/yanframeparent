@@ -81,22 +81,16 @@ var active = {
             ,area: '500px'
             ,id: 'layerDemo'+this.id //防止重复弹出
             ,content: getContentTmp(this)
-            ,btn: ['确认修改','我要重置','关闭全部']
+            ,btn: ['确认修改','关闭全部']
             ,btnAlign: 'c' //按钮居中
             ,shade: 0 //不显示遮罩
             ,yes: function(){
                 addUpdateSysUserInfoList(layer,objdata.user_id);
             },btn2: function(index, layero){
-                $(".resetbtn").click();
-                return false;
-            },btn3: function(index, layero){
                 layer.closeAll();
-
             },success: function(layero, index){
-                debugger
                 //打开成功后的回调
                 InitLayOpen(laydate, layform,objdata.role_id);
-
             }
         });
 
@@ -124,8 +118,9 @@ function addUpdateSysUserInfoList(layer,user_id) {
     var posturl = static_path +
         $(".addSysUserForm").attr("action")
         , tmp = $(".addSysUserForm").serializeObject();
-    if(user_id ==undefined||user_id ==''){
-        posturl = static_path +'SysUserInfoManagerController/addSysUser';
+
+    if(user_id !=undefined&&user_id !=''){
+        posturl = static_path +'SysUserInfoManagerController/updateSysUser';
         tmp.user_id = user_id
     }
 

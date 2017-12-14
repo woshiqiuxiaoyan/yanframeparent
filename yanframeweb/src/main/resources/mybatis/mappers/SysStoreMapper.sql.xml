@@ -22,10 +22,10 @@
 		WHERE
 			store_deleted = 1
 		  <if test="store_id !=null and store_id !=''">
-			AND  store_id = #{store_id}
+			AND  sysstore.store_id = #{store_id}
 		  </if>
 		  <if test="store_name !=null and store_name !=''">
-		    	AND  store_name  like CONCAT('%',#{store_name},'%')
+		    	AND  sysstore.store_name  like CONCAT('%',#{store_name},'%')
 		  </if>
 
 	</select>

@@ -71,6 +71,21 @@ public class SysStockController extends BaseController {
 
 
     /**
+     * 库存调拨
+     *
+     * @param model
+     * @return
+     */
+    @MenuAuthory
+    @RequestMapping("/inStockTransfer/{menu_code}")
+    public String inStockTransfer(Model model) {
+        model.addAttribute("title","库存调拨");
+        return view(model, Constant.Views.inStockTransfer);
+    }
+
+
+
+    /**
      * 进货 (相关表  sys_stock/sys_stock_record/sys_stock_log)
      *
      * @param model
@@ -88,7 +103,6 @@ public class SysStockController extends BaseController {
                 return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE, ErrorCode.sys_error.SUCCESS_MSG, stock_record_id);
             }
         } catch (CustomException e) {
-            e.printStackTrace();
             log.error("进货失败：" + e.getMessage());
             return ResultVo.createSuccess(ErrorCode.sys_error.FAIL_CODE, e.getMessage(), null);
         } catch (Exception e) {

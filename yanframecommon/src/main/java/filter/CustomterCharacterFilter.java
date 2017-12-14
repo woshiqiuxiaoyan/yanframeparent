@@ -49,7 +49,7 @@ public class CustomterCharacterFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         String encoding = getEncoding();
 
-        LoggerFactory.getLogger("CustomSystemLog").info("编码过滤request："+encoding);
+//        LoggerFactory.getLogger("CustomSystemLog").info("编码过滤request："+encoding);
 
         if (encoding != null) {
             if (isForceRequestEncoding() || request.getCharacterEncoding() == null) {

@@ -7,7 +7,7 @@ if(isDebug){
 
 
 var menu_code_ctuserList = "22";  //会员列表 权限id
-var menu_code_instock = "42";  //库存列表 权限id
+var menu_code_instock = "4_2";  //库存列表 权限id
 var menu_cod_goodsInfo="32";//产品列表 权限id
 
 // var index_page_main_content=static_path+"IndexController/index";//首页

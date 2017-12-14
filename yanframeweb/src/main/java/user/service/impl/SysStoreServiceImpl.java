@@ -50,7 +50,7 @@ public class SysStoreServiceImpl implements ISysStoreService {
     public Page<SysStoreDTO> getSysStoreList(SysUserDTO sysUser, SysStoreDTO sysStoreDTO) {
 
         //管理员查询所有 店铺
-        if(sysUser.getRole_id().intValue()==2){
+        if(sysUser.getRole_id().equals(Constant.ADMIN.role_id)){
             sysStoreDTO.setStore_id(null);
         }else{
             sysStoreDTO.setStore_id(sysUser.getStore_id());
@@ -137,6 +137,15 @@ public class SysStoreServiceImpl implements ISysStoreService {
         updateUserForSysStore(sysStoreDTO);
 
         return 1;
+    }
+
+    /**
+     * 取店铺列表作为下拉数据
+     * @return
+     */
+    @Override
+    public List<SysStoreDTO> getgetStoreListForSelect() {
+        return sysStoreMapper.getSysStoreList(new SysStoreDTO());
     }
 
 

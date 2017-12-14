@@ -29,4 +29,6 @@ public class SysUserDTO extends SysUser  {
     private DateTime end_time;
 
     private Integer role_id;//角色ID
+
+    private String isAdmin;//是否是管理员
 }

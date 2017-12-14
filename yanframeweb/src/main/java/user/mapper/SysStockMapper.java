@@ -28,12 +28,7 @@ public interface SysStockMapper {
      */
     List<SysStockRecordDTO> queryByStockRecordId(String stock_record_id);
 
-    /**
-     * 更新库存
-     * @param sysStockDTO
-     * @return
-     */
-    int updateStockByGoodsInfoId(SysStockDTO sysStockDTO);
+
 
     /**
      * 插入库存

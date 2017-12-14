@@ -40,7 +40,6 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
     //应用场景：比如登录拦截
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws Exception {
         //return false 拦截、return true 放行
-        log.info("--------------------对注解时行拦截--------------------");
 
         if (handler instanceof HandlerMethod) {
             HandlerMethod handler2 = (HandlerMethod) handler;

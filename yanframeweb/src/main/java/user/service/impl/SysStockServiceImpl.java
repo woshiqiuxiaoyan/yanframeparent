@@ -80,15 +80,13 @@ public class SysStockServiceImpl implements ISysStockService {
         String stock_record_id = saveStockRecordList(sysUser, sysStockRecordDTOList);
 
         log.info("------------------------------保存入库------------------------------");
-        saveAboutStockInfo(sysUser, sysStockRecordDTOList, sysGoodsInfoDTOList, stock_record_id);
-
-
-        return stock_record_id;
+        return saveAboutStockInfo(sysUser, sysStockRecordDTOList, sysGoodsInfoDTOList, stock_record_id);
     }
 
 
     /**
      * 取库存列表
+     *
      * @param sysUser
      * @param sysStockDTO
      * @return
@@ -117,39 +115,45 @@ public class SysStockServiceImpl implements ISysStockService {
      * @param sysUser
      * @param sysStockRecordDTOS
      * @param sysGoodsInfoDTOList
-     * @param stock_record_id
      */
-    private void saveAboutStockInfo(SysUserDTO sysUser, List<SysStockRecordDTO> sysStockRecordDTOS, List<SysGoodsInfoDTO> sysGoodsInfoDTOList, String stock_record_id) {
+    private String saveAboutStockInfo(SysUserDTO sysUser, List<SysStockRecordDTO> sysStockRecordDTOS, List<SysGoodsInfoDTO> sysGoodsInfoDTOList, String stock_record_id) {
         sysStockRecordDTOS.stream().forEach((string) -> {
+
+            if (sysUser.getStore_id() == null) {
+                throw new CustomException(ErrorCode.sys_user.NO_LOGIN_ERROR);
+            }
 
             SysStockDTO sysStockDTO = new SysStockDTO();
             sysStockDTO.setGoods_info_id(string.getGoods_info_id());
-            sysStockDTO.setTotal(string.getNum());
+            sysStockDTO.setNum(string.getNum());
+            sysStockDTO.setStore_id(sysUser.getStore_id()); //设置店铺
             sysStockDTO.setRemark("进货");//备注
             //如果商品已经存在则更新库存
-            int effect = sysStockMapper.updateStockByGoodsInfoId(sysStockDTO);
+            int effect = sysStockMapper.updateStockNum(sysStockDTO);
 
             if (0 == effect) {
-                //设置店铺
-                sysStockDTO.setStore_id(sysUser.getStore_id());
-
+                //新增库存
+                sysStockDTO.setTotal(string.getNum());
                 effect = sysStockMapper.saveStock(sysStockDTO);
+                if (0 == effect) {
+                    throw new CustomException(ErrorCode.manager_Stock.INSTOCK_FAIL);
+                }
             }
 
-            if (0 == effect) {
-                throw new CustomException(ErrorCode.manager_Stock.INSTOCK_FAIL);
-            }
+
 
             log.info("------------------------------保存库存履历------------------------------");
             //取商品入库价格
             List<SysGoodsInfoDTO> list = sysGoodsInfoDTOList.stream().filter(
                     (sysGoodsInfoDTOTmp) -> sysGoodsInfoDTOTmp.getId().equals(string.getGoods_info_id()))
                     .collect(Collectors.toList());
-            double goods_instock_price = list.get(0).getGoods_instock_price();
+
+            Integer goods_instock_price = list.get(0).getGoods_instock_price();
 
             saveSysStockLog(sysStockDTO.getId(), sysStockDTO.getRemark(), sysUser.getUser_id(), string.getNum(), goods_instock_price, stock_record_id);
 
         });
+        return stock_record_id;
     }
 
     /**
@@ -200,19 +204,16 @@ public class SysStockServiceImpl implements ISysStockService {
 
         String stock_record_id = CommonTools.createRandomString();
 
-        List<SysStockRecordDTO> sysStockRecordDTOList1 = sysStockMapper.queryByStockRecordId(stock_record_id);
-
-        sysStockRecordDTOList1.forEach(System.out::println);
-
-
         //生成订单批次/
-        List<SysStockRecordDTO> sysStockRecordDTOList = sysStockRecordDTOS.stream().filter((string) -> string.getGoods_info_id() != null).map((tmp) -> {
+        List<SysStockRecordDTO> sysStockRecordDTOList = sysStockRecordDTOS.stream().filter(
+                (string) -> string.getGoods_info_id() != null//过滤商品id为空的
+        ).map((tmp) -> {
             tmp.setStock_record_id(stock_record_id);//设置批次
             tmp.setType(StockRecordType.INSTOCK.getValue());//清单类型
             tmp.setCreate_by(sysUser.getUser_id());
+            tmp.setStore_id(sysUser.getStore_id());//保存店铺
             return tmp;
         }).collect(Collectors.toList());
-
 
         int effect = sysStockMapper.saveSysStockRecordDTOList(sysStockRecordDTOList);
 

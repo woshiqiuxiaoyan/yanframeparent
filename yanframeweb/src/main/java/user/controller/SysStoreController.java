@@ -46,7 +46,7 @@ public class SysStoreController extends BaseController {
 
 
     /**
-     * 店铺列表(管理员才能看)
+     * 店铺列表(管理员才能看) 分页
      *
      * @param sysStoreDTO
      * @return
@@ -54,7 +54,6 @@ public class SysStoreController extends BaseController {
     @RequestMapping("/getSysStoreList")
     @ResponseBody
     public ResultVoPage getSysStoreList(@CurrentUser SysUserDTO sysUser, SysStoreDTO sysStoreDTO) {
-
 
         try {
 
@@ -71,6 +70,23 @@ public class SysStoreController extends BaseController {
             log.error("店铺列表查询失败:" + e.getMessage());
         }
         return ResultVoPage.createCustomSuccess(1, ErrorCode.sys_error.SUCCESS_MSG, new ArrayList<>(), 0);
+    }
+
+
+
+
+    /**
+     * 取店铺列表作为下拉数据
+     *
+     * @return
+     */
+    @RequestMapping("/getStoreListForSelect")
+    @ResponseBody
+    public ResultVo getStoreListForSelect() {
+
+        List<SysStoreDTO> sysStoreDTOList = sysStoreService.getgetStoreListForSelect();
+
+        return ResultVo.createSuccess(ErrorCode.sys_error.SUCCESS_CODE,ErrorCode.sys_error.SUCCESS_MSG,sysStoreDTOList);
     }
 
 

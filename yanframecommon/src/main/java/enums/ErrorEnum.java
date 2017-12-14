@@ -9,21 +9,21 @@ package enums;
  * Time: 18:13
  */
 public enum ErrorEnum {
-    LOGIN_ERROR("LOGIN_ERROR","帐号不存在");
+    ACCOUNT_NOT_EXIST(1001,"帐号不存在"),ROLE_ID_ERROR(1001,"角色异常"),;
 
-    private String code ;
+    private int code ;
     private String message;
 
-    ErrorEnum(String code, String message) {
+    ErrorEnum(int code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 
