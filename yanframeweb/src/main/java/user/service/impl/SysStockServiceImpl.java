@@ -128,17 +128,25 @@ public class SysStockServiceImpl implements ISysStockService {
             sysStockDTO.setNum(string.getNum());
             sysStockDTO.setStore_id(sysUser.getStore_id()); //设置店铺
             sysStockDTO.setRemark("进货");//备注
-            //如果商品已经存在则更新库存
-            int effect = sysStockMapper.updateStockNum(sysStockDTO);
 
-            if (0 == effect) {
+
+
+            //如果商品已经存在则更新库存
+            List<SysStockDTO> listtmp = queryByStoreIdAndGoodsId(sysStockDTO);
+
+            int effect = 0;
+            if(listtmp!=null&&listtmp.size()>0 ){
+                effect = sysStockMapper.updateStockNum(sysStockDTO);
+            }else{
                 //新增库存
                 sysStockDTO.setTotal(string.getNum());
                 effect = sysStockMapper.saveStock(sysStockDTO);
-                if (0 == effect) {
-                    throw new CustomException(ErrorCode.manager_Stock.INSTOCK_FAIL);
-                }
             }
+            if (0 == effect) {
+                throw new CustomException(ErrorCode.manager_Stock.INSTOCK_FAIL);
+            }
+
+
 
 
 
@@ -154,6 +162,13 @@ public class SysStockServiceImpl implements ISysStockService {
 
         });
         return stock_record_id;
+    }
+
+    private List<SysStockDTO> queryByStoreIdAndGoodsId(SysStockDTO sysStockDTO) {
+        SysStockDTO tmp = new SysStockDTO();
+        tmp.setStore_id(sysStockDTO.getStore_id());
+        tmp.setGoods_info_id(sysStockDTO.getGoods_info_id());
+        return sysStockMapper.queryByCondition(tmp);
     }
 
     /**

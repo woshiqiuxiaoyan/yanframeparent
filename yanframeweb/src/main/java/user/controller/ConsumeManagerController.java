@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import system.controller.BaseController;
 import user.dto.CtOrdersDTO;
@@ -50,6 +51,22 @@ public class ConsumeManagerController extends BaseController {
         model.addAttribute("title","快速消费");
         return view(model, Constant.Views.consumePage);
     }
+
+    /**
+     * 打印小票页面
+     * @param model
+     * @return
+     */
+    @MenuAuthory
+    @RequestMapping("/printBill/{menu_code}")
+    public String printBill(@CurrentUser SysUserDTO sysUserDTO, @RequestParam("orderId") String orderId, Model model) {
+//        CtOrdersDTO ctOrdersDTO =  consumeService.getBillData(sysUserDTO,orderId);
+
+        model.addAttribute("title",sysUserDTO.getStore_id());
+        return "admin/OrderManager/quickconsumebill";
+    }
+
+
 
     /**
      * 结算

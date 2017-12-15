@@ -86,7 +86,7 @@
             $.post($(".m-t").attr("action"), $(".m-t").serializeObject(), function (result) {
                 console.log(JSON.stringify(result));
                 if (result.code == '1000') {
-                    location.href="../IndexController/index";
+                    location.href="../ConsumeManagerController/consumePage/11";
                 }else{
                     alert(result.msg);
                 }

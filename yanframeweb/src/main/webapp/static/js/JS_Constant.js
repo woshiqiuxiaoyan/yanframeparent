@@ -1,5 +1,5 @@
 var static_path = "http://114.215.116.198/";
-var isDebug=false;//开发者模式
+var isDebug=true;//开发者模式
 
 if(isDebug){
     static_path = "http://localhost:8091/";
@@ -15,6 +15,7 @@ var ctuserListurl = static_path+"CtuManagerController/ctuserList/"+menu_code_ctu
 var goodsInfoListurl = static_path+"GoodsInfoManagerController/goodsInfoList/"+menu_cod_goodsInfo//产品列表url
 var instockInfoListurl = static_path+"SysStockController/stockListPage/"+menu_code_instock//库存列表url
 var orderlisturl=static_path+'ConsumeManagerController/orderList/12';//订单列表
+var orderlisturl=static_path+'ConsumeManagerController/printBill/12_0';//小票页面
 
 
 //表单转对像

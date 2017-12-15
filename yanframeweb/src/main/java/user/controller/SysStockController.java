@@ -21,7 +21,6 @@ import system.controller.BaseController;
 import user.dto.SysStockDTO;
 import user.dto.SysStockRecordDTO;
 import user.dto.SysUserDTO;
-import user.service.ICtUserInfoService;
 import user.service.ISysStockService;
 
 import java.util.ArrayList;

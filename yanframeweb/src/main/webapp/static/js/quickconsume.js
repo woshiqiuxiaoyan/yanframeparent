@@ -144,15 +144,15 @@ var accountResultActive = {
             , success: function (result) {
                 layer.msg(result.msg)
                 if (result.code == '1000') {
+
                     layer.open({
                         content: '是否继续下单？'
-                        , btn: ['继续', '不加了']
+                        , btn: ['继续', '打印小票' ]
                         , yes: function (index, layero) {
                             location.reload();
                         }
                         , btn2: function (index, layero) {
-                             location.href = orderlisturl;
-
+                          location.href = orderlisturl+"?orderId="+result.result;
                         }
                     });
                 }

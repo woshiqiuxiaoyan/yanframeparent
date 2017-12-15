@@ -4,6 +4,7 @@ import annotation.HelloYan;
 import annotation.MenuAuthory;
 import annotation.TrimSpace;
 import constant.Constant;
+import exception.CustomException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -58,6 +59,7 @@ public class CustomerForAnnotationHandlerInterceptor implements HandlerIntercept
                 if (null != sysAuthorities && sysAuthorities.size() > 0) {
                     return true;
                 } else {
+                    log.info("================菜单没有权限==========================");
                     return false;
                 }
 
