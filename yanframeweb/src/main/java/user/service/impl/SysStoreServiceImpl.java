@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pojo.SysStore;
 import user.dto.SysStoreDTO;
 import user.dto.SysUserDTO;
 import user.mapper.SysStoreMapper;
@@ -146,6 +147,19 @@ public class SysStoreServiceImpl implements ISysStoreService {
     @Override
     public List<SysStoreDTO> getgetStoreListForSelect() {
         return sysStoreMapper.getSysStoreList(new SysStoreDTO());
+    }
+
+    /**
+     * 取店铺信息
+     * @param store_id
+     * @return
+     */
+    @Override
+    public SysStoreDTO queryByStoreId(Integer store_id) {
+        SysStoreDTO sysStoreDTO = new SysStoreDTO();
+        sysStoreDTO.setStore_id(store_id);
+
+        return sysStoreMapper.selectSysStoreByStoreId(sysStoreDTO);
     }
 
 

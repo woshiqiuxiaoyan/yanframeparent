@@ -11,12 +11,14 @@ package constant;
  public class Constant {
 
     public interface enviorment{
-        boolean isDebugger=false;
+        boolean isDebugger=true;
         boolean isLocal=true;
     }
 
     public static  String SYSUSERDTO = "SYSUSERDTO";//登录session 的 key 值
     public static  String MENULIST = "MENULIST";//菜单列表session key 值
+    public static String SYSSTOREDTO="SYSSTOREDTO";//店铺信息session key 值
+
     public static  String LAY_CONTAIN = "lay_contain"; //指定内容页面
     public static  String INEXPAGE = "admin/index";//主页
     public static  String PIC_URL_GOODS_UPLOAD = "uploadimages/GoodsInfoUpload/";//图片上传保存的真正路径
@@ -79,6 +81,7 @@ package constant;
         int role_id=8;//管理员角色
         int store_id=1;//店铺
     }
+
 
 
 }

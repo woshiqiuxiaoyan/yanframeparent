@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import constant.Constant;
 import constant.ErrorCode;
+import enums.GoodsSize;
 import enums.StockRecordType;
 import enums.StockType;
 import exception.CustomException;
@@ -337,6 +338,8 @@ public class ConsumeServiceImpl implements IConsumeService {
                     ctOrderDetailDTO.setRemark(ctOrdersDTO.getRemark());
                     ctOrderDetailDTO.setSys_goods_info_id(sysStockDTOList.get(0).getGoods_info_id());
                     ctOrderDetailDTO.setStock_id(sysStockDTOList.get(0).getId());
+                    ctOrderDetailDTO.setGoods_color(sysStockDTOList.get(0).getGoods_color());
+                    ctOrderDetailDTO.setGoods_size_name(GoodsSize.getName(sysStockDTOList.get(0).getGoods_size()));
                     return   ctOrderDetailDTO;
                 }
                 throw  new CustomException(Constant.ct_order.GOODS_NOT_EXIT);

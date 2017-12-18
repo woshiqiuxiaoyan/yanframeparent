@@ -81,4 +81,11 @@ public interface CtUserInfoMapper  {
      * @return
      */
     int updateCtUserIntegral(CtOrdersDTO ctOrdersDTO);
+
+    /**
+     * 通过 id 取会员 信息
+     * @param ct_user_info_id
+     * @return
+     */
+    CtUserInfoDTO queryCtUserCardNo(Integer ct_user_info_id);
 }

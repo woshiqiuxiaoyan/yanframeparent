@@ -85,4 +85,11 @@ public interface ICtUserInfoService {
      * @return
      */
     int delCtUserGrade(Integer id);
+
+    /**
+     * 查询会员 信息
+     * @param ct_user_info_id
+     * @return
+     */
+    CtUserInfoDTO queryCtUserCardNo(Integer ct_user_info_id);
 }

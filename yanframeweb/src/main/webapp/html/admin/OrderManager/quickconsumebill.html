@@ -5,14 +5,87 @@
     <title th:text="${title}"></title>
 </head>
 <body>
+<div style="text-align:center;">
+    <h1 th:text="${title}+小票"></h1>
+    <table style="margin:auto;text-align:left;">
+        <tr>
+            <td>店名：</td>
+            <td th:text="${title}"></td>
+        </tr>
+        <tr>
+            <td>电话：</td>
+            <td th:text="${sysStoreDto.store_tel}"></td>
+        </tr>
+        <tr>
+            <td>地址：</td>
+            <td th:text="${sysStoreDto.store_address}"></td>
+        </tr>
+        <tr>
+            <td>流水号：</td>
+            <td th:text="${ctOrdersDTO.order_id}"></td>
+        </tr>
+        <tr>
+            <td>操作日期：</td>
+            <td th:text="${ctOrdersDTO.cr_time_show}"></td>
+        </tr>
 
+        <tr>
+            <td colspan="2" style="text-align:center;width:100%;margin:0;">
+                <table border="1" cellspacing="0" style="margin:auto;">
+                    <tr>
+                        <th>商品</th>
+                        <th>尺码</th>
+                        <th>颜色</th>
+                        <th>数量</th>
+                        <th>单价</th>
+                    </tr>
+                    <option th:each="goodsize : ${GoodsSizeBound}"  th:value="${goodsize.value}" th:text="${goodsize.name}" selected></option>
+                    <tr th:each="orderDetail :${ctOrdersDTO.ctOrderDetailDTOS}">
+                        <td th:text="${orderDetail.goods_name}"></td>
+                        <td th:text="${orderDetail.goods_size_name}"></td>
+                        <td th:text="${orderDetail.goods_color}"></td>
+                        <td th:text="${orderDetail.goods_num/100}+元"></td>
+                        <td th:text="${orderDetail.goods_price/100}+元"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>总计：</td>
+            <td th:text="${ctOrdersDTO.summoney/100}+元"></td>
+        </tr>
+        <tr>
+            <td>会员卡号：</td>
+            <td th:text="${ctUserInfoDTO.card_no}"></td>
+        </tr>
+        <tr>
+            <td>当前积分：</td>
+            <td th:text="${ctUserInfoDTO.accumulate_integral}"></td>
+        </tr>
+        <tr>
+            <td colspan="2">*********温馨提示**********</td>
+        </tr>
+        <tr>
+            <td colspan="2">一经出售概不退换，如有质量问题，<br>且未经使用、洗涤、吊牌完整，<br>请七天内凭小票退换一次！<br>特价商品概不退换！<br>谢谢你的惠顾,欢迎下次光临！<br>此单为购物，退换货唯一凭证！</td>
+        </tr>
 
-我是小票
-
+    </table>
+</div>
 
 
 <script th:src="@{/static/js/jquery-3.2.1.min.js}"></script>
 <script th:src="@{/static/js/JS_Constant.js}"></script>
+<script>
 
+
+
+   /* bdhtml=window.document.body.innerHTML;
+    sprnstr="<!--startprint-->";
+    eprnstr="<!--endprint-->";
+    prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17);
+    prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));
+    window.document.body.innerHTML=prnhtml;*/
+    window.print();
+</script>
 </body>
 </html>

@@ -29,4 +29,6 @@ public interface IConsumeService {
      * @return
      */
     CtOrdersDTO getOrdersDetail(SysUserDTO sysUser, CtOrdersDTO ctOrdersDTO);
+
+
 }
