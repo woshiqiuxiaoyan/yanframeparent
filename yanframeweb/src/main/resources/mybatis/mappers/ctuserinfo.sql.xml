@@ -191,4 +191,12 @@
         id = #{ct_user_info_id}
     </update>
 
+    <select id="queryCtUserCardNo" resultType="ctUserInfoDTO">
+         SELECT
+            *
+        FROM
+               ct_user_info
+        WHERE  id =  #{id}
+    </select>
+
 </mapper>

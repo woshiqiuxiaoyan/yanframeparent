@@ -116,7 +116,6 @@ var delInstock = function () {
 //保存库存相应操作
 var accountResultActive = {
     submit: function(table) { //获取选中数据
-
         var remark = $(".remarkTextArea").val()
             ,subMitData=new Object();
 
@@ -152,7 +151,7 @@ var accountResultActive = {
                             location.reload();
                         }
                         , btn2: function (index, layero) {
-                          location.href = orderlisturl+"?orderId="+result.result;
+                            window.open( orderlisturl+"?orderId="+result.result);
                         }
                     });
                 }

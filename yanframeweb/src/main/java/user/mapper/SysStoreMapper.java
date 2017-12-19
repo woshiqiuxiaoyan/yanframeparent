@@ -58,4 +58,6 @@ public interface SysStoreMapper {
      * @return
      */
     SysStoreDTO selectSysStoreByStoreId(SysStoreDTO sysStoreDTO);
+
+
 }

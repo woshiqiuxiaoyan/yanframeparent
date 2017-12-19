@@ -40,4 +40,12 @@ public enum GoodsSize {
         return list;
     }
 
+    public static String getName(Integer goods_size) {
+        for(GoodsSize goodsSize: GoodsSize.values()){
+            if(goodsSize.value==goods_size.intValue()){
+                return goodsSize.getName();
+            }
+        }
+        return "";
+    }
 }

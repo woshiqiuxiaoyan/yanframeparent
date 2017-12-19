@@ -226,4 +226,9 @@ public class CtUserInfoServiceImpl implements ICtUserInfoService {
     public int delCtUserGrade(Integer id) {
         return ctUserInfoMapper.delCtUserGrade(id);
     }
+
+    @Override
+    public CtUserInfoDTO queryCtUserCardNo(Integer ct_user_info_id) {
+         return ctUserInfoMapper.queryCtUserCardNo(ct_user_info_id);
+    }
 }

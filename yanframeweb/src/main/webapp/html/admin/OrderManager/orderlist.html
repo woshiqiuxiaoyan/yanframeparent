@@ -37,7 +37,8 @@
 
 <!--工具条-->
 <script type="text/html" id="bargetOrdersList">
-    <a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-mini" lay-event="print">打印</a>
+    <!--<a class="layui-btn layui-btn-mini" lay-event="detail">查看</a>-->
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
@@ -77,7 +78,7 @@ var carousel_static=null;
             var layEvent = obj.event; //获得 lay-event 对应的值
             var tr = obj.tr;          //获得当前行 tr 的DOM对象
 
-            if (layEvent === 'detail' || layEvent === 'edit') { //查看
+            if (layEvent === 'detail' || layEvent === 'edit'||layEvent==='print') { //查看
                 var othis = $(this), method = layEvent;
                 active[method] ? active[method].call(data) : '';
             } else if (layEvent === 'del'){//删除
@@ -264,6 +265,9 @@ var carousel_static=null;
 
                     }
                 });
+            }
+            ,print:function (){
+                window.open( orderlisturl+"?orderId="+this.order_id);
             }
 
         };

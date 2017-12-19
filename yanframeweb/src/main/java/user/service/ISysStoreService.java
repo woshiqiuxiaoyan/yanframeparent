@@ -43,4 +43,11 @@ public interface ISysStoreService {
      * @return
      */
     List<SysStoreDTO> getgetStoreListForSelect();
+
+    /**
+     * 取店铺信息
+     * @param store_id
+     * @return
+     */
+    SysStoreDTO queryByStoreId(Integer store_id);
 }

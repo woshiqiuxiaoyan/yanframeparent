@@ -9,6 +9,7 @@ import dto.ResultVo;
 import dto.ResultVoPage;
 import exception.CustomException;
 import io.swagger.annotations.ApiOperation;
+import javafx.scene.input.DataFormat;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import system.controller.BaseController;
 import user.dto.CtOrdersDTO;
+import user.dto.CtUserInfoDTO;
 import user.dto.SysUserDTO;
 import user.service.IConsumeService;
+import user.service.ICtUserInfoService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.DateFormatter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -37,6 +45,9 @@ public class ConsumeManagerController extends BaseController {
 
     @Autowired
     private IConsumeService consumeService;
+
+    @Autowired
+    public ICtUserInfoService ctUserInfoService;
 
 
     /**
@@ -59,10 +70,24 @@ public class ConsumeManagerController extends BaseController {
      */
     @MenuAuthory
     @RequestMapping("/printBill/{menu_code}")
-    public String printBill(@CurrentUser SysUserDTO sysUserDTO, @RequestParam("orderId") String orderId, Model model) {
-//        CtOrdersDTO ctOrdersDTO =  consumeService.getBillData(sysUserDTO,orderId);
+    public String printBill(@CurrentUser SysUserDTO sysUserDTO, @RequestParam("orderId") String orderId, Model model, HttpServletRequest request) {
+        if(StringUtils.isBlank(orderId)){
+            log.info("===========小票异常===========");
+        }
 
-        model.addAttribute("title",sysUserDTO.getStore_id());
+        CtOrdersDTO ctOrdersDTO = new CtOrdersDTO();
+        ctOrdersDTO.setOrder_id(Integer.parseInt(orderId));
+        ctOrdersDTO =  consumeService.getOrdersDetail(sysUserDTO,ctOrdersDTO);
+
+        //用户信息
+        CtUserInfoDTO ctUserInfoDTO =  ctUserInfoService.queryCtUserCardNo(ctOrdersDTO.getCt_user_info_id());
+
+        ctOrdersDTO.setCr_time_show(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(ctOrdersDTO.getCreate_time()));
+        model.addAttribute("title",sysUserDTO.getStore_name());
+        model.addAttribute("ctOrdersDTO",ctOrdersDTO);
+        model.addAttribute("sysStoreDto",request.getSession().getAttribute(Constant.SYSSTOREDTO));
+        model.addAttribute("ctUserInfoDTO",ctUserInfoDTO);
+
         return "admin/OrderManager/quickconsumebill";
     }
 

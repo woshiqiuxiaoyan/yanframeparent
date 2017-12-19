@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import user.dto.SysAuthorityDTO;
 import user.dto.SysRolePermissionDTO;
+import user.dto.SysStoreDTO;
 import user.dto.SysUserDTO;
 import user.service.IAccountService;
+import user.service.ISysStoreService;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -90,10 +92,16 @@ public class MyShiroRealm extends AuthorizingRealm {
         if (sysUser != null) {
             //查询对应菜单权限
             List<SysAuthorityDTO> sysAuthorityDTOList = accountService.getMenuList(sysUser);
+            //查询店铺信息
+            SysStoreDTO sysStoreDTO= iSysStoreService.queryByStoreId(sysUser.getStore_id());
+            sysUser.setStore_name(sysStoreDTO.getStore_name());
             Subject subject = SecurityUtils.getSubject();
             Session session = subject.getSession();
             session.setAttribute(Constant.SYSUSERDTO, sysUser);//用户信息存入session 中
             session.setAttribute(Constant.MENULIST, sysAuthorityDTOList);//菜单信息存入session 中
+            session.setAttribute(Constant.SYSSTOREDTO,sysStoreDTO);//店铺信息存入
+
+
             setName(sysUser.getUser_id() + "");
             System.out.println(getName());
             return new SimpleAuthenticationInfo(sysUser, sysUser.getLogin_pass(), getName());
@@ -107,6 +115,9 @@ public class MyShiroRealm extends AuthorizingRealm {
      **/
     @Autowired
     private IAccountService accountService;
+
+    @Autowired
+    private ISysStoreService iSysStoreService;
 
 
 }
